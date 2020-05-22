@@ -20,12 +20,13 @@ class CreateUsersTable extends Migration
             $table->bigInteger('shop_id')->unsigned()->nullable();
             $table->string('name');
             $table->string('surname');
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->string('email')->unique();
-            $table->date('birthday');
-            $table->string('avatar');
+            $table->date('birthday')->nullable();
+            $table->string('avatar')->nullable();;
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
 

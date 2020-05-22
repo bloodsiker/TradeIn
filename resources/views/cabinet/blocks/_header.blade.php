@@ -1,8 +1,8 @@
 <header class="navbar navbar-header navbar-header-fixed">
     <a href="" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a>
     <div class="navbar-brand">
-        <a href="../../index.html" class="df-logo">dash<span>forge</span></a>
-    </div><!-- navbar-brand -->
+        <a href="{{ route('cabinet.main') }}"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS.png') }}" alt=""></a>
+    </div>
     <div id="navbarMenu" class="navbar-menu-wrapper">
         <div class="navbar-menu-header">
             <a href="../../index.html" class="df-logo">dash<span>forge</span></a>
@@ -60,8 +60,17 @@
                     </div>
                 </div><!-- nav-sub -->
             </li>
-            <li class="nav-item"><a href="../../components/" class="nav-link"><i data-feather="box"></i> Components</a></li>
-            <li class="nav-item"><a href="../../collections/" class="nav-link"><i data-feather="archive"></i> Collections</a></li>
+            <li class="nav-item with-sub">
+                <a href="" class="nav-link"><i data-feather="pie-chart"></i> Справочник</a>
+                <ul class="navbar-menu-sub">
+                    <li class="nav-sub-item"><a href="{{ route('cabinet.network.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Торговые сети</a></li>
+                    <li class="nav-sub-item"><a href="dashboard-two.html" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Website Analytics</a></li>
+                    <li class="nav-sub-item"><a href="dashboard-three.html" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Cryptocurrency</a></li>
+                    <li class="nav-sub-item"><a href="dashboard-four.html" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Helpdesk Management</a></li>
+                </ul>
+            </li>
+            <li class="nav-item"><a href="{{ route('cabinet.user.list') }}" class="nav-link"><i data-feather="box"></i> Пользователи</a></li>
+            <li class="nav-item"><a href="" class="nav-link"><i data-feather="archive"></i> Collections</a></li>
         </ul>
     </div><!-- navbar-menu-wrapper -->
     <div class="navbar-right">
@@ -182,3 +191,5 @@
         </div><!-- dropdown -->
     </div><!-- navbar-right -->
 </header><!-- navbar -->
+
+@yield('subHeader')

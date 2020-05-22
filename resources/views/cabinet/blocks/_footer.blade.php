@@ -1,4 +1,4 @@
-<footer class="footer">
+<footer class="footer fixed-bottom">
     <div>
         <span>&copy; 2019 DashForge v1.0.0. </span>
         <span>Created by <a href="http://themepixels.me">ThemePixels</a></span>

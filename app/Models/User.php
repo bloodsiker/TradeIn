@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'surname', 'email', 'phone', 'password', 'role_id', 'network_id',
     ];
 
     /**
@@ -36,4 +36,34 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function role()
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+
+    public function network()
+    {
+        return $this->hasOne(Network::class, 'id', 'network_id');
+    }
+
+    public function shop()
+    {
+        return $this->hasOne(Shop::class, 'id', 'shop_id');
+    }
+
+    public function fullName()
+    {
+        return $this->name .' ' . $this->surname;
+    }
+
+    public function attributeStatus($attribute)
+    {
+        if ($attribute === 'text') {
+            return $this->is_active ? 'Активный' : 'Не активный';
+        } elseif ($attribute === 'color') {
+            return $this->is_active ? 'success' : 'danger';
+        }
+        return null;
+    }
 }

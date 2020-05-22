@@ -18,6 +18,7 @@
 
     <link href="{{ asset('assets/css/dashforge.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/dashforge.profile.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 </head>
 <body class="page-profile">
 
@@ -25,7 +26,7 @@
 
 
 
-<div class="content content-fixed">
+<div class="content">
 
     @yield('content')
 
@@ -33,6 +34,7 @@
 
 @include('cabinet.blocks._footer')
 
+@stack('modals')
 
 @include('cabinet.blocks.scripts')
 

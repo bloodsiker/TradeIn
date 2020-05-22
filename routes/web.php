@@ -45,5 +45,16 @@ Route::group(['middleware' => ['web']], function (){
 Route::group(['middleware' => ['web']], function () {
     Route::group(['prefix' => 'cabinet'], function () {
         Route::get('/', 'Cabinet\MainController@index')->name('cabinet.main');
+
+        Route::get('/users', 'Cabinet\UserController@list')->name('cabinet.user.list');
+        Route::match(['post', 'get'], '/user/add', 'Cabinet\UserController@add')->name('cabinet.user.add');
+        Route::match(['post', 'get'], '/user/{id}/edit', 'Cabinet\UserController@edit')->name('cabinet.user.edit');
+        Route::get('/user/{id}/delete', 'Cabinet\UserController@delete')->name('cabinet.user.delete');
+
+
+        Route::get('/networks', 'Cabinet\NetworkController@list')->name('cabinet.network.list');
+        Route::post('/network/add', 'Cabinet\NetworkController@add')->name('cabinet.network.add');
+        Route::match(['post', 'get'], '/network/{id}/edit', 'Cabinet\NetworkController@edit')->name('cabinet.network.edit');
+        Route::get('/network/{id}/delete', 'Cabinet\NetworkController@delete')->name('cabinet.network.delete');
     });
 });
