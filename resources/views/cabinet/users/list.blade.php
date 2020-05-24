@@ -1,6 +1,6 @@
 @extends('cabinet.layouts.main')
 
-@section('title', 'Список користувачів')
+@section('title', 'Список пользователи')
 
 @section('subHeader')
     <div class="sub-content content-fixed bd-b">
@@ -27,7 +27,7 @@
                 @if (session('danger'))
                     <div class="alert alert-danger">{{ session('danger') }}</div>
                 @endif
-                <table class="table table-dark table-striped">
+                <table class="table table-dark table-striped table-bordered">
                     <thead>
                     <tr>
                         <th scope="col">ID</th>
@@ -41,7 +41,7 @@
                     </thead>
                     <tbody>
                     @foreach($users as $user)
-                        <tr>
+                        <tr data-id="{{ $user->id }}">
                             <th scope="row">{{ $user->id }}</th>
                             <td>{{ $user->fullName() }}</td>
                             <td>{{ $user->email }}</td>
@@ -49,10 +49,10 @@
                             <td>{{ $user->role->name }}</td>
                             <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
                             <td>
-                                <a href="{{ route('cabinet.user.edit', ['id' => $user->id]) }}" class="btn btn-xxs btn-success btn-icon">
+                                <a href="{{ route('cabinet.user.edit', ['id' => $user->id]) }}" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon">
                                     <i class="far fa-edit"></i>
                                 </a>
-                                <a href="{{ route('cabinet.user.delete', ['id' => $user->id]) }}" class="btn btn-xxs btn-danger btn-icon">
+                                <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                             </td>
@@ -65,3 +65,14 @@
         </div>
     </div>
 @endsection
+
+
+@push('scripts')
+    <script>
+        $(function() {
+            'use strict'
+
+            deleteObject('.table', '.btnDelete', "{{ route('cabinet.user.delete') }}");
+        });
+    </script>
+@endpush

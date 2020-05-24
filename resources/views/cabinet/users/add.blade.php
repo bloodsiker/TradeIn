@@ -1,6 +1,6 @@
 @extends('cabinet.layouts.main')
 
-@section('title', 'Список користувачів')
+@section('title', 'Добавить пользователя')
 
 @section('subHeader')
     <div class="sub-content content-fixed bd-b">
@@ -10,7 +10,7 @@
                     <h4 class="mg-b-0">Добавить пользователя</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
-                    <a href="{{ redirect()->back()->getTargetUrl() }} }}" type="button" class="btn btn-sm btn-secondary">
+                    <a href="{{ route('cabinet.user.list') }}" type="button" class="btn btn-sm btn-secondary">
                         <i class="fa fa-undo"></i>
                         Назад
                     </a>
@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
 
-                <form action="{{ route('cabinet.user.add') }}" class="@if ($errors->any()) needs-validation was-validated @endif" method="POST" novalidate>
+                <form action="{{ route('cabinet.user.add') }}" id="infoUser" method="POST" novalidate>
                     @csrf
                     <fieldset class="form-fieldset">
                         <legend>Персональная информация</legend>
@@ -51,45 +51,48 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="name">Имя</label>
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}" id="name" placeholder="Имя" required>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" id="name" placeholder="Имя" required>
                                 @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="surname">Фамилия</label>
-                                <input type="text" class="form-control" name="surname" value="{{ old('surname') }}" id="surname" placeholder="Фамилия" required>
+                                <input type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ old('surname') }}" id="surname" placeholder="Фамилия" required>
                                 @error('surname')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" name="email" value="{{ old('email') }}" id="email" placeholder="Email" required>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" id="email" placeholder="Email" required>
                                 @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="password">Пароль</label>
-                                <input type="password" class="form-control" name="password" value="{{ old('password') }}" id="password" placeholder="Пароль">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{ old('password') }}" id="password" placeholder="Пароль">
+                                @error('password')
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="phone">Телефон</label>
-                                <input type="text" class="form-control phone-mask" name="phone" value="{{ old('phone') }}" id="phone" placeholder="">
+                                <input type="text" class="form-control phone-mask @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" id="phone" placeholder="">
                                 @error('phone')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="birthday">Дата рождения</label>
-                                <input type="text" class="form-control" name="birthday" value="{{ old('birthday') }}" id="birthday" placeholder="">
+                                <input type="text" class="form-control @error('birthday') is-invalid @enderror" name="birthday" value="{{ old('birthday') }}" id="birthday" placeholder="">
                                 @error('birthday')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                         </div>
@@ -129,5 +132,35 @@
             autoclose: true,
             format: "dd.mm.yyyy",
         });
+
+        $('form#infoUser').on('change', '#network', function (e) {
+
+            let _form = $('form#infoUser');
+            let network_id = e.target.value;
+
+            $.ajax({
+                url: "{{ route('cabinet.user.ajax_date') }}",
+                type: "POST",
+                data: {network_id: network_id},
+                cache: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    if (response.status === 1) {
+                        var shop = "<option value=''></option>";
+
+                        for (var i = 0; i < response.data.length; i++) {
+                            var id = response.data[i].id,
+                                name = response.data[i].name;
+
+                            shop += "<option value='"+id+"'>"+name+"</option>";
+                        }
+                        _form.find('select#shop').html(shop);
+                    }
+                }
+            });
+        })
+
     </script>
 @endpush

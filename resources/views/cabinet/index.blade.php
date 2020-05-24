@@ -1,11 +1,36 @@
 @extends('cabinet.layouts.main')
 
-@section('title', 'CRM')
+@section('title', 'Калькулятор')
+
+@section('subHeader')
+    <div class="sub-content content-fixed bd-b">
+        <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
+            <div class="d-sm-flex align-items-center justify-content-between">
+                <div>
+                    <h4 class="mg-b-0">Калькулятор</h4>
+                </div>
+                <div class="mg-t-20 mg-sm-t-0">
+
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
 
 @section('content')
     <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
         <div class="row">
             <div class="col-lg-8 col-xl-9">
+                @if (session('success'))
+                    <div class="alert alert-success d-flex align-items-center" role="alert">
+                        <i data-feather="alert-circle" class="mg-r-10"></i> {{ session('success') }}
+                    </div>
+                @endif
+                @if (session('danger'))
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        <i data-feather="alert-circle" class="mg-r-10"></i> {{ session('danger') }}
+                    </div>
+                @endif
 
                 <div class="row row-sm mg-b-25">
                     <div class="col-md-6">

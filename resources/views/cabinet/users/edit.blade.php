@@ -1,16 +1,16 @@
 @extends('cabinet.layouts.main')
 
-@section('title', 'Список користувачів')
+@section('title', 'Редактировать пользователя')
 
 @section('subHeader')
     <div class="sub-content content-fixed bd-b">
         <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
             <div class="d-sm-flex align-items-center justify-content-between">
                 <div>
-                    <h4 class="mg-b-0">Редактировать пользователя</h4>
+                    <h4 class="mg-b-0">Редактировать пользователя {{ $user->fullName() }}</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
-                    <a href="{{ redirect()->back()->getTargetUrl() }} }}" type="button" class="btn btn-sm btn-secondary">
+                    <a href="{{ route('cabinet.user.list') }}" type="button" class="btn btn-sm btn-secondary">
                         <i class="fa fa-undo"></i>
                         Назад
                     </a>
@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
 
-                <form action="{{ route('cabinet.user.edit', ['id' => $user->id]) }}" class="@if ($errors->any()) needs-validation was-validated @endif" novalidate method="POST">
+                <form action="{{ route('cabinet.user.edit', ['id' => $user->id]) }}" id="infoUser" novalidate method="POST">
                     @csrf
                     <fieldset class="form-fieldset">
                         <legend>Персональная информация</legend>
@@ -51,25 +51,25 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="name">Имя</label>
-                                <input type="text" class="form-control" name="name" value="{{ $user->name }}" id="name" placeholder="Имя" required>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                <input type="text" class="form-contro @error('surname') is-invalid @enderror" name="name" value="{{ $user->name }}" id="name" placeholder="Имя" required>
+                                @error('surname')
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="surname">Фамилия</label>
-                                <input type="text" class="form-control" name="surname" value="{{ $user->surname }}" id="surname" placeholder="Фамилия" required>
+                                <input type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ $user->surname }}" id="surname" placeholder="Фамилия" required>
                                 @error('surname')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" name="email" value="{{ $user->email }}" id="email" placeholder="Email" required>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $user->email }}" id="email" placeholder="Email" required>
                                 @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
@@ -80,11 +80,17 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="phone">Телефон</label>
-                                <input type="text" class="form-control phone-mask" name="phone" value="{{ $user->phone }}" id="phone" placeholder="">
+                                <input type="text" class="form-control phone-mask @error('phone') is-invalid @enderror" name="phone" value="{{ $user->phone }}" id="phone" placeholder="">
+                                @error('phone')
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
+                                @enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="birthday">Дата рождения</label>
-                                <input type="text" class="form-control" name="birthday" value="{{ $user->birthday }}" id="birthday" placeholder="">
+                                <input type="text" class="form-control @error('phone') is-invalid @enderror" name="birthday" value="{{ $user->birthday }}" id="birthday" placeholder="">
+                                @error('birthday')
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-row">
@@ -100,7 +106,10 @@
                             <div class="form-group col-md-6">
                                 <label for="shop">Магазин</label>
                                 <select class="custom-select" id="shop" name="shop_id">
-                                    <option disabled></option>
+                                    <option value=""></option>
+                                    @foreach($shops as $shop)
+                                        <option value="{{ $shop->id }}" @if($shop->id === $user->shop_id) selected @endif>{{ $shop->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -123,5 +132,34 @@
             autoclose: true,
             format: "dd.mm.yyyy",
         });
+
+        $('form#infoUser').on('change', '#network', function (e) {
+
+            let _form = $('form#infoUser');
+            let network_id = e.target.value;
+
+            $.ajax({
+                url: "{{ route('cabinet.user.ajax_date') }}",
+                type: "POST",
+                data: {network_id: network_id},
+                cache: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    if (response.status === 1) {
+                        var shop = "<option value=''></option>";
+
+                        for (var i = 0; i < response.data.length; i++) {
+                            var id = response.data[i].id,
+                                name = response.data[i].name;
+
+                            shop += "<option value='"+id+"'>"+name+"</option>";
+                        }
+                        _form.find('select#shop').html(shop);
+                    }
+                }
+            });
+        })
     </script>
 @endpush

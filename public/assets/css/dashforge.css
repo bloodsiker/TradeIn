@@ -3323,7 +3323,7 @@ input[type="button"].btn-block {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center; }
-  
+
   .btn-group-vertical > .btn,
   .ui-datepicker-buttonpane .btn-group-vertical > button,
   .sp-container .btn-group-vertical > button,
@@ -8299,6 +8299,14 @@ strong {
     background-color: #00a7e6;
     border-color: #00a7e6;
     color: #fff; }
+.btn-outline-google {
+    background-color: transparent;
+    border-color: #e64a41;
+    color: #e64a41; }
+.btn-outline-google:hover, .btn-outline-google:focus {
+    background-color: #e64a41;
+    border-color: #e64a41;
+    color: #fff; }
 
 .btn-uppercase {
   text-transform: uppercase;
@@ -12663,41 +12671,41 @@ textarea.parsley-success:focus {
       color: rgba(255, 255, 255, 0.5); }
       .navbar-header .btn-social.btn-for-dark:hover, .navbar-header .btn-social.btn-for-dark:focus {
         color: #fff; }
-  .navbar-header .btn-buy {
+  .navbar-header .btn-to-cabinet {
     letter-spacing: 1px;
     padding: 0;
     line-height: 1.454;
     margin-left: 15px;
     display: flex;
     align-items: center;
-    color: #0168fa;
+    color: #2e3d46;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase; }
     @media (min-width: 992px) {
-      .navbar-header .btn-buy {
+      .navbar-header .btn-to-cabinet {
         min-height: inherit;
         padding: 7px 12px;
-        color: #0168fa;
-        border: 2px solid #0168fa; }
-        .navbar-header .btn-buy:hover, .navbar-header .btn-buy:focus {
-          background-color: #0168fa;
+        color: #2e3d46;
+        border: 2px solid #2e3d46; }
+        .navbar-header .btn-to-cabinet:hover, .navbar-header .btn-to-cabinet:focus {
+          background-color: #2e3d46;
           color: #fff; } }
-    .navbar-header .btn-buy .feather {
+    .navbar-header .btn-to-cabinet .feather {
       width: 18px;
       height: 18px;
       margin-right: 0; }
       @media (min-width: 992px) {
-        .navbar-header .btn-buy .feather {
+        .navbar-header .btn-to-cabinet .feather {
           width: 14px;
           height: 14px; } }
-    .navbar-header .btn-buy span {
+    .navbar-header .btn-to-cabinet span {
       margin-left: 8px;
       display: none; }
       @media (min-width: 992px) {
-        .navbar-header .btn-buy span {
+        .navbar-header .btn-to-cabinet span {
           display: inline; } }
-    .navbar-header .btn-buy.btn-for-dark {
+    .navbar-header .btn-to-cabinet.btn-for-dark {
       border-color: #fff;
       color: #fff; }
   .navbar-header .navbar-right {

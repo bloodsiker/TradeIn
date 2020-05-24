@@ -2,33 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-
 //Auth::routes();
 
 Route::group(['middleware' => ['web']], function (){
-    Route::get('/', 'SiteController@index')->name('main');
 //    Route::get('about', 'SiteController@getAbout')->name('about');
 //    Route::get('support', 'SiteController@getSupport')->name('support');
 //    Route::post('support', 'SiteController@postSupport')->name('support');
 //
 //
-//    Route::post('forms/main', 'FormsController@mainHelpRequest')->name('form.main.help');
-//    Route::post('forms/sc', 'FormsController@ScRequest')->name('form.sc');
-//    Route::get('html', 'FormsController@html')->name('form.sc');
-//
-//    Route::get('user/login', 'LoginController@getUserLogin')->name('user.login');
-//    Route::post('user/login', 'LoginController@postUserLogin')->name('user.login');
 //    Route::get('user/registration', 'RegisterController@getUserIndex')->name('user.registration');
 //    Route::post('user/registration', 'RegisterController@postUserRegister')->name('user.registration');
 //
@@ -43,18 +24,61 @@ Route::group(['middleware' => ['web']], function (){
 });
 
 Route::group(['middleware' => ['web']], function () {
-    Route::group(['prefix' => 'cabinet'], function () {
+
+    Route::get('/', 'SiteController@index')->name('main');
+
+    Route::match(['post', 'get'], '/login', 'LoginController@login')->name('login');
+    Route::match(['post', 'get'], '/reset-password', 'LoginController@resetPassword')->name('reset_password');
+
+    Route::get('/auth/{provider}', 'SocialAuthController@providerRedirect')->name('provider.redirect');
+    Route::get('/auth/facebook/callback', 'SocialAuthController@facebookCallback')->name('auth.facebook.callback');
+    Route::get('/auth/google/callback', 'SocialAuthController@googleCallback')->name('auth.google.callback');
+    Route::get('/auth/linkedin/callback', 'SocialAuthController@linkedinCallback')->name('auth.linkedin.callback');
+
+    Route::group(['prefix' => 'cabinet', 'middleware' => ['auth']], function () {
         Route::get('/', 'Cabinet\MainController@index')->name('cabinet.main');
 
-        Route::get('/users', 'Cabinet\UserController@list')->name('cabinet.user.list');
-        Route::match(['post', 'get'], '/user/add', 'Cabinet\UserController@add')->name('cabinet.user.add');
-        Route::match(['post', 'get'], '/user/{id}/edit', 'Cabinet\UserController@edit')->name('cabinet.user.edit');
-        Route::get('/user/{id}/delete', 'Cabinet\UserController@delete')->name('cabinet.user.delete');
+        Route::group(['middleware' => ['admin']], function () {
+            Route::get('/users', 'Cabinet\UserController@list')->name('cabinet.user.list');
+            Route::match(['post', 'get'], '/user/add', 'Cabinet\UserController@add')->name('cabinet.user.add');
+            Route::match(['post', 'get'], '/user/{id}/edit', 'Cabinet\UserController@edit')->name('cabinet.user.edit');
+            Route::post('/user/delete', 'Cabinet\UserController@delete')->name('cabinet.user.delete');
+            Route::post('/user/get-ajax-date', 'Cabinet\UserController@getAjaxData')->name('cabinet.user.ajax_date');
 
+            Route::get('/networks', 'Cabinet\NetworkController@list')->name('cabinet.network.list');
+            Route::post('/network/add', 'Cabinet\NetworkController@add')->name('cabinet.network.add');
+            Route::post('/network/edit', 'Cabinet\NetworkController@edit')->name('cabinet.network.edit');
+            Route::post('/network/delete', 'Cabinet\NetworkController@delete')->name('cabinet.network.delete');
+            Route::get('/network/{id}/users', 'Cabinet\NetworkController@users')->name('cabinet.network.users');
 
-        Route::get('/networks', 'Cabinet\NetworkController@list')->name('cabinet.network.list');
-        Route::post('/network/add', 'Cabinet\NetworkController@add')->name('cabinet.network.add');
-        Route::match(['post', 'get'], '/network/{id}/edit', 'Cabinet\NetworkController@edit')->name('cabinet.network.edit');
-        Route::get('/network/{id}/delete', 'Cabinet\NetworkController@delete')->name('cabinet.network.delete');
+            Route::get('/shops', 'Cabinet\ShopController@list')->name('cabinet.shop.list');
+            Route::post('/shop/add', 'Cabinet\ShopController@add')->name('cabinet.shop.add');
+            Route::post('/shop/edit', 'Cabinet\ShopController@edit')->name('cabinet.shop.edit');
+            Route::post('/shop/delete', 'Cabinet\ShopController@delete')->name('cabinet.shop.delete');
+            Route::get('/shop/{id}/users', 'Cabinet\ShopController@users')->name('cabinet.shop.users');
+
+            Route::get('/brands', 'Cabinet\BrandController@list')->name('cabinet.brand.list');
+            Route::post('/brand/add', 'Cabinet\BrandController@add')->name('cabinet.brand.add');
+            Route::post('/brand/edit', 'Cabinet\BrandController@edit')->name('cabinet.brand.edit');
+            Route::post('/brand/delete', 'Cabinet\BrandController@delete')->name('cabinet.brand.delete');
+
+            Route::get('/models', 'Cabinet\ModelController@list')->name('cabinet.model.list');
+            Route::post('/model/add', 'Cabinet\ModelController@add')->name('cabinet.model.add');
+            Route::post('/model/edit', 'Cabinet\ModelController@edit')->name('cabinet.model.edit');
+            Route::post('/model/delete', 'Cabinet\ModelController@delete')->name('cabinet.model.delete');
+
+            Route::get('/buyback-bonus', 'Cabinet\BuybackBonusController@list')->name('cabinet.buyback_bonus.list');
+            Route::post('/buyback-bonus/add', 'Cabinet\BuybackBonusController@add')->name('cabinet.buyback_bonus.add');
+            Route::post('/buyback-bonus/edit', 'Cabinet\BuybackBonusController@edit')->name('cabinet.buyback_bonus.edit');
+            Route::post('/buyback-bonus/delete', 'Cabinet\BuybackBonusController@delete')->name('cabinet.buyback_bonus.delete');
+        });
+
+        Route::get('/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
+        Route::get('/logout', 'Cabinet\ProfileController@logout')->name('cabinet.profile.logout');
+
+        Route::get('/model-requests', 'Cabinet\ModelRequestController@list')->name('cabinet.model_request.list');
+        Route::post('/model-request/add', 'Cabinet\ModelRequestController@add')->name('cabinet.model_request.add');
+        Route::post('/model-request/edit', 'Cabinet\ModelRequestController@edit')->name('cabinet.model_request.edit');
+        Route::post('/model-request/delete', 'Cabinet\ModelRequestController@delete')->name('cabinet.model_request.delete');
     });
 });

@@ -17,6 +17,8 @@ class CreateShopsTable extends Migration
             $table->id();
             $table->bigInteger('network_id')->unsigned();
             $table->string('name');
+            $table->string('city')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
 
             $table->foreign('network_id')->references('id')->on('networks')->onDelete('cascade');

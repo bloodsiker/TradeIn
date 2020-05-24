@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cabinet;
 use App\Http\Controllers\Controller;
 use App\Models\Network;
 use App\Models\Role;
+use App\Models\Shop;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class UserController extends Controller
 
     public function list()
     {
-        $users = User::all();
+        $users = User::all()->sortByDesc('id');
 
         return view('cabinet.users.list', compact('users'));
     }
@@ -35,21 +36,22 @@ class UserController extends Controller
                 'email'      => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'birthday'   => ['nullable', 'date'],
                 'phone'      => ['nullable'],
-                'network_id' => ['required', 'numeric'],
-                'password'   => ['required', 'string', 'min:8', 'confirmed'],
+                'network_id' => ['nullable', 'numeric'],
+                'password'   => ['required', 'string', 'min:6'],
             ]);
 
 
             $user = new User([
-                'role_id' => $request->get('role_id'),
+                'role_id'    => $request->get('role_id'),
                 'network_id' => $request->get('network_id'),
-                'name' => $request->get('name'),
-                'surname' => $request->get('surname'),
-                'email' => $request->get('email'),
-                'phone' => $request->get('phone'),
-                'birthday' => $request->filled('birthday') ? Carbon::parse($request->get('birthday'))->format('Y-m-d') : null,
-                'is_active' => $request->get('is_active'),
-                'password' => Hash::make($request->get('password')),
+                'shop_id'    => $request->get('shop_id'),
+                'name'       => $request->get('name'),
+                'surname'    => $request->get('surname'),
+                'email'      => $request->get('email'),
+                'phone'      => $request->get('phone'),
+                'birthday'   => $request->filled('birthday') ? Carbon::parse($request->get('birthday'))->format('Y-m-d') : null,
+                'is_active'  => $request->get('is_active'),
+                'password'   => Hash::make($request->get('password')),
             ]);
 
             $user->save();
@@ -66,11 +68,13 @@ class UserController extends Controller
 
         $roles = Role::all();
         $networks = Network::all();
+        $shops = $user->network_id ? Shop::where('network_id', $user->network_id)->get() : [];
 
         if ($request->isMethod('post')) {
 
             $user->role_id = $request->get('role_id');
             $user->network_id = $request->get('network_id');
+            $user->shop_id = $request->get('shop_id');
             $user->name = $request->get('name');
             $user->surname = $request->get('surname');
             $user->email = $request->get('email');
@@ -86,19 +90,26 @@ class UserController extends Controller
             return redirect()->route('cabinet.user.list')->with('success', 'Информация обновлена');
         }
 
-        return view('cabinet.users.edit', compact('user', 'roles', 'networks'));
+        return view('cabinet.users.edit', compact('user', 'roles', 'networks', 'shops'));
     }
 
-    public function delete(Request $request, $id)
+    public function delete(Request $request)
     {
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($request->get('id'));
 
         if ($user) {
             $user->delete();
 
-            return redirect()->route('cabinet.user.list')->with('success', 'Пользователь удален!');
+            return response(['status' => 1, 'type' => 'success', 'message' => "Пользователь {$user->fullName()} удален!"]);
         }
 
-        return redirect()->route('cabinet.user.list')->with('danger', 'Ошибка при удалении!');
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при удалении!']);
+    }
+
+    public function getAjaxData(Request $request)
+    {
+        $data = Shop::where('network_id', $request->get('network_id'))->get();
+
+        return response(['status' => 1, 'data' => $data]);
     }
 }

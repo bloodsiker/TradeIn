@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
 use App\Models\Network;
-use App\Models\Role;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -17,7 +15,7 @@ class NetworkController extends Controller
 
     public function list()
     {
-        $networks = Network::all();
+        $networks = Network::all()->sortByDesc('id');
 
         return view('cabinet.networks.list', compact('networks'));
     }
@@ -29,9 +27,8 @@ class NetworkController extends Controller
                 'name' => ['required', 'min:3', 'max:255']
             ]);
 
-            $network = new Network([
-                'name' => $request->get('name'),
-            ]);
+            $network = new Network();
+            $network->name = $request->get('name');
 
             $network->save();
 
@@ -41,45 +38,39 @@ class NetworkController extends Controller
         return redirect()->route('cabinet.network.list');
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request)
     {
-        $user = User::findOrFail($id);
+        if ($request->isMethod('post') && $request->filled('id')) {
 
-        $roles = Role::all();
-        $networks = Network::all();
+            $network = Network::find($request->get('id'));
+            $network->name = $request->get('name');
 
-        if ($request->isMethod('post')) {
+            $network->save();
 
-            $user->role_id = $request->get('role_id');
-            $user->network_id = $request->get('network_id');
-            $user->name = $request->get('name');
-            $user->surname = $request->get('surname');
-            $user->email = $request->get('email');
-            $user->birthday = Carbon::parse($request->get('birthday'))->format('Y-m-d');
-            $user->is_active = $request->get('is_active');
-
-            if ($request->filled('password')) {
-                $user->password = Hash::make($request->get('password'));
-            }
-
-            $user->save();
-
-            return redirect()->route('cabinet.user.list')->with('success', 'Информация обновлена');
+            return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!']);
         }
 
-        return view('cabinet.users.edit', compact('user', 'roles', 'networks'));
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при обновлении!']);
     }
 
-    public function delete(Request $request, $id)
+    public function delete(Request $request)
     {
-        $user = User::findOrFail($id);
+        $network = Network::findOrFail($request->get('id'));
 
-        if ($user) {
-            $user->delete();
+        if ($network) {
+            $network->delete();
 
-            return redirect()->route('cabinet.user.list')->with('success', 'Пользователь удален!');
+            return response(['status' => 1, 'type' => 'success', 'message' => "Торговая {$network->name} сеть удалена!"]);
         }
 
-        return redirect()->route('cabinet.user.list')->with('danger', 'Ошибка при удалении!');
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при удалении!']);
+    }
+
+    public function users(Request $request, $id)
+    {
+        $network = Network::findOrFail($id);
+        $users = User::where('network_id', $network->id)->orderBy('id', 'desc')->get();
+
+        return view('cabinet.networks.users', compact('network', 'users'));
     }
 }

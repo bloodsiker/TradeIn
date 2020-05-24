@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -65,5 +66,35 @@ class User extends Authenticatable
             return $this->is_active ? 'success' : 'danger';
         }
         return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        if (Auth::user()->role_id == Role::ROLE_ADMIN){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isNetwork()
+    {
+        if (Auth::user()->role_id == Role::ROLE_NETWORK){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isShop()
+    {
+        if (Auth::user()->role_id == Role::ROLE_SHOP){
+            return true;
+        }
+
+        return false;
     }
 }

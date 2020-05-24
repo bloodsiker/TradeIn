@@ -16,14 +16,19 @@ class CreateBuybackRequestsTable extends Migration
         Schema::create('buyback_requests', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('model_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('status_id')->unsigned();
             $table->string('name');
             $table->string('email');
             $table->string('phone');
             $table->string('imei');
-            $table->string('number_packet');
+            $table->string('packet');
+            $table->float('cost');
             $table->timestamps();
 
-            $table->foreign('model_id')->references('id')->on('models')->onDelete('cascade');
+            $table->foreign('model_id')->references('id')->on('device_models')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
         });
     }
 

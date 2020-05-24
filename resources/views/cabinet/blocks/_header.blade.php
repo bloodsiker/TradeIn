@@ -61,18 +61,24 @@
                 </div><!-- nav-sub -->
             </li>
             <li class="nav-item with-sub">
+                <a href="" class="nav-link"><i data-feather="pie-chart"></i> Заявки</a>
+                <ul class="navbar-menu-sub">
+                    <li class="nav-sub-item"><a href="{{ route('cabinet.model_request.list') }}" class="nav-sub-link"><i data-feather="mail"></i>Заявки на добавление в калькулятор</a></li>
+                </ul>
+            </li>
+            <li class="nav-item with-sub">
                 <a href="" class="nav-link"><i data-feather="pie-chart"></i> Справочник</a>
                 <ul class="navbar-menu-sub">
                     <li class="nav-sub-item"><a href="{{ route('cabinet.network.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Торговые сети</a></li>
-                    <li class="nav-sub-item"><a href="dashboard-two.html" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Website Analytics</a></li>
-                    <li class="nav-sub-item"><a href="dashboard-three.html" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Cryptocurrency</a></li>
-                    <li class="nav-sub-item"><a href="dashboard-four.html" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Helpdesk Management</a></li>
+                    <li class="nav-sub-item"><a href="{{ route('cabinet.shop.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Магазины</a></li>
+                    <li class="nav-sub-item"><a href="{{ route('cabinet.brand.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Производители</a></li>
+                    <li class="nav-sub-item"><a href="{{route('cabinet.model.list')}}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Модели девайсов</a></li>
+                    <li class="nav-sub-item"><a href="{{route('cabinet.buyback_bonus.list')}}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Таблица бонусов</a></li>
                 </ul>
             </li>
             <li class="nav-item"><a href="{{ route('cabinet.user.list') }}" class="nav-link"><i data-feather="box"></i> Пользователи</a></li>
-            <li class="nav-item"><a href="" class="nav-link"><i data-feather="archive"></i> Collections</a></li>
         </ul>
-    </div><!-- navbar-menu-wrapper -->
+    </div>
     <div class="navbar-right">
         <div class="dropdown dropdown-message">
             <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">
@@ -164,32 +170,30 @@
                         <div class="media-body mg-l-15">
                             <p><strong>Adrian Monino</strong> added new comment on your photo</p>
                             <span>Mar 12 10:40pm</span>
-                        </div><!-- media-body -->
-                    </div><!-- media -->
+                        </div>
+                    </div>
                 </a>
                 <div class="dropdown-footer"><a href="">View all Notifications</a></div>
-            </div><!-- dropdown-menu -->
-        </div><!-- dropdown -->
+            </div>
+        </div>
         <div class="dropdown dropdown-profile">
             <a href="" class="dropdown-link" data-toggle="dropdown" data-display="static">
                 <div class="avatar avatar-sm"><img src="https://via.placeholder.com/500" class="rounded-circle" alt=""></div>
-            </a><!-- dropdown-link -->
+            </a>
             <div class="dropdown-menu dropdown-menu-right tx-13">
                 <div class="avatar avatar-lg mg-b-15"><img src="https://via.placeholder.com/500" class="rounded-circle" alt=""></div>
-                <h6 class="tx-semibold mg-b-5">Katherine Pechon</h6>
-                <p class="mg-b-25 tx-12 tx-color-03">Administrator</p>
+                <h6 class="tx-semibold mg-b-5">{{ Auth::user()->fullName() }}</h6>
+                <p class="mg-b-25 tx-12 tx-color-03">{{ Auth::user()->role->name }}</p>
 
-                <a href="" class="dropdown-item"><i data-feather="edit-3"></i> Edit Profile</a>
+                <a href="{{ route('cabinet.profile') }}" class="dropdown-item"><i data-feather="edit-3"></i> Edit Profile</a>
                 <a href="page-profile-view.html" class="dropdown-item"><i data-feather="user"></i> View Profile</a>
                 <div class="dropdown-divider"></div>
-                <a href="page-help-center.html" class="dropdown-item"><i data-feather="help-circle"></i> Help Center</a>
-                <a href="" class="dropdown-item"><i data-feather="life-buoy"></i> Forum</a>
+                <a href="#" class="dropdown-item"><i data-feather="help-circle"></i> Help Center</a>
                 <a href="" class="dropdown-item"><i data-feather="settings"></i>Account Settings</a>
-                <a href="" class="dropdown-item"><i data-feather="settings"></i>Privacy Settings</a>
-                <a href="page-signin.html" class="dropdown-item"><i data-feather="log-out"></i>Sign Out</a>
-            </div><!-- dropdown-menu -->
-        </div><!-- dropdown -->
-    </div><!-- navbar-right -->
-</header><!-- navbar -->
+                <a href="{{ route('cabinet.profile.logout') }}" class="dropdown-item"><i data-feather="log-out"></i>Выйти</a>
+            </div>
+        </div>
+    </div>
+</header>
 
 @yield('subHeader')

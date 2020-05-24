@@ -126,5 +126,29 @@ $(function(){
       }
     }
   });
-
 })
+
+const deleteObject = function(selector, btn, url) {
+    $(selector).on('click', btn,function (e) {
+        e.preventDefault();
+
+        let _parent = $(this).parent().parent('tr'),
+            id = _parent.data('id');
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: {id: id},
+            cache: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                if (response.status === 1) {
+                    _parent.remove();
+                    $.notify(response.message, response.type);
+                }
+            }
+        });
+    });
+}
