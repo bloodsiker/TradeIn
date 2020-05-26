@@ -41,11 +41,11 @@
                     <tbody>
                     @foreach($shops as $shop)
                         <tr data-id="{{ $shop->id }}">
-                            <td data-id="{{ $shop->id }}">{{ $shop->id }}</td>
-                            <td data-name="{{ $shop->name }}">{{ $shop->name }}</td>
-                            <td data-network-id="{{ $shop->network->id }}"><span class="badge badge-success">{{ $shop->network->name }}</span></td>
-                            <td data-city="{{ $shop->city }}">{{ $shop->city }}</td>
-                            <td data-address="{{ $shop->address }}">{{ $shop->address }}</td>
+                            <td>{{ $shop->id }}</td>
+                            <td class="td-name">{{ $shop->name }}</td>
+                            <td class="td-network"><span class="badge badge-success">{{ $shop->network->name }}</span></td>
+                            <td class="td-city">{{ $shop->city }}</td>
+                            <td class="td-address">{{ $shop->address }}</td>
                             <td>
                                 <a href="{{ route('cabinet.shop.users', ['id' => $shop->id]) }}" data-toggle="tooltip" title="Сотрудники магазина" class="btn btn-xxs btn-info btn-icon">
                                     <i class="fas fa-users"></i>
@@ -68,7 +68,6 @@
 @endsection
 
 @push('modals')
-
     <div class="modal fade" id="modal-data" tabindex="-1" role="dialog" aria-labelledby="titleModalAdd" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
@@ -111,10 +110,10 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="titleModalEdit" aria-hidden="true">
+    <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModalEdit" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.shop.edit') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.shop.edit') }}" id="formEdit" method="POST" novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModalEdit">Редактировать магазин</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -165,22 +164,63 @@
             $('.editModal').click(function (e) {
                 e.preventDefault();
 
-                let modalNetwork = $('#modal-edit'),
+                let modalNetwork = $('#edit-data'),
                     _parent = $(this).parent().parent('tr'),
-                    name = _parent.find('td[data-name]').data('name'),
-                    network_id = _parent.find('td[data-network-id]').data('network-id'),
-                    city = _parent.find('td[data-city]').data('city'),
-                    address = _parent.find('td[data-address]').data('address'),
-                    id = _parent.find('td[data-id]').data('id');
+                    id = _parent.data('id');
 
-                modalNetwork.modal('toggle');
-                modalNetwork.find('input[name=name]').val(name);
-                modalNetwork.find('input[name=id]').val(id);
-                modalNetwork.find('select option').attr('selected', false);
-                modalNetwork.find('select option[value='+network_id+']').attr('selected', 'selected');
-                modalNetwork.find('input[name=city]').val(city);
-                modalNetwork.find('input[name=address]').val(address);
+                $.ajax({
+                    url: "{{ route('cabinet.ajax_date') }}",
+                    type: "POST",
+                    data: { action: 'get_shop', id: id },
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            modalNetwork.modal('toggle');
+                            modalNetwork.find('input[name=name]').val(response.data.name);
+                            modalNetwork.find('input[name=id]').val(response.data.id);
+                            modalNetwork.find('select option').attr('selected', false);
+                            modalNetwork.find('select option[value='+response.data.network_id+']').attr('selected', 'selected');
+                            modalNetwork.find('input[name=city]').val(response.data.city);
+                            modalNetwork.find('input[name=address]').val(response.data.address);
+                        } else {
+                            $.notify('Error get shop object', 'error');
+                        }
+                    }
+                });
             });
+
+            $('form#formEdit').on('submit', function (e) {
+                e.preventDefault();
+
+                const _this = $(this),
+                    id = _this.find('input[name=id]').val(),
+                    data = $(this).serializeArray();
+
+                $.ajax({
+                    url: _this.attr('action'),
+                    type: "POST",
+                    data: data,
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            const tr = $('.table').find('tr[data-id='+id+']');
+                                tr.find('td.td-name').text(response.data.name);
+                                tr.find('td.td-network > .badge').text(response.data.network.name);
+                                tr.find('td.td-city').text(response.data.city);
+                                tr.find('td.td-address').text(response.data.address);
+
+                            $.notify(response.message, response.type);
+                            $('#edit-data').modal('toggle');
+                        }
+                    }
+                });
+            })
 
         });
     </script>

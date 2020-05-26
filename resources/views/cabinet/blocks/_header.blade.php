@@ -10,6 +10,7 @@
         </div><!-- navbar-menu-header -->
         <ul class="nav navbar-menu">
             <li class="nav-label pd-l-20 pd-lg-l-25 d-lg-none">Main Navigation</li>
+            <li class="nav-item"><a href="{{ route('cabinet.main') }}" class="nav-link"><i data-feather="box"></i> Калькулятор</a></li>
             <li class="nav-item with-sub">
                 <a href="" class="nav-link"><i data-feather="pie-chart"></i> Dashboard</a>
                 <ul class="navbar-menu-sub">

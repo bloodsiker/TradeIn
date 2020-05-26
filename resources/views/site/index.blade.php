@@ -138,17 +138,17 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="name">Имя</label>
-                                <input type="text" class="form-control" name="name" value="{{ Auth::user() ? Auth::user()->name : null }}" id="name" placeholder="Имя" required>
+                                <input type="text" class="form-control" name="name" value="" id="name" placeholder="Имя" required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" name="email" value="{{ Auth::user() ? Auth::user()->email : null }}" id="email" placeholder="Email">
+                                <input type="email" class="form-control" name="email" value="" id="email" placeholder="Email">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="phone">Телефон</label>
-                                <input type="text" class="form-control phone-mask" name="phone" value="{{ Auth::user() ? Auth::user()->phone : null }}" id="phone" placeholder="Телефон">
+                                <input type="text" class="form-control phone-mask" name="phone" value="" id="phone" placeholder="Телефон">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="password">IMEI</label>

@@ -147,9 +147,9 @@
             let network_id = e.target.value;
 
             $.ajax({
-                url: "{{ route('cabinet.user.ajax_date') }}",
+                url: "{{ route('cabinet.ajax_date') }}",
                 type: "POST",
-                data: {network_id: network_id},
+                data: {network_id: network_id, action: 'shop_list'},
                 cache: false,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -46,7 +46,7 @@
                         <tr data-id="{{ $model->id }}">
                             <td data-id="{{ $model->id }}">{{ $model->id }}</td>
                             <td data-name="{{ $model->name }}">{{ $model->name }}</td>
-                            <td data-brand-id="{{ $model->brand->name }}"><span class="badge badge-success">{{ $model->brand->name }}</span></td>
+                            <td data-brand-id="{{ $model->brand->id }}"><span class="badge badge-success">{{ $model->brand->name }}</span></td>
                             <td data-price1="{{ $model->price_1 }}">{{ $model->price_1 }}</td>
                             <td data-price2="{{ $model->price_2 }}">{{ $model->price_2 }}</td>
                             <td data-price3="{{ $model->price_3 }}">{{ $model->price_3 }}</td>

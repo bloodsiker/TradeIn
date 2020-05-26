@@ -47,7 +47,7 @@ class NetworkController extends Controller
 
             $network->save();
 
-            return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!']);
+            return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $network]);
         }
 
         return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при обновлении!']);
@@ -60,7 +60,7 @@ class NetworkController extends Controller
         if ($network) {
             $network->delete();
 
-            return response(['status' => 1, 'type' => 'success', 'message' => "Торговая {$network->name} сеть удалена!"]);
+            return response(['status' => 1, 'type' => 'success', 'message' => "Торговая сеть {$network->name} удалена!"]);
         }
 
         return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при удалении!']);
@@ -72,5 +72,12 @@ class NetworkController extends Controller
         $users = User::where('network_id', $network->id)->orderBy('id', 'desc')->get();
 
         return view('cabinet.networks.users', compact('network', 'users'));
+    }
+
+    public function getAjaxData(Request $request)
+    {
+        $data = Network::find($request->get('id'));
+
+        return response(['status' => 1, 'data' => $data]);
     }
 }

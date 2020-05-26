@@ -38,8 +38,8 @@
                     <tbody>
                     @foreach($networks as $network)
                         <tr data-id="{{ $network->id }}">
-                            <td data-id="{{ $network->id }}">{{ $network->id }}</td>
-                            <td data-name="{{ $network->name }}">{{ $network->name }}</td>
+                            <td>{{ $network->id }}</td>
+                            <td class="td-name">{{ $network->name }}</td>
                             <td>
                                 <a href="{{ route('cabinet.network.users', ['id' => $network->id]) }}" data-toggle="tooltip" title="Сотрудники сети" class="btn btn-xxs btn-info btn-icon">
                                     <i class="fas fa-users"></i>
@@ -129,24 +129,37 @@
 
                 let modalNetwork = $('#edit-data'),
                     _parent = $(this).parent().parent('tr'),
-                    name = _parent.find('td[data-name]').attr('data-name'),
-                    id = _parent.find('td[data-id]').attr('data-id');
+                    id = _parent.data('id');
 
-                modalNetwork.modal('toggle');
-                modalNetwork.find('input[name=name]').val(name);
-                modalNetwork.find('input[name=id]').val(id);
+                $.ajax({
+                    url: "{{ route('cabinet.ajax_date') }}",
+                    type: "POST",
+                    data: { action: 'get_network', id: id },
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            modalNetwork.modal('toggle');
+                            modalNetwork.find('input[name=name]').val(response.data.name);
+                            modalNetwork.find('input[name=id]').val(response.data.id);
+                        } else {
+                            $.notify('Error get network object', 'error');
+                        }
+                    }
+                });
             });
 
             $('form#formEdit').on('submit', function (e) {
                 e.preventDefault();
 
                 const _this = $(this),
-                    url = _this.attr('action'),
                     id = _this.find('input[name=id]').val(),
                     data = $(this).serializeArray();
 
                 $.ajax({
-                    url: url,
+                    url: _this.attr('action'),
                     type: "POST",
                     data: data,
                     cache: false,
@@ -155,14 +168,7 @@
                     },
                     success: function (response) {
                         if (response.status === 1) {
-                            const tr = $('.table').find('tr[data-id='+id+']');
-
-                            $.each(data, function(key, value) {
-                                const td = tr.find('td[data-'+value.name+']');
-                                if (td) {
-                                    td.text(value.value).attr('data-'+value.name, value.value);
-                                }
-                            });
+                            $('.table').find('tr[data-id='+id+']').find('td.td-name').text(response.data.name);
 
                             $.notify(response.message, response.type);
                             $('#edit-data').modal('toggle');
@@ -170,7 +176,6 @@
                     }
                 });
             })
-
         });
     </script>
 @endpush

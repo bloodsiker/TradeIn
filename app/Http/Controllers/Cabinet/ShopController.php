@@ -55,11 +55,12 @@ class ShopController extends Controller
             $shop->address = $request->get('address');
 
             $shop->save();
+            $shop->load('network');
 
-            return redirect()->route('cabinet.shop.list')->with('success', 'Информация обновлена');
+            return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $shop]);
         }
 
-        return redirect()->route('cabinet.shop.list')->with('danger', 'Ошибка при обновлении!');
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при обновлении!']);
     }
 
     public function delete(Request $request)
