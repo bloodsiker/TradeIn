@@ -55,7 +55,12 @@ class User extends Authenticatable
 
     public function fullName()
     {
-        return $this->name .' ' . $this->surname;
+        return $this->name .' ' . $this->surname .' ' .$this->patronymic;
+    }
+
+    public function getAvatar()
+    {
+        return $this->avatar ?: 'assets/img/no-avatar.png';
     }
 
     public function attributeStatus($attribute)

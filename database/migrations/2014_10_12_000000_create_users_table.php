@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->bigInteger('shop_id')->unsigned()->nullable();
             $table->string('name');
             $table->string('surname');
+            $table->string('patronymic')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->unique();
             $table->date('birthday')->nullable();

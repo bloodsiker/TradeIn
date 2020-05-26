@@ -31,6 +31,30 @@
                         <legend>Персональная информация</legend>
 
                         <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="name">Имя</label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" id="name" placeholder="Имя" required>
+                                @error('name')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="surname">Фамилия</label>
+                                <input type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ old('surname') }}" id="surname" placeholder="Фамилия" required>
+                                @error('surname')
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="patronymic">Отчество</label>
+                                <input type="text" class="form-control @error('patronymic') is-invalid @enderror" name="patronymic" value="{{ old('surname') }}" id="patronymic" placeholder="Отчество">
+                                @error('patronymic')
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="role">Роль</label>
                                 <select class="custom-select" id="role" name="role_id">
@@ -48,22 +72,6 @@
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="name">Имя</label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" id="name" placeholder="Имя" required>
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="surname">Фамилия</label>
-                                <input type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ old('surname') }}" id="surname" placeholder="Фамилия" required>
-                                @error('surname')
-                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                        </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="email">Email</label>

@@ -16,6 +16,7 @@
 
     <link href="{{ asset('assets/css/dashforge.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/dashforge.auth.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/calculator.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 
     @stack('styles')
@@ -24,9 +25,7 @@
 
 @include('site.blocks._header')
 
-
-
-<div class="content content-fixed content-auth">
+<div class="content @stack('class')">
 
     @yield('content')
 

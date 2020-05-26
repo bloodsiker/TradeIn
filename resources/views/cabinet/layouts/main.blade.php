@@ -26,7 +26,6 @@
 @include('cabinet.blocks._header')
 
 
-
 <div class="content @stack('class')">
 
     @yield('content')

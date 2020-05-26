@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('class')
+    content-fixed
+@endpush
+
 @section('content')
     <div class="container">
         <div class="media align-items-stretch justify-content-center ht-100p pos-relative">

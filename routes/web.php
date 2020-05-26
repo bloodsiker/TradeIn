@@ -73,7 +73,12 @@ Route::group(['middleware' => ['web']], function () {
             Route::post('/buyback-bonus/delete', 'Cabinet\BuybackBonusController@delete')->name('cabinet.buyback_bonus.delete');
         });
 
-        Route::get('/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
+        Route::get('/buyback-request', 'Cabinet\BuybackRequestController@list')->name('cabinet.buyback_request.list');
+        Route::post('/buyback-request/add', 'Cabinet\BuybackRequestController@add')->name('cabinet.buyback_request.add');
+        Route::post('/buyback-request/edit', 'Cabinet\BuybackRequestController@edit')->name('cabinet.buyback_request.edit');
+        Route::post('/buyback-request/delete', 'Cabinet\BuybackRequestController@delete')->name('cabinet.buyback_request.delete');
+
+        Route::match(['post', 'get'], '/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
         Route::get('/logout', 'Cabinet\ProfileController@logout')->name('cabinet.profile.logout');
 
         Route::get('/model-requests', 'Cabinet\ModelRequestController@list')->name('cabinet.model_request.list');

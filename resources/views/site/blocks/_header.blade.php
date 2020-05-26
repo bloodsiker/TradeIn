@@ -28,3 +28,5 @@
         @endif
     </div>
 </header>
+
+@yield('subHeader')

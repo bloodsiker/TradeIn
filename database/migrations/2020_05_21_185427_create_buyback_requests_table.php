@@ -21,8 +21,8 @@ class CreateBuybackRequestsTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('phone');
-            $table->string('imei');
-            $table->string('packet');
+            $table->string('imei')->nullable();
+            $table->string('packet')->nullable();
             $table->float('cost');
             $table->timestamps();
 

@@ -17,31 +17,37 @@ use Illuminate\Support\Facades\Hash;
 class ProfileController extends Controller
 {
 
-    public function profile()
+    public function profile(Request $request)
     {
         $user = \Auth::user();
 
-        return view('cabinet.profile.index', compact('user'));
-    }
-
-    public function edit(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-
-        $roles = Role::all();
-        $networks = Network::all();
-        $shops = $user->network_id ? Shop::where('network_id', $user->network_id)->get() : [];
-
         if ($request->isMethod('post')) {
 
-            $user->role_id = $request->get('role_id');
-            $user->network_id = $request->get('network_id');
-            $user->shop_id = $request->get('shop_id');
+            $request->validate([
+                'name'       => ['required', 'min:3', 'max:255'],
+                'surname'    => ['required', 'min:3', 'max:255'],
+                'patronymic' => ['nullable', 'min:3', 'max:255'],
+                'birthday'   => ['nullable', 'date'],
+                'phone'      => ['nullable'],
+                'password'   => ['nullable', 'string', 'min:6'],
+            ]);
+
             $user->name = $request->get('name');
             $user->surname = $request->get('surname');
-            $user->email = $request->get('email');
+            $user->patronymic = $request->get('patronymic');
+            $user->phone = $request->get('phone');
             $user->birthday = Carbon::parse($request->get('birthday'))->format('Y-m-d');
-            $user->is_active = $request->get('is_active');
+
+            if ($request->has('avatar')) {
+                $path = '/image/profile/';
+                $image = $request->file('avatar');
+                $name = sha1(time().random_bytes(5)) . '.' . trim($image->getClientOriginalExtension());
+                $fullPatch = $path . $name;
+
+                $image->storeAs($path, $name, 'publicImage');
+
+                $user->avatar = $fullPatch;
+            }
 
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->get('password'));
@@ -49,10 +55,10 @@ class ProfileController extends Controller
 
             $user->save();
 
-            return redirect()->route('cabinet.user.list')->with('success', 'Информация обновлена');
+            return redirect()->route('cabinet.profile')->with('success', 'Информация обновлена');
         }
 
-        return view('cabinet.users.edit', compact('user', 'roles', 'networks', 'shops'));
+        return view('cabinet.profile.index', compact('user'));
     }
 
     public function logout(Request $request)

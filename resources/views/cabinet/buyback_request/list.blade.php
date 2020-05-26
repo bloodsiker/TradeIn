@@ -1,16 +1,16 @@
 @extends('cabinet.layouts.main')
 
-@section('title', 'Таблица начисляемых бонусов')
+@section('title', 'Заявки на выкуп')
 
 @section('subHeader')
     <div class="sub-content content-fixed bd-b">
         <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
             <div class="d-sm-flex align-items-center justify-content-between">
                 <div>
-                    <h4 class="mg-b-0">Таблица начисляемых бонусов</h4>
+                    <h4 class="mg-b-0">Заявки на выкуп</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
-                    <a href="#modal-data" class="btn btn-sm btn-dark btn-block" data-toggle="modal">Добавить</a>
+
                 </div>
             </div>
         </div><!-- container -->
@@ -31,19 +31,27 @@
                     <thead>
                     <tr>
                         <th scope="col" width="40px">ID</th>
-                        <th scope="col">Стоимость от</th>
-                        <th scope="col">Стоимость до</th>
-                        <th scope="col">Бонус (грн)</th>
+                        <th scope="col">ФИО продавца</th>
+                        <th scope="col">Производитель</th>
+                        <th scope="col">Модель</th>
+                        <th scope="col">IMEI</th>
+                        <th scope="col">Номер сейф-пакета</th>
+                        <th scope="col">Стоимость (грн)</th>
+                        <th scope="col">Статус</th>
                         <th scope="col" width="80px"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($bonuses as $bonus)
-                        <tr data-id="{{ $bonus->id }}">
-                            <td data-id="{{ $bonus->id }}">{{ $bonus->id }}</td>
-                            <td data-cost-from="{{ $bonus->cost_from }}">{{ $bonus->cost_from }}</td>
-                            <td data-cost-to="{{ $bonus->cost_to }}">{{ $bonus->cost_to }}</td>
-                            <td data-bonus="{{ $bonus->bonus }}">{{ $bonus->bonus }}</td>
+                    @foreach($buyRequests as $buyRequest)
+                        <tr data-id="{{ $buyRequest->id }}">
+                            <td data-id="{{ $buyRequest->id }}">{{ $buyRequest->id }}</td>
+                            <td data-user-id="{{ $buyRequest->user->fullName() }}">{{ $buyRequest->user->fullName()  }}</td>
+                            <td data-brand="">{{ $buyRequest->model->brand->name }}</td>
+                            <td data-model="{{ $buyRequest->model->name }}">{{ $buyRequest->model->name }}</td>
+                            <td data-emei="{{ $buyRequest->emei }}">{{ $buyRequest->emei }}</td>
+                            <td data-packet="{{ $buyRequest->packet }}">{{ $buyRequest->packet }}</td>
+                            <td data-status="{{ $buyRequest->cost }}">{{ $buyRequest->cost }}</td>
+                            <td data-status="{{ $buyRequest->status->id }}">{{ $buyRequest->status->name }}</td>
                             <td>
                                 <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                     <i class="far fa-edit"></i>
@@ -64,46 +72,10 @@
 
 @push('modals')
 
-    <div class="modal fade" id="modal-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.buyback_bonus.add') }}" method="POST" novalidate>
-                    <div class="modal-header">
-                        <h6 class="modal-title" id="titleModal">Добавить бонус</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @csrf
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="cost_from">Стоимость от</label>
-                                <input type="number" class="form-control" name="cost_from" id="cost_from" placeholder="Стоимость от" autocomplete="off" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="cost_to">Стоимость до</label>
-                                <input type="number" class="form-control" name="cost_to" id="cost_to" placeholder="Стоимость до" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="bonus">Бонус</label>
-                            <input type="number" class="form-control" name="bonus" id="bonus" placeholder="Бонус" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
-                        <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-save"></i> Создать</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.buyback_bonus.edit') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.buyback_request.edit') }}" method="POST" novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Редактировать бонус</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -143,7 +115,7 @@
         $(function(){
             'use strict'
 
-            deleteObject('.table', '.btnDelete', "{{ route('cabinet.buyback_bonus.delete') }}");
+            deleteObject('.table', '.btnDelete', "{{ route('cabinet.buyback_request.delete') }}");
 
             $('.editModal').click(function (e) {
                 e.preventDefault();

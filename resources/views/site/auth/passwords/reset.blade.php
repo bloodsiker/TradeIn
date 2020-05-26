@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('class')
+    content-fixed
+@endpush
+
 @section('content')
     <div class="container d-flex justify-content-center ht-100p">
         <div class="mx-wd-300 wd-sm-450 ht-100p d-flex flex-column align-items-center justify-content-center">

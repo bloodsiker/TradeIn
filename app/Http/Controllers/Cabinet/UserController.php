@@ -33,6 +33,7 @@ class UserController extends Controller
             $request->validate([
                 'name'       => ['required', 'min:3', 'max:255'],
                 'surname'    => ['required', 'min:3', 'max:255'],
+                'patronymic' => ['nullable', 'min:3', 'max:255'],
                 'email'      => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'birthday'   => ['nullable', 'date'],
                 'phone'      => ['nullable'],
@@ -47,6 +48,7 @@ class UserController extends Controller
                 'shop_id'    => $request->get('shop_id'),
                 'name'       => $request->get('name'),
                 'surname'    => $request->get('surname'),
+                'patronymic' => $request->get('patronymic'),
                 'email'      => $request->get('email'),
                 'phone'      => $request->get('phone'),
                 'birthday'   => $request->filled('birthday') ? Carbon::parse($request->get('birthday'))->format('Y-m-d') : null,
@@ -77,7 +79,9 @@ class UserController extends Controller
             $user->shop_id = $request->get('shop_id');
             $user->name = $request->get('name');
             $user->surname = $request->get('surname');
+            $user->patronymic = $request->get('patronymic');
             $user->email = $request->get('email');
+            $user->phone = $request->get('phone');
             $user->birthday = Carbon::parse($request->get('birthday'))->format('Y-m-d');
             $user->is_active = $request->get('is_active');
 

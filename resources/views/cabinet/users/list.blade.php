@@ -27,7 +27,7 @@
                 @if (session('danger'))
                     <div class="alert alert-danger">{{ session('danger') }}</div>
                 @endif
-                <table class="table table-dark table-striped table-bordered">
+                <table class="table table-sm table-dark table-striped table-bordered">
                     <thead>
                     <tr>
                         <th scope="col">ID</th>

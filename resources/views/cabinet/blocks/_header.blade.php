@@ -63,6 +63,7 @@
             <li class="nav-item with-sub">
                 <a href="" class="nav-link"><i data-feather="pie-chart"></i> Заявки</a>
                 <ul class="navbar-menu-sub">
+                    <li class="nav-sub-item"><a href="{{ route('cabinet.buyback_request.list') }}" class="nav-sub-link"><i data-feather="mail"></i>Заявки на выкуп</a></li>
                     <li class="nav-sub-item"><a href="{{ route('cabinet.model_request.list') }}" class="nav-sub-link"><i data-feather="mail"></i>Заявки на добавление в калькулятор</a></li>
                 </ul>
             </li>
@@ -178,10 +179,10 @@
         </div>
         <div class="dropdown dropdown-profile">
             <a href="" class="dropdown-link" data-toggle="dropdown" data-display="static">
-                <div class="avatar avatar-sm"><img src="https://via.placeholder.com/500" class="rounded-circle" alt=""></div>
+                <div class="avatar avatar-sm"><img src="{{ asset(Auth::user()->getAvatar()) }}" class="rounded-circle" alt=""></div>
             </a>
             <div class="dropdown-menu dropdown-menu-right tx-13">
-                <div class="avatar avatar-lg mg-b-15"><img src="https://via.placeholder.com/500" class="rounded-circle" alt=""></div>
+                <div class="avatar avatar-lg mg-b-15"><img src="{{ asset(Auth::user()->getAvatar()) }}" class="rounded-circle" alt=""></div>
                 <h6 class="tx-semibold mg-b-5">{{ Auth::user()->fullName() }}</h6>
                 <p class="mg-b-25 tx-12 tx-color-03">{{ Auth::user()->role->name }}</p>
 

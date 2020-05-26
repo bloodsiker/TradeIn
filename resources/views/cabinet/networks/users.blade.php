@@ -16,8 +16,8 @@
                     </a>
                 </div>
             </div>
-        </div><!-- container -->
-    </div><!-- content -->
+        </div>
+    </div>
 @endsection
 
 @section('content')
@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 @if(count($users))
-                    <table class="table table-dark table-striped">
+                    <table class="table table-sm table-dark table-striped table-bordered">
                         <thead>
                         <tr>
                             <th scope="col" width="40px">ID</th>
