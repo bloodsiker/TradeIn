@@ -84,11 +84,7 @@
                     </div>
                     <div class="modal-body">
                         @csrf
-                        <div class="form-group">
-                            <label for="name">Имя</label>
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Имя" autocomplete="off" disabled>
-                            <input type="hidden" name="id" value="">
-                        </div>
+                        <input type="hidden" name="id" value="">
                         <div class="form-group">
                             <label for="edit-brand">Производитель</label>
                             <input type="text" class="form-control" name="brand" id="edit-brand" placeholder="Название" autocomplete="off" required>
@@ -180,7 +176,6 @@
                     }
                 });
             })
-
         });
     </script>
 @endpush

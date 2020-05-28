@@ -16,6 +16,7 @@ class CreateDeviceModelsTable extends Migration
         Schema::create('device_models', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('brand_id')->unsigned();
+            $table->bigInteger('network_id')->unsigned()->nullable();
             $table->string('name');
             $table->float('price', 8, 2)->default(0);
             $table->float('price_1', 8, 2)->default(0);
@@ -25,7 +26,8 @@ class CreateDeviceModelsTable extends Migration
             $table->float('price_5', 8, 2)->default(0);
             $table->timestamps();
 
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('set null');
+            $table->foreign('network_id')->references('id')->on('networks')->onDelete('set null');
+            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
         });
     }
 

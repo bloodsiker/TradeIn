@@ -32,28 +32,30 @@
                     <tr>
                         <th scope="col" width="40px">ID</th>
                         <th scope="col">Пользователь</th>
-                        <th scope="col">Продавец</th>
                         <th scope="col">Производитель</th>
                         <th scope="col">Модель</th>
                         <th scope="col">IMEI</th>
                         <th scope="col">Номер сейф-пакета</th>
                         <th scope="col">Стоимость (грн)</th>
                         <th scope="col">Статус</th>
+                        <th scope="col">Бонус</th>
+                        <th scope="col">Дата</th>
                         <th scope="col" width="80px"></th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($buyRequests as $buyRequest)
                         <tr data-id="{{ $buyRequest->id }}">
-                            <td data-id="{{ $buyRequest->id }}">{{ $buyRequest->id }}</td>
+                            <td>{{ $buyRequest->id }}</td>
                             <td>{{ $buyRequest->user->fullName()  }}</td>
-                            <td>{{ $buyRequest->name  }}</td>
-                            <td data-brand="">{{ $buyRequest->model->brand->name }}</td>
-                            <td data-model="{{ $buyRequest->model->name }}">{{ $buyRequest->model->name }}</td>
-                            <td data-emei="{{ $buyRequest->emei }}">{{ $buyRequest->emei }}</td>
-                            <td data-packet="{{ $buyRequest->packet }}">{{ $buyRequest->packet }}</td>
-                            <td data-status="{{ $buyRequest->cost }}">{{ $buyRequest->cost }}</td>
-                            <td data-status="{{ $buyRequest->status->id }}">{{ $buyRequest->status->name }}</td>
+                            <td>{{ $buyRequest->model->brand->name }}</td>
+                            <td>{{ $buyRequest->model->name }}</td>
+                            <td class="td-imei">{{ $buyRequest->imei }}</td>
+                            <td class="td-packet">{{ $buyRequest->packet }}</td>
+                            <td class="td-cost">{{ $buyRequest->cost }}</td>
+                            <td class="td-status">{{ $buyRequest->status->name }}</td>
+                            <td>{{ $buyRequest->bonus }}</td>
+                            <td>{{ $buyRequest->created_at }}</td>
                             <td>
                                 <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                     <i class="far fa-edit"></i>
@@ -77,9 +79,9 @@
     <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.buyback_request.edit') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.buyback_request.edit') }}" id="formEdit" method="POST" novalidate>
                     <div class="modal-header">
-                        <h6 class="modal-title" id="titleModal">Редактировать бонус</h6>
+                        <h6 class="modal-title" id="titleModal">Редактировать заявку на выкуп</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -89,23 +91,27 @@
                         <input type="hidden" name="id" value="">
                         <div class="form-group">
                             <label for="name">Имя продавца</label>
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Имя продавца" autocomplete="off" required>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Имя продавца" autocomplete="off" readonly>
                         </div>
-                        <div class="form-group">
-                            <label for="phone">Телефон</label>
-                            <input type="text" class="form-control" name="phone" id="phone" placeholder="Телефон" autocomplete="off" required>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="phone">Телефон</label>
+                                <input type="text" class="form-control" name="phone" id="phone" placeholder="Телефон" autocomplete="off" readonly>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="email">E-mail</label>
+                                <input type="text" class="form-control" name="email" id="email" placeholder="E-mail" autocomplete="off" readonly>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="email">E-mail</label>
-                            <input type="text" class="form-control" name="email" id="email" placeholder="E-mail" autocomplete="off" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="imei">IMEI-номер</label>
-                            <input type="text" class="form-control" name="imei" id="imei" placeholder="IMEI-номер" autocomplete="off" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="packet">Номер сейф-пакета</label>
-                            <input type="text" class="form-control" name="packet" id="packet" placeholder="Номер сейф-пакета" autocomplete="off" required>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="imei">IMEI-номер</label>
+                                <input type="text" class="form-control" name="imei" id="imei" placeholder="IMEI-номер" autocomplete="off" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="packet">Номер сейф-пакета</label>
+                                <input type="text" class="form-control" name="packet" id="packet" placeholder="Номер сейф-пакета" autocomplete="off" required>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="status">Статус</label>
@@ -154,8 +160,8 @@
                             modalNetwork.modal('toggle');
                             modalNetwork.find('input[name=id]').val(response.data.id);
                             modalNetwork.find('input[name=name]').val(response.data.user.name+ ' ' +response.data.user.surname+' '+response.data.user.patronymic);
-                            modalNetwork.find('input[name=email]').val(response.data.email);
-                            modalNetwork.find('input[name=phone]').val(response.data.phone);
+                            modalNetwork.find('input[name=email]').val(response.data.user.email);
+                            modalNetwork.find('input[name=phone]').val(response.data.user.phone);
                             modalNetwork.find('input[name=imei]').val(response.data.imei);
                             modalNetwork.find('input[name=packet]').val(response.data.packet);
                             modalNetwork.find('select option').attr('selected', false);
@@ -166,6 +172,37 @@
                     }
                 });
             });
+
+            $('form#formEdit').on('submit', function (e) {
+                e.preventDefault();
+
+                const _this = $(this),
+                    id = _this.find('input[name=id]').val(),
+                    data = $(this).serializeArray();
+
+                $.ajax({
+                    url: _this.attr('action'),
+                    type: "POST",
+                    data: data,
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            const tr = $('.table').find('tr[data-id='+id+']');
+                            tr.find('td.td-name').text(response.data.name);
+                            tr.find('td.td-imei').text(response.data.imei);
+                            tr.find('td.td-packet').text(response.data.packet);
+                            tr.find('td.td-cost').text(response.data.cost);
+                            tr.find('td.td-status').text(response.data.status.name);
+
+                            $.notify(response.message, response.type);
+                            $('#edit-data').modal('toggle');
+                        }
+                    }
+                });
+            })
 
         });
     </script>

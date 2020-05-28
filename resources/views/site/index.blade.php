@@ -137,49 +137,31 @@
                         <div class="form-block">
                             @csrf
                             <input type="hidden" name="model_id" id="model_id">
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="name">Имя</label>
-                                    <input type="text" class="form-control" name="name" value="" id="name" placeholder="Имя" required>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" name="email" value="" id="email" placeholder="Email">
-                                </div>
+                            <div class="form-group">
+                                <label for="imei">IMEI</label>
+                                <input type="text" class="form-control" name="imei" value="" id="imei" placeholder="IMEI">
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="phone">Телефон</label>
-                                    <input type="text" class="form-control phone-mask" name="phone" value="" id="phone" placeholder="Телефон">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="imei">IMEI</label>
-                                    <input type="text" class="form-control" name="imei" value="" id="imei" placeholder="IMEI">
-                                </div>
+
+                            <div class="form-group">
+                                <label for="packet">№ Сейф-пакета</label>
+                                <input type="text" class="form-control" name="packet" value="" id="packet" placeholder="№ Сейф-пакета">
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="packet">№ Сейф-пакета</label>
-                                    <input type="text" class="form-control" name="packet" value="" id="packet" placeholder="№ Сейф-пакета">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="brand">Бренд</label>
-                                    <input type="text" class="form-control" name="brand" value="" id="brand" placeholder="" readonly>
-                                </div>
+                            <div class="form-group">
+                                <label for="brand">Бренд</label>
+                                <input type="text" class="form-control" name="brand" value="" id="brand" placeholder="" readonly>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="model">Модель</label>
-                                    <input type="text" class="form-control" name="model" value="" id="model" placeholder="" readonly>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="cost">Стоимость (Грн)</label>
-                                    <input type="text" class="form-control" name="cost" value="" id="cost" placeholder="" readonly>
-                                </div>
-                                @guest
-                                    <div class="need-auth col-md-12 text-right" id="swap-to-login"><a href="">Что бы продолжить, Вам нужно авторизоваться</a></div>
-                                @endguest
+
+                            <div class="form-group">
+                                <label for="model">Модель</label>
+                                <input type="text" class="form-control" name="model" value="" id="model" placeholder="" readonly>
                             </div>
+                            <div class="form-group">
+                                <label for="cost">Стоимость (Грн)</label>
+                                <input type="text" class="form-control" name="cost" value="" id="cost" placeholder="" readonly>
+                            </div>
+                            @guest
+                                <div class="need-auth col-md-12 text-right" id="swap-to-login"><a href="">Что бы продолжить, Вам нужно авторизоваться</a></div>
+                            @endguest
                         </div>
                         <div class="success-block text-center hide">
                             <h2></h2>

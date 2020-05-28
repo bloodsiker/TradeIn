@@ -18,7 +18,13 @@ class LoginController extends Controller
             ]);
 
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-                return redirect()->route('cabinet.main');
+                if (Auth::user()->is_active) {
+                    return redirect()->route('cabinet.main');
+                }
+
+                Auth::logout();
+
+                return redirect()->back()->with(['danger' => 'Пользователь заблокирован']);
             }
 
             return redirect()->back()->with(['danger' => 'Не верные данные для входа']);
@@ -42,7 +48,13 @@ class LoginController extends Controller
             ]);
 
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-                return response(['status' => 1, 'message' => 'Authentication success']);
+                if (Auth::user()->is_active) {
+                    return response(['status' => 1, 'message' => 'Authentication success']);
+                }
+
+                Auth::logout();
+
+                return response(['status' => 0, 'message' => 'Пользователь заблокирован']);
             }
 
             return response(['status' => 0, 'message' => 'Не верные данные для входа']);

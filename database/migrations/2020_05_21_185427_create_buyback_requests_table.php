@@ -18,12 +18,11 @@ class CreateBuybackRequestsTable extends Migration
             $table->bigInteger('model_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('status_id')->unsigned();
-            $table->string('name');
-            $table->string('email');
-            $table->string('phone');
             $table->string('imei')->nullable();
             $table->string('packet')->nullable();
-            $table->float('cost');
+            $table->float('cost')->default(0);
+            $table->float('bonus')->default(0);
+            $table->boolean('is_paid')->default(0);
             $table->timestamps();
 
             $table->foreign('model_id')->references('id')->on('device_models')->onDelete('cascade');

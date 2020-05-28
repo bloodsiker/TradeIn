@@ -29,12 +29,19 @@ class BuybackRequestController extends Controller
             $buyRequest->user_id = \Auth::user()->id;
             $buyRequest->model_id = $request->get('model_id');
             $buyRequest->status_id = Status::STATUS_NEW;
-            $buyRequest->name = $request->get('name');
-            $buyRequest->email = $request->get('email');
-            $buyRequest->phone = $request->get('phone');
             $buyRequest->imei = $request->get('imei');
             $buyRequest->packet = $request->get('packet');
             $buyRequest->cost = (int) $request->get('cost');
+
+            $bonuses = BuybackBonus::all();
+            $bonusAdd = 0;
+            foreach ($bonuses as $bonus) {
+                if ($buyRequest->cost >= $bonus->cost_from && $buyRequest->cost < $bonus->cost_to) {
+                    $bonusAdd = $bonus->bonus;
+                }
+            }
+
+            $buyRequest->bonus = $bonusAdd;
 
             $buyRequest->save();
 
@@ -49,15 +56,9 @@ class BuybackRequestController extends Controller
         if ($request->isMethod('post') && $request->filled('id')) {
 
             $buyRequest = BuybackRequest::find($request->get('id'));
-            $buyRequest->user_id = \Auth::user()->id;
-            $buyRequest->model_id = $request->get('model_id');
             $buyRequest->status_id = $request->get('status_id');
-            $buyRequest->name = $request->get('name');
-            $buyRequest->email = $request->get('email');
-            $buyRequest->phone = $request->get('phone');
             $buyRequest->imei = $request->get('imei');
             $buyRequest->packet = $request->get('packet');
-            $buyRequest->cost = (int) $request->get('cost');
 
             $buyRequest->save();
             $buyRequest->load('user', 'status', 'model');
