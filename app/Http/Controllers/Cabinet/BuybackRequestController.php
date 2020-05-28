@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cabinet;
 use App\Http\Controllers\Controller;
 use App\Models\BuybackBonus;
 use App\Models\BuybackRequest;
+use App\Models\Status;
 use Illuminate\Http\Request;
 
 /**
@@ -14,9 +15,10 @@ class BuybackRequestController extends Controller
 {
     public function list()
     {
-        $buyRequests = BuybackRequest::all();
+        $buyRequests = BuybackRequest::all()->sortByDesc('id');
+        $statuses = Status::all();
 
-        return view('cabinet.buyback_request.list', compact('buyRequests'));
+        return view('cabinet.buyback_request.list', compact('buyRequests', 'statuses'));
     }
 
     public function add(Request $request)
@@ -25,6 +27,8 @@ class BuybackRequestController extends Controller
 
             $buyRequest = new BuybackRequest();
             $buyRequest->user_id = \Auth::user()->id;
+            $buyRequest->model_id = $request->get('model_id');
+            $buyRequest->status_id = Status::STATUS_NEW;
             $buyRequest->name = $request->get('name');
             $buyRequest->email = $request->get('email');
             $buyRequest->phone = $request->get('phone');
@@ -34,26 +38,34 @@ class BuybackRequestController extends Controller
 
             $buyRequest->save();
 
-            return redirect()->route('cabinet.buyback_bonus.list')->with('success', "Правило для бонуса добавлено!");
+            return response(['status' => 1, 'type' => 'success', 'message' => 'Ваша заявка на выкуп отправлена!']);
         }
 
-        return redirect()->route('cabinet.buyback_bonus.list')->with('danger', 'Ошибка, правило для бонуса не удалось добавить!');
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка приотправке заявки']);
     }
 
     public function edit(Request $request)
     {
         if ($request->isMethod('post') && $request->filled('id')) {
 
-            $bonus = BuybackBonus::find($request->get('id'));
-            $bonus->cost_from = $request->get('cost_from');
-            $bonus->cost_to = $request->get('cost_to');
-            $bonus->bonus = $request->get('bonus');
-            $bonus->save();
+            $buyRequest = BuybackRequest::find($request->get('id'));
+            $buyRequest->user_id = \Auth::user()->id;
+            $buyRequest->model_id = $request->get('model_id');
+            $buyRequest->status_id = $request->get('status_id');
+            $buyRequest->name = $request->get('name');
+            $buyRequest->email = $request->get('email');
+            $buyRequest->phone = $request->get('phone');
+            $buyRequest->imei = $request->get('imei');
+            $buyRequest->packet = $request->get('packet');
+            $buyRequest->cost = (int) $request->get('cost');
 
-            return redirect()->route('cabinet.buyback_bonus.list')->with('success', 'Информация обновлена');
+            $buyRequest->save();
+            $buyRequest->load('user', 'status', 'model');
+
+            return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $buyRequest]);
         }
 
-        return redirect()->route('cabinet.buyback_bonus.list')->with('danger', 'Ошибка при обновлении!');
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при обновлении!']);
     }
 
     public function delete(Request $request)

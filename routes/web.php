@@ -28,6 +28,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/', 'SiteController@index')->name('main');
 
     Route::match(['post', 'get'], '/login', 'LoginController@login')->name('login');
+    Route::post('/auth', 'LoginController@auth')->name('auth');
     Route::match(['post', 'get'], '/reset-password', 'LoginController@resetPassword')->name('reset_password');
 
     Route::get('/auth/{provider}', 'SocialAuthController@providerRedirect')->name('provider.redirect');

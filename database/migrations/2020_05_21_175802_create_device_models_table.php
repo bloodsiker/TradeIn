@@ -17,6 +17,7 @@ class CreateDeviceModelsTable extends Migration
             $table->id();
             $table->bigInteger('brand_id')->unsigned();
             $table->string('name');
+            $table->float('price', 8, 2)->default(0);
             $table->float('price_1', 8, 2)->default(0);
             $table->float('price_2', 8, 2)->default(0);
             $table->float('price_3', 8, 2)->default(0);

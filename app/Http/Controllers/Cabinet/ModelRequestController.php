@@ -47,11 +47,13 @@ class ModelRequestController extends Controller
             $modelRequest->is_done = $request->get('is_done');
 
             $modelRequest->save();
+            $modelRequest->status_color = $modelRequest->attributeStatus('color');
+            $modelRequest->status_text = $modelRequest->attributeStatus('text');
 
-            return redirect()->route('cabinet.model_request.list')->with('success', 'Информация обновлена');
+            return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $modelRequest]);
         }
 
-        return redirect()->route('cabinet.model_request.list')->with('danger', 'Ошибка при обновлении!');
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при обновлении!']);
     }
 
     public function delete(Request $request)

@@ -69,21 +69,21 @@
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label for="name">Имя</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{  Auth::user()->name }}" id="name" placeholder="Имя" required>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ Auth::user()->name }}" id="name" placeholder="Имя" required>
                                     @error('name')
                                         <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="surname">Фамилия</label>
-                                    <input type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{  Auth::user()->surname }}" id="surname" placeholder="Фамилия" required>
+                                    <input type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ Auth::user()->surname }}" id="surname" placeholder="Фамилия" required>
                                     @error('surname')
                                         <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="patronymic">Отчество</label>
-                                    <input type="text" class="form-control @error('patronymic') is-invalid @enderror" name="patronymic" value="{{  Auth::user()->patronymic }}" id="patronymic" placeholder="Отчество" required>
+                                    <input type="text" class="form-control @error('patronymic') is-invalid @enderror" name="patronymic" value="{{ Auth::user()->patronymic }}" id="patronymic" placeholder="Отчество" required>
                                     @error('patronymic')
                                         <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                     @enderror
@@ -92,7 +92,7 @@
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="email">Email</label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{  Auth::user()->email }}" id="email" placeholder="Email" disabled>
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ Auth::user()->email }}" id="email" placeholder="Email" disabled>
                                     @error('email')
                                         <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                     @enderror

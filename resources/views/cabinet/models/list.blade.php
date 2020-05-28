@@ -33,6 +33,7 @@
                         <th scope="col" width="40px">ID</th>
                         <th scope="col">Название</th>
                         <th scope="col">Бренд</th>
+                        <th scope="col">Цена</th>
                         <th scope="col">Цена 1</th>
                         <th scope="col">Цена 2</th>
                         <th scope="col">Цена 3</th>
@@ -44,14 +45,15 @@
                     <tbody>
                     @foreach($models as $model)
                         <tr data-id="{{ $model->id }}">
-                            <td data-id="{{ $model->id }}">{{ $model->id }}</td>
-                            <td data-name="{{ $model->name }}">{{ $model->name }}</td>
-                            <td data-brand-id="{{ $model->brand->id }}"><span class="badge badge-success">{{ $model->brand->name }}</span></td>
-                            <td data-price1="{{ $model->price_1 }}">{{ $model->price_1 }}</td>
-                            <td data-price2="{{ $model->price_2 }}">{{ $model->price_2 }}</td>
-                            <td data-price3="{{ $model->price_3 }}">{{ $model->price_3 }}</td>
-                            <td data-price4="{{ $model->price_4 }}">{{ $model->price_4 }}</td>
-                            <td data-price5="{{ $model->price_5 }}">{{ $model->price_5 }}</td>
+                            <td>{{ $model->id }}</td>
+                            <td class="td-name">{{ $model->name }}</td>
+                            <td class="td-brand"><span class="badge badge-success">{{ $model->brand->name }}</span></td>
+                            <td class="td-price">{{ $model->price }}</td>
+                            <td class="td-price1">{{ $model->price_1 }}</td>
+                            <td class="td-price2">{{ $model->price_2 }}</td>
+                            <td class="td-price3">{{ $model->price_3 }}</td>
+                            <td class="td-price4">{{ $model->price_4 }}</td>
+                            <td class="td-price5">{{ $model->price_5 }}</td>
                             <td>
                                 <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                     <i class="far fa-edit"></i>
@@ -101,27 +103,31 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
+                                <label for="price">Цена</label>
+                                <input type="text" class="form-control" name="price" id="price" placeholder="Цена 1" autocomplete="off" required>
+                            </div>
+                            <div class="form-group col-md-6">
                                 <label for="price_1">Цена 1</label>
                                 <input type="text" class="form-control" name="price_1" id="price_1" placeholder="Цена 1" autocomplete="off" required>
                             </div>
+                        </div>
+
+                        <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="price_2">Цена 2</label>
                                 <input type="text" class="form-control" name="price_2" id="price_2" placeholder="Цена 2" autocomplete="off" required>
                             </div>
-                        </div>
-
-                        <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="price_3">Цена 3</label>
                                 <input type="text" class="form-control" name="price_3" id="price_3" placeholder="Цена 3" autocomplete="off" required>
                             </div>
+                        </div>
+
+                        <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="price_4">Цена 4</label>
                                 <input type="text" class="form-control" name="price_4" id="price_4" placeholder="Цена 4" autocomplete="off" required>
                             </div>
-                        </div>
-
-                        <div class="form-row">
                             <div class="form-grou col-md-6">
                                 <label for="price_5">Цена 5</label>
                                 <input type="text" class="form-control" name="price_5" id="price_5" placeholder="Цена 5" autocomplete="off" required>
@@ -137,10 +143,10 @@
         </div>
     </div>
 
-    <div class="modal fade" id="edit-network" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+    <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.model.edit') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.model.edit') }}" id="formEdit" method="POST" novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Редактировать модель</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -167,27 +173,31 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
+                                <label for="price">Цена</label>
+                                <input type="text" class="form-control" name="price" id="price" placeholder="Цена 1" autocomplete="off" required>
+                            </div>
+                            <div class="form-group col-md-6">
                                 <label for="price_1">Цена 1</label>
                                 <input type="text" class="form-control" name="price_1" id="price_1" placeholder="Цена 1" autocomplete="off" required>
                             </div>
+                        </div>
+
+                        <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="price_2">Цена 2</label>
                                 <input type="text" class="form-control" name="price_2" id="price_2" placeholder="Цена 2" autocomplete="off" required>
                             </div>
-                        </div>
-
-                        <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="price_3">Цена 3</label>
                                 <input type="text" class="form-control" name="price_3" id="price_3" placeholder="Цена 3" autocomplete="off" required>
                             </div>
+                        </div>
+
+                        <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="price_4">Цена 4</label>
                                 <input type="text" class="form-control" name="price_4" id="price_4" placeholder="Цена 4" autocomplete="off" required>
                             </div>
-                        </div>
-
-                        <div class="form-row">
                             <div class="form-grou col-md-6">
                                 <label for="price_5">Цена 5</label>
                                 <input type="text" class="form-control" name="price_5" id="price_5" placeholder="Цена 5" autocomplete="off" required>
@@ -214,29 +224,70 @@
             $('.editModal').click(function (e) {
                 e.preventDefault();
 
-                let modalNetwork = $('#edit-network'),
+                let modalNetwork = $('#edit-data'),
                     _parent = $(this).parent().parent('tr'),
-                    name = _parent.find('td[data-name]').data('name'),
-                    brand_id = _parent.find('td[data-brand-id]').data('brand-id'),
-                    price1 = _parent.find('td[data-price1]').data('price1'),
-                    price2 = _parent.find('td[data-price2]').data('price2'),
-                    price3 = _parent.find('td[data-price3]').data('price3'),
-                    price4 = _parent.find('td[data-price4]').data('price4'),
-                    price5 = _parent.find('td[data-price5]').data('price5'),
-                    id = _parent.find('td[data-id]').data('id');
+                    id = _parent.data('id');
 
-                modalNetwork.modal('toggle');
-                modalNetwork.find('input[name=name]').val(name)
-                modalNetwork.find('input[name=id]').val(id)
-                modalNetwork.find('input[name=price_1]').val(price1)
-                modalNetwork.find('input[name=price_2]').val(price2)
-                modalNetwork.find('input[name=price_3]').val(price3)
-                modalNetwork.find('input[name=price_4]').val(price4)
-                modalNetwork.find('input[name=price_5]').val(price5)
-                modalNetwork.find('select option').attr('selected', false)
-                modalNetwork.find('select option[value='+brand_id+']').attr('selected', 'selected')
+                $.ajax({
+                    url: "{{ route('cabinet.ajax_date') }}",
+                    type: "POST",
+                    data: { action: 'get_model', id: id },
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            modalNetwork.modal('toggle');
+                            modalNetwork.find('input[name=name]').val(response.data.name);
+                            modalNetwork.find('input[name=id]').val(response.data.id);
+                            modalNetwork.find('select option').attr('selected', false);
+                            modalNetwork.find('select option[value='+response.data.brand_id+']').attr('selected', 'selected');
+                            modalNetwork.find('input[name=price]').val(response.data.price);
+                            modalNetwork.find('input[name=price_1]').val(response.data.price_1);
+                            modalNetwork.find('input[name=price_2]').val(response.data.price_2);
+                            modalNetwork.find('input[name=price_3]').val(response.data.price_3);
+                            modalNetwork.find('input[name=price_4]').val(response.data.price_4);
+                            modalNetwork.find('input[name=price_5]').val(response.data.price_5);
+                        } else {
+                            $.notify('Error get device model object', 'error');
+                        }
+                    }
+                });
             });
 
+            $('form#formEdit').on('submit', function (e) {
+                e.preventDefault();
+
+                const _this = $(this),
+                    id = _this.find('input[name=id]').val();
+
+                $.ajax({
+                    url: _this.attr('action'),
+                    type: "POST",
+                    data: _this.serializeArray(),
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            const tr = $('.table').find('tr[data-id='+id+']');
+                            tr.find('td.td-name').text(response.data.name);
+                            tr.find('td.td-brand > .badge').text(response.data.brand.name);
+                            tr.find('td.td-price').text(response.data.price);
+                            tr.find('td.td-price1').text(response.data.price_1);
+                            tr.find('td.td-price2').text(response.data.price_2);
+                            tr.find('td.td-price3').text(response.data.price_3);
+                            tr.find('td.td-price4').text(response.data.price_4);
+                            tr.find('td.td-price5').text(response.data.price_5);
+
+                            $.notify(response.message, response.type);
+                            $('#edit-data').modal('toggle');
+                        }
+                    }
+                });
+            })
         });
     </script>
 @endpush

@@ -50,10 +50,10 @@ class BuybackBonusController extends Controller
             $bonus->bonus = $request->get('bonus');
             $bonus->save();
 
-            return redirect()->route('cabinet.buyback_bonus.list')->with('success', 'Информация обновлена');
+            return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $bonus]);
         }
 
-        return redirect()->route('cabinet.buyback_bonus.list')->with('danger', 'Ошибка при обновлении!');
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при обновлении!']);
     }
 
     public function delete(Request $request)

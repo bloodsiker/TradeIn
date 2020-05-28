@@ -251,6 +251,19 @@ mark {
 .hide {
   display: none;}
 
+.success-block {
+    padding: 30px;
+}
+.need-auth {
+    margin-top: 0.25rem;
+    font-size: 80%;
+}
+.need-auth a {
+    color: #dc3545;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
 @media screen and (min-width: 1200px) {
   .cost_page {
     width: 100%;

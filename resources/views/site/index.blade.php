@@ -125,7 +125,7 @@
 @push('modals')
     <div class="modal fade" id="modal-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content tx-14">
+            <div class="modal-content tx-14" id="modal-request">
                 <form action="{{ route('cabinet.buyback_request.add') }}" method="POST" id="form" novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Оставить заявку</h6>
@@ -134,51 +134,89 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        @csrf
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="name">Имя</label>
-                                <input type="text" class="form-control" name="name" value="" id="name" placeholder="Имя" required>
+                        <div class="form-block">
+                            @csrf
+                            <input type="hidden" name="model_id" id="model_id">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="name">Имя</label>
+                                    <input type="text" class="form-control" name="name" value="" id="name" placeholder="Имя" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" name="email" value="" id="email" placeholder="Email">
+                                </div>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" name="email" value="" id="email" placeholder="Email">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="phone">Телефон</label>
+                                    <input type="text" class="form-control phone-mask" name="phone" value="" id="phone" placeholder="Телефон">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="imei">IMEI</label>
+                                    <input type="text" class="form-control" name="imei" value="" id="imei" placeholder="IMEI">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="packet">№ Сейф-пакета</label>
+                                    <input type="text" class="form-control" name="packet" value="" id="packet" placeholder="№ Сейф-пакета">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="brand">Бренд</label>
+                                    <input type="text" class="form-control" name="brand" value="" id="brand" placeholder="" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="model">Модель</label>
+                                    <input type="text" class="form-control" name="model" value="" id="model" placeholder="" readonly>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="cost">Стоимость (Грн)</label>
+                                    <input type="text" class="form-control" name="cost" value="" id="cost" placeholder="" readonly>
+                                </div>
+                                @guest
+                                    <div class="need-auth col-md-12 text-right" id="swap-to-login"><a href="">Что бы продолжить, Вам нужно авторизоваться</a></div>
+                                @endguest
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="phone">Телефон</label>
-                                <input type="text" class="form-control phone-mask" name="phone" value="" id="phone" placeholder="Телефон">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="password">IMEI</label>
-                                <input type="text" class="form-control" name="imei" value="" id="password" placeholder="IMEI">
-                            </div>
+                        <div class="success-block text-center hide">
+                            <h2></h2>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="packet">№ Сейф-пакета</label>
-                                <input type="text" class="form-control" name="packet" value="" id="packet" placeholder="№ Сейф-пакета">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-sm btn-dark float-right" @guest disabled @endguest id="feed_send">Отправить</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-content tx-14 hide" id="modal-auth">
+                <form action="{{ route('auth') }}" id="authForm" method="POST" novalidate>
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="titleModal">Авторизация</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger error-message hide" role="alert"></div>
+                        <div class="form-block">
+                            @csrf
+                            <div class="form-group">
+                                <label for="auth-email">Email</label>
+                                <input type="email" class="form-control" name="email" value="" id="auth-email" placeholder="Email">
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="brand">Бренд</label>
-                                <input type="text" class="form-control" name="brand" value="" id="brand" placeholder="" readonly>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="model">Модель</label>
-                                <input type="text" class="form-control" name="model" value="" id="model" placeholder="" readonly>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="cost">Стоимость (Грн)</label>
-                                <input type="text" class="form-control" name="cost" value="" id="cost" placeholder="" readonly>
+                            <div class="form-group">
+                                <label for="name">Пароль</label>
+                                <input type="password" class="form-control" name="password" value="" id="password" placeholder="Пароль">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
-                        <button type="submit" class="btn btn-sm btn-dark float-right" id="feed_send">Отправить</button>
+                        <button type="submit" class="btn btn-sm btn-dark float-right" id="send_login">Войти</button>
                     </div>
                 </form>
             </div>
@@ -198,28 +236,33 @@
                 $('#modal-data').modal('toggle');
             })
 
-            // $('form#formEdit').on('submit', function (e) {
-            //     e.preventDefault();
-            //
-            //     const _this = $(this),
-            //         url = _this.attr('action'),
-            //         id = _this.find('input[name=id]').val(),
-            //         data = $(this).serializeArray();
-            //
-            //     $.ajax({
-            //         url: url,
-            //         type: "POST",
-            //         data: data,
-            //         cache: false,
-            //         headers: {
-            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //         },
-            //         success: function (response) {
-            //
-            //         }
-            //     });
-            // })
+            $('#modal-data').on('click', '#swap-to-login', function (e) {
+                e.preventDefault();
+                $('#modal-request').hide();
+                $('#modal-auth').show();
+            })
 
+
+            $('#authForm').on('click', '#send_login', function (e) {
+                e.preventDefault();
+
+                let _form = $('#authForm');
+
+                $.ajax({
+                    type: _form.attr('method'),
+                    url: _form.attr('action'),
+                    data: _form.serializeArray(),
+                }).done(function(response) {
+                    if (response.status == 1) {
+                        $('#modal-auth').hide();
+                        $('#swap-to-login').hide();
+                        $('#feed_send').removeAttr('disabled');
+                        $('#modal-request').show();
+                    } else if (response.status == 0) {
+                        $('.error-message').removeClass('hide').text(response.message)
+                    }
+                });
+            });
         });
     </script>
 @endpush

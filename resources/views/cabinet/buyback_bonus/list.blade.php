@@ -40,10 +40,10 @@
                     <tbody>
                     @foreach($bonuses as $bonus)
                         <tr data-id="{{ $bonus->id }}">
-                            <td data-id="{{ $bonus->id }}">{{ $bonus->id }}</td>
-                            <td data-cost-from="{{ $bonus->cost_from }}">{{ $bonus->cost_from }}</td>
-                            <td data-cost-to="{{ $bonus->cost_to }}">{{ $bonus->cost_to }}</td>
-                            <td data-bonus="{{ $bonus->bonus }}">{{ $bonus->bonus }}</td>
+                            <td>{{ $bonus->id }}</td>
+                            <td class="td-cost-from">{{ $bonus->cost_from }}</td>
+                            <td class="td-cost-to">{{ $bonus->cost_to }}</td>
+                            <td class="bonus">{{ $bonus->bonus }}</td>
                             <td>
                                 <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                     <i class="far fa-edit"></i>
@@ -103,7 +103,7 @@
     <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.buyback_bonus.edit') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.buyback_bonus.edit') }}" id="formEdit" method="POST" novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Редактировать бонус</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -150,17 +150,60 @@
 
                 let modalNetwork = $('#edit-data'),
                     _parent = $(this).parent().parent('tr'),
-                    cost_from = _parent.find('td[data-cost-from]').data('cost-from'),
-                    cost_to = _parent.find('td[data-cost-to]').data('cost-to'),
-                    bonus = _parent.find('td[data-bonus]').data('bonus'),
-                    id = _parent.find('td[data-id]').data('id');
+                    id = _parent.data('id');
 
-                modalNetwork.modal('toggle');
-                modalNetwork.find('input[name=cost_from]').val(cost_from)
-                modalNetwork.find('input[name=cost_to]').val(cost_to)
-                modalNetwork.find('input[name=bonus]').val(bonus)
-                modalNetwork.find('input[name=id]').val(id)
+                $.ajax({
+                    url: "{{ route('cabinet.ajax_date') }}",
+                    type: "POST",
+                    data: { action: 'get_request_bonus', id: id },
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            modalNetwork.modal('toggle');
+                            modalNetwork.modal('toggle');
+                            modalNetwork.find('input[name=cost_from]').val(response.data.cost_from)
+                            modalNetwork.find('input[name=cost_to]').val(response.data.cost_to)
+                            modalNetwork.find('input[name=bonus]').val(response.data.bonus)
+                            modalNetwork.find('input[name=id]').val(response.data.id)
+                        } else {
+                            $.notify('Error get network object', 'error');
+                        }
+                    }
+                });
             });
+
+            $('form#formEdit').on('submit', function (e) {
+                e.preventDefault();
+
+                const _this = $(this),
+                    id = _this.find('input[name=id]').val(),
+                    data = $(this).serializeArray();
+
+                $.ajax({
+                    url: _this.attr('action'),
+                    type: "POST",
+                    data: data,
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+
+                            const tr = $('.table').find('tr[data-id='+id+']');
+                            tr.find('td.td-cost-from').text(response.data.cost_from);
+                            tr.find('td.td-cost-from').text(response.data.cost_to);
+                            tr.find('td.td-bonus').text(response.data.bonus);
+
+                            $.notify(response.message, response.type);
+                            $('#edit-data').modal('toggle');
+                        }
+                    }
+                });
+            })
 
         });
     </script>

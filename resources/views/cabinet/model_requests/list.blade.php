@@ -43,13 +43,13 @@
                     <tbody>
                     @foreach($requests as $request)
                         <tr data-id="{{ $request->id }}">
-                            <td data-id="{{ $request->id }}">{{ $request->id }}</td>
-                            <td data-name="{{ $request->user->fullName() }}">{{ $request->user->fullName() }}</td>
+                            <td>{{ $request->id }}</td>
+                            <td>{{ $request->user->fullName() }}</td>
                             <td>{{ $request->user->network ? $request->user->network->name : null }}</td>
                             <td>{{ $request->user->shop ? $request->user->shop->name : null }}</td>
-                            <td data-brand="{{ $request->brand }}">{{ $request->brand }}</td>
-                            <td data-model="{{ $request->model }}">{{ $request->model }}</td>
-                            <td data-is-done="{{ $request->is_done }}">
+                            <td class="td-brand">{{ $request->brand }}</td>
+                            <td class="td-model">{{ $request->model }}</td>
+                            <td class="td-is-done">
                                 <span class="badge badge-{{ $request->attributeStatus('color') }}">{{ $request->attributeStatus('text') }}</span>
                             </td>
                             <td>
@@ -75,7 +75,7 @@
     <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="titleModalEdit" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.model_request.edit') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.model_request.edit') }}" id="formEdit" method="POST" novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModalEdit">Редактировать заявку</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -127,20 +127,59 @@
 
                 let modalNetwork = $('#modal-edit'),
                     _parent = $(this).parent().parent('tr'),
-                    name = _parent.find('td[data-name]').data('name'),
-                    brand = _parent.find('td[data-brand]').data('brand'),
-                    model = _parent.find('td[data-model]').data('model'),
-                    is_done = _parent.find('td[data-is-done]').data('is-done'),
-                    id = _parent.find('td[data-id]').data('id');
+                    id = _parent.data('id');
 
-                modalNetwork.modal('toggle');
-                modalNetwork.find('input[name=name]').val(name);
-                modalNetwork.find('input[name=id]').val(id);
-                modalNetwork.find('input[name=brand]').val(brand);
-                modalNetwork.find('input[name=model]').val(model);
-                modalNetwork.find('select option').attr('selected', false);
-                modalNetwork.find('select option[value='+is_done+']').attr('selected', 'selected');
+                $.ajax({
+                    url: "{{ route('cabinet.ajax_date') }}",
+                    type: "POST",
+                    data: { action: 'get_model_request', id: id },
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            modalNetwork.modal('toggle');
+                            modalNetwork.find('input[name=id]').val(response.data.id);
+                            modalNetwork.find('input[name=brand]').val(response.data.brand);
+                            modalNetwork.find('input[name=model]').val(response.data.model);
+                            modalNetwork.find('select option').attr('selected', false);
+                            modalNetwork.find('select option[value='+response.data.is_done+']').attr('selected', 'selected');
+                        } else {
+                            $.notify('Error get network object', 'error');
+                        }
+                    }
+                });
             });
+
+            $('form#formEdit').on('submit', function (e) {
+                e.preventDefault();
+
+                const _this = $(this),
+                    id = _this.find('input[name=id]').val(),
+                    data = $(this).serializeArray();
+
+                $.ajax({
+                    url: _this.attr('action'),
+                    type: "POST",
+                    data: data,
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            const tr = $('.table').find('tr[data-id='+id+']');
+                            tr.find('td.td-brand').text(response.data.brand);
+                            tr.find('td.td-model').text(response.data.model);
+                            tr.find('td.td-is-done > .badge').removeClass('badge-success badge-danger').addClass('badge-'+response.data.status_color).text(response.data.status_text);
+
+                            $.notify(response.message, response.type);
+                            $('#modal-edit').modal('toggle');
+                        }
+                    }
+                });
+            })
 
         });
     </script>

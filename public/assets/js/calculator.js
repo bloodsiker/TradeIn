@@ -38,6 +38,7 @@ const SCREEN_TITLE = document.getElementsByClassName("screen_title")[0];
 const FUNCTION_PHONE_TITLE = document.getElementsByClassName("function_phone-title")[0];
 const GET_BRAND = document.getElementById("brand");
 const GET_MODEL = document.getElementById("model");
+const GET_MODEL_ID = document.getElementById("model_id");
 const GET_COST = document.getElementById("cost");
 const FORM = document.getElementById("form");
 const TEXT_NO_RESULT = "К сожалению состояние устройства не соответствует условиям программе Trade-in";
@@ -144,6 +145,7 @@ UL_BRAND_LIST.onclick = function (e) {
             createLi.onclick = function() {
                 selectModel.shift();
                 MODEL_SEARCH.value = el.name;
+                MODEL_SEARCH.setAttribute('id', el.id);
                 selectModel.push(MODEL_SEARCH.value);
             }
         });
@@ -801,6 +803,7 @@ COVER_STATE_QUESTION.onclick = function () {
 
 GET_OFFERS.onclick = function () {
     GET_MODEL.value = MODEL_SEARCH.value;
+    GET_MODEL_ID.value = MODEL_SEARCH.getAttribute('id');
     GET_BRAND.value = BRAND_SEARCH.value;
     GET_COST.value = CHANGE_COST.textContent;
 }
@@ -815,13 +818,15 @@ FEED_SEND.onclick = function(e) {
         url: _form.attr('action'),
         data: _form.serializeArray(),
     }).done(function(response) {
-        console.log(response);
-
-        // function reloadPage() {
-        //     location.reload();
-        // }
-        // setTimeout(reloadPage, 2000);
-        // $("#form").trigger("reset");
+        _form.find('.modal-header > #titleModal').addClass('hide');
+        _form.find('.modal-footer > #feed_send').addClass('hide');
+        _form.find('.modal-body > .form-block').addClass('hide');
+        _form.find('.modal-body > .success-block').removeClass('hide').find('h2').text(response.message);
+        _form.trigger('reset');
+        function reloadPage() {
+            location.reload();
+        }
+        setTimeout(reloadPage, 2000);
     });
 }
 

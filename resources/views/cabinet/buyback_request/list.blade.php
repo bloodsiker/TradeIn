@@ -31,7 +31,8 @@
                     <thead>
                     <tr>
                         <th scope="col" width="40px">ID</th>
-                        <th scope="col">ФИО продавца</th>
+                        <th scope="col">Пользователь</th>
+                        <th scope="col">Продавец</th>
                         <th scope="col">Производитель</th>
                         <th scope="col">Модель</th>
                         <th scope="col">IMEI</th>
@@ -45,7 +46,8 @@
                     @foreach($buyRequests as $buyRequest)
                         <tr data-id="{{ $buyRequest->id }}">
                             <td data-id="{{ $buyRequest->id }}">{{ $buyRequest->id }}</td>
-                            <td data-user-id="{{ $buyRequest->user->fullName() }}">{{ $buyRequest->user->fullName()  }}</td>
+                            <td>{{ $buyRequest->user->fullName()  }}</td>
+                            <td>{{ $buyRequest->name  }}</td>
                             <td data-brand="">{{ $buyRequest->model->brand->name }}</td>
                             <td data-model="{{ $buyRequest->model->name }}">{{ $buyRequest->model->name }}</td>
                             <td data-emei="{{ $buyRequest->emei }}">{{ $buyRequest->emei }}</td>
@@ -85,19 +87,34 @@
                     <div class="modal-body">
                         @csrf
                         <input type="hidden" name="id" value="">
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="cost_from">Стоимость от</label>
-                                <input type="number" class="form-control" name="cost_from" id="cost_from" placeholder="Стоимость от" autocomplete="off" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="cost_to">Стоимость до</label>
-                                <input type="number" class="form-control" name="cost_to" id="cost_to" placeholder="Стоимость до" autocomplete="off" required>
-                            </div>
+                        <div class="form-group">
+                            <label for="name">Имя продавца</label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Имя продавца" autocomplete="off" required>
                         </div>
                         <div class="form-group">
-                            <label for="bonus">Бонус</label>
-                            <input type="number" class="form-control" name="bonus" id="bonus" placeholder="Бонус" autocomplete="off" required>
+                            <label for="phone">Телефон</label>
+                            <input type="text" class="form-control" name="phone" id="phone" placeholder="Телефон" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="text" class="form-control" name="email" id="email" placeholder="E-mail" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="imei">IMEI-номер</label>
+                            <input type="text" class="form-control" name="imei" id="imei" placeholder="IMEI-номер" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="packet">Номер сейф-пакета</label>
+                            <input type="text" class="form-control" name="packet" id="packet" placeholder="Номер сейф-пакета" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Статус</label>
+                            <select class="custom-select" id="status" name="status_id">
+                                <option selected></option>
+                                @foreach($statuses as $status)
+                                    <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -122,16 +139,32 @@
 
                 let modalNetwork = $('#edit-data'),
                     _parent = $(this).parent().parent('tr'),
-                    cost_from = _parent.find('td[data-cost-from]').data('cost-from'),
-                    cost_to = _parent.find('td[data-cost-to]').data('cost-to'),
-                    bonus = _parent.find('td[data-bonus]').data('bonus'),
-                    id = _parent.find('td[data-id]').data('id');
+                    id = _parent.data('id');
 
-                modalNetwork.modal('toggle');
-                modalNetwork.find('input[name=cost_from]').val(cost_from)
-                modalNetwork.find('input[name=cost_to]').val(cost_to)
-                modalNetwork.find('input[name=bonus]').val(bonus)
-                modalNetwork.find('input[name=id]').val(id)
+                $.ajax({
+                    url: "{{ route('cabinet.ajax_date') }}",
+                    type: "POST",
+                    data: { action: 'get_buyback_request', id: id },
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+                            modalNetwork.modal('toggle');
+                            modalNetwork.find('input[name=id]').val(response.data.id);
+                            modalNetwork.find('input[name=name]').val(response.data.user.name+ ' ' +response.data.user.surname+' '+response.data.user.patronymic);
+                            modalNetwork.find('input[name=email]').val(response.data.email);
+                            modalNetwork.find('input[name=phone]').val(response.data.phone);
+                            modalNetwork.find('input[name=imei]').val(response.data.imei);
+                            modalNetwork.find('input[name=packet]').val(response.data.packet);
+                            modalNetwork.find('select option').attr('selected', false);
+                            modalNetwork.find('select option[value='+response.data.status_id+']').attr('selected', 'selected');
+                        } else {
+                            $.notify('Error get network object', 'error');
+                        }
+                    }
+                });
             });
 
         });

@@ -145,8 +145,14 @@ const deleteObject = function(selector, btn, url) {
             },
             success: function (response) {
                 if (response.status === 1) {
+
+                  _parent.addClass('bg-red-300').hide('slow');
+
+                  setTimeout(function () {
                     _parent.remove();
-                    $.notify(response.message, response.type);
+                  },2000);
+
+                  $.notify(response.message, response.type);
                 }
             }
         });

@@ -196,13 +196,12 @@
                 e.preventDefault();
 
                 const _this = $(this),
-                    id = _this.find('input[name=id]').val(),
-                    data = $(this).serializeArray();
+                    id = _this.find('input[name=id]').val();
 
                 $.ajax({
                     url: _this.attr('action'),
                     type: "POST",
-                    data: data,
+                    data: _this.serializeArray(),
                     cache: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -221,7 +220,6 @@
                     }
                 });
             })
-
         });
     </script>
 @endpush

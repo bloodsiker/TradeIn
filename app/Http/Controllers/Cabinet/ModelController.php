@@ -32,6 +32,7 @@ class ModelController extends Controller
             $model = new DeviceModel();
             $model->name = $request->get('name');
             $model->brand_id = $request->get('brand_id');
+            $model->price = $request->get('price') ?: 0;
             $model->price_1 = $request->get('price_1') ?: 0;
             $model->price_2 = $request->get('price_2') ?: 0;
             $model->price_3 = $request->get('price_3') ?: 0;
@@ -52,6 +53,7 @@ class ModelController extends Controller
             $model = DeviceModel::find($request->get('id'));
             $model->name = $request->get('name');
             $model->brand_id = $request->get('brand_id');
+            $model->price = $request->get('price') ?: 0;
             $model->price_1 = $request->get('price_1') ?: 0;
             $model->price_2 = $request->get('price_2') ?: 0;
             $model->price_3 = $request->get('price_3') ?: 0;
@@ -59,11 +61,12 @@ class ModelController extends Controller
             $model->price_5 = $request->get('price_5') ?: 0;
 
             $model->save();
+            $model->load('brand');
 
-            return redirect()->route('cabinet.model.list')->with('success', 'Информация обновлена');
+            return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $model]);
         }
 
-        return redirect()->route('cabinet.model.list')->with('danger', 'Ошибка при обновлении!');
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при обновлении!']);
     }
 
     public function delete(Request $request)
