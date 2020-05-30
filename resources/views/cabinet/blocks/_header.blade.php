@@ -65,20 +65,24 @@
                 <a href="" class="nav-link"><i data-feather="pie-chart"></i> Заявки</a>
                 <ul class="navbar-menu-sub">
                     <li class="nav-sub-item"><a href="{{ route('cabinet.buyback_request.list') }}" class="nav-sub-link"><i data-feather="mail"></i>Заявки на выкуп</a></li>
-                    <li class="nav-sub-item"><a href="{{ route('cabinet.model_request.list') }}" class="nav-sub-link"><i data-feather="mail"></i>Заявки на добавление в калькулятор</a></li>
+                    @if(Auth::user()->isAdmin() || Auth::user()->isShop())
+                        <li class="nav-sub-item"><a href="{{ route('cabinet.model_request.list') }}" class="nav-sub-link"><i data-feather="mail"></i>Заявки на добавление в калькулятор</a></li>
+                    @endif
                 </ul>
             </li>
-            <li class="nav-item with-sub">
-                <a href="" class="nav-link"><i data-feather="pie-chart"></i> Справочник</a>
-                <ul class="navbar-menu-sub">
-                    <li class="nav-sub-item"><a href="{{ route('cabinet.network.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Торговые сети</a></li>
-                    <li class="nav-sub-item"><a href="{{ route('cabinet.shop.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Магазины</a></li>
-                    <li class="nav-sub-item"><a href="{{ route('cabinet.brand.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Производители</a></li>
-                    <li class="nav-sub-item"><a href="{{route('cabinet.model.list')}}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Модели девайсов</a></li>
-                    <li class="nav-sub-item"><a href="{{route('cabinet.buyback_bonus.list')}}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Таблица бонусов</a></li>
-                </ul>
-            </li>
+            @if(Auth::user()->isAdmin())
+                <li class="nav-item with-sub">
+                    <a href="" class="nav-link"><i data-feather="pie-chart"></i> Справочник</a>
+                    <ul class="navbar-menu-sub">
+                        <li class="nav-sub-item"><a href="{{ route('cabinet.network.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Торговые сети</a></li>
+                        <li class="nav-sub-item"><a href="{{ route('cabinet.shop.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Магазины</a></li>
+                        <li class="nav-sub-item"><a href="{{ route('cabinet.brand.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Производители</a></li>
+                        <li class="nav-sub-item"><a href="{{route('cabinet.model.list')}}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Базы данных смартфонов</a></li>
+                        <li class="nav-sub-item"><a href="{{route('cabinet.buyback_bonus.list')}}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Таблица бонусов</a></li>
+                    </ul>
+                </li>
             <li class="nav-item"><a href="{{ route('cabinet.user.list') }}" class="nav-link"><i data-feather="box"></i> Пользователи</a></li>
+            @endif
         </ul>
     </div>
     <div class="navbar-right">

@@ -32,14 +32,14 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="name">Имя</label>
+                                <label for="name">Имя<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $user->name }}" id="name" placeholder="Имя" required>
                                 @error('name')
                                     <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="surname">Фамилия</label>
+                                <label for="surname">Фамилия<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ $user->surname }}" id="surname" placeholder="Фамилия" required>
                                 @error('surname')
                                     <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
@@ -74,7 +74,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="email">Email</label>
+                                <label for="email">Email<span class="text-danger">*</span></label>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $user->email }}" id="email" placeholder="Email" required>
                                 @error('email')
                                     <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
@@ -95,7 +95,7 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="birthday">Дата рождения</label>
-                                <input type="text" class="form-control @error('phone') is-invalid @enderror" name="birthday" value="{{ $user->birthday }}" id="birthday" placeholder="">
+                                <input type="text" class="form-control @error('phone') is-invalid @enderror" name="birthday" value="{{ $user->birthday }}" id="birthday" autocomplete="off">
                                 @error('birthday')
                                     <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror

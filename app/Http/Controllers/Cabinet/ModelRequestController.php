@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
-use App\Models\DeviceModel;
 use App\Models\DeviceModelRequest;
 use Illuminate\Http\Request;
 
@@ -14,7 +13,11 @@ class ModelRequestController extends Controller
 {
     public function list()
     {
-        $requests = DeviceModelRequest::all()->sortByDesc('id');
+        if (\Auth::user()->isAdmin()) {
+            $requests = DeviceModelRequest::all()->sortByDesc('id');
+        } elseif (\Auth::user()->isShop()) {
+            $requests = DeviceModelRequest::where('user_id', \Auth::user()->id)->get()->sortByDesc('id');
+        }
 
         return view('cabinet.model_requests.list', compact('requests'));
     }
@@ -23,15 +26,17 @@ class ModelRequestController extends Controller
     {
         if ($request->isMethod('post')) {
             $request->validate([
-                'name' => ['required', 'min:3', 'max:255']
+                'model' => ['required', 'max:255'],
+                'brand' => ['required', 'max:255'],
             ]);
 
-            $model = new DeviceModel();
-            $model->name = $request->get('name');
-            $model->brand_id = $request->get('brand_id');
-            $model->save();
+            $modelRequest = new DeviceModelRequest();
+            $modelRequest->user_id = \Auth::user()->id;
+            $modelRequest->brand = $request->get('brand');
+            $modelRequest->model = $request->get('model');
+            $modelRequest->save();
 
-            return redirect()->route('cabinet.model_request.list')->with('success', "Модель {$model->name} добавлен!");
+            return redirect()->route('cabinet.model_request.list')->with('success', "Заявка добавлена!");
         }
 
         return redirect()->route('cabinet.model_request.list');

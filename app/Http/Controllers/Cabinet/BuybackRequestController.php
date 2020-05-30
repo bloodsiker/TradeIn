@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Cabinet;
 use App\Http\Controllers\Controller;
 use App\Models\BuybackBonus;
 use App\Models\BuybackRequest;
+use App\Models\Network;
+use App\Models\Shop;
 use App\Models\Status;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -13,12 +16,48 @@ use Illuminate\Http\Request;
  */
 class BuybackRequestController extends Controller
 {
-    public function list()
+    public function list(Request $request)
     {
-        $buyRequests = BuybackRequest::all()->sortByDesc('id');
         $statuses = Status::all();
+        $shops = $networks = [];
+        $query = BuybackRequest::with('user');
+        $query->join('users', 'users.id', '=', 'buyback_requests.user_id');
 
-        return view('cabinet.buyback_request.list', compact('buyRequests', 'statuses'));
+        if (\Auth::user()->isAdmin()) {
+            $networks = Network::all();
+            $shops = Shop::all();
+
+        } elseif (\Auth::user()->isShop()) {
+            $query->where('user_id', \Auth::user()->id);
+        }
+
+        if ($request->has('network_id') && $request->get('network_id')) {
+            $query->join('networks', 'users.network_id', '=', 'networks.id')
+                ->where('networks.id', $request->get('network_id'));
+        }
+
+        if ($request->has('shop_id') && $request->get('shop_id')) {
+            $query->join('shops', 'users.shop_id', '=', 'shops.id')
+                ->where('shops.id', $request->get('shop_id'));
+        }
+
+        if ($request->get('date_from') && $request->get('date_to')) {
+            $from = Carbon::parse($request->get('date_from'))->format('Y-m-d').' 00:00';
+            $to = Carbon::parse($request->get('date_to'))->format('Y-m-d').' 23:59';
+            $query->whereBetween('.buyback_requests.created_at', [$from, $to]);
+        } elseif ($request->get('date_from') && empty($request->get('date_to'))) {
+            $from = Carbon::parse($request->get('date_from'))->format('Y-m-d').' 00:00';
+            $to = Carbon::now()->format('Y-m-d').' 23:59';
+            $query->whereBetween('buyback_requests.created_at', [$from, $to]);
+        }
+
+        if ($request->has('status_id') && $request->get('status_id')) {
+            $query->where('status_id', $request->get('status_id'));
+        }
+
+        $buyRequests = $query->select('buyback_requests.*')->get()->sortByDesc('id');
+
+        return view('cabinet.buyback_request.list', compact('buyRequests', 'statuses', 'shops', 'networks'));
     }
 
     public function add(Request $request)
@@ -28,7 +67,6 @@ class BuybackRequestController extends Controller
             $buyRequest = new BuybackRequest();
             $buyRequest->user_id = \Auth::user()->id;
             $buyRequest->model_id = $request->get('model_id');
-            $buyRequest->status_id = Status::STATUS_NEW;
             $buyRequest->imei = $request->get('imei');
             $buyRequest->packet = $request->get('packet');
             $buyRequest->cost = (int) $request->get('cost');

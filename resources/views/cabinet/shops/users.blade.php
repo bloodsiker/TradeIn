@@ -29,26 +29,24 @@
                         <thead>
                         <tr>
                             <th scope="col" width="40px">ID</th>
-                            <th scope="col">Название</th>
-                            <th scope="col" width="110px"></th>
+                            <th scope="col">Имя</th>
+                            <th scope="col">Фамилия</th>
+                            <th scope="col">E-mail</th>
+                            <th scope="col">Телефон</th>
+                            <th scope="col">Торговая сеть</th>
+                            <th scope="col">Статус</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($users as $user)
                             <tr>
-                                <td data-id="{{ $user->id }}">{{ $user->id }}</td>
-                                <td data-name="{{ $user->name }}">{{ $user->name }}</td>
-                                <td>
-                                    <a href="{{ route('cabinet.network.users', ['id' => $network->id]) }}" data-toggle="tooltip" title="Пользователи сети" class="btn btn-xxs btn-info btn-icon">
-                                        <i class="fas fa-users"></i>
-                                    </a>
-                                    <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    <a href="{{ route('cabinet.network.delete', ['id' => $network->id]) }}" data-toggle="tooltip" title="Удалить" class="btn btn-xxs btn-danger btn-icon">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                </td>
+                                <td>{{ $user->id }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->surname }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->phone }}</td>
+                                <td><span class="badge badge-success">{{ $user->network ? $user->network->name : null }}</span></td>
+                                <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
                             </tr>
                         @endforeach
                         </tbody>

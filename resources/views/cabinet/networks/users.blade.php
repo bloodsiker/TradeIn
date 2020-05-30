@@ -34,6 +34,7 @@
                             <th scope="col">E-mail</th>
                             <th scope="col">Телефон</th>
                             <th scope="col">Магазин</th>
+                            <th scope="col">Роль</th>
                             <th scope="col">Статус</th>
                         </tr>
                         </thead>
@@ -46,6 +47,7 @@
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->phone }}</td>
                                 <td><span class="badge badge-success">{{ $user->shop ? $user->shop->name : null }}</span></td>
+                                <td>{{ $user->role->name }}</td>
                                 <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
                             </tr>
                         @endforeach

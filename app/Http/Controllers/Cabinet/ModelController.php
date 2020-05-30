@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cabinet;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\DeviceModel;
+use App\Models\Network;
 use Illuminate\Http\Request;
 
 /**
@@ -13,12 +14,20 @@ use Illuminate\Http\Request;
 class ModelController extends Controller
 {
 
-    public function list()
+    public function list(Request $request)
     {
-        $models = DeviceModel::all()->sortByDesc('id');
         $brands = Brand::all()->sortByDesc('id');
+        $networks = Network::all();
 
-        return view('cabinet.models.list', compact('models', 'brands'));
+        $network = null;
+        if ($request->has('network_id')) {
+            $network = Network::find($request->get('network_id'));
+            $models = DeviceModel::where('network_id', $network->id)->get()->sortByDesc('id');
+        } else {
+            $models = DeviceModel::all()->sortByDesc('id');
+        }
+
+        return view('cabinet.models.list', compact('models', 'brands', 'networks', 'network'));
     }
 
     public function add(Request $request)
@@ -31,6 +40,7 @@ class ModelController extends Controller
 
             $model = new DeviceModel();
             $model->name = $request->get('name');
+            $model->network_id = $request->get('network_id');
             $model->brand_id = $request->get('brand_id');
             $model->price = $request->get('price') ?: 0;
             $model->price_1 = $request->get('price_1') ?: 0;
@@ -40,10 +50,10 @@ class ModelController extends Controller
             $model->price_5 = $request->get('price_5') ?: 0;
             $model->save();
 
-            return redirect()->route('cabinet.model.list')->with('success', "Модель {$model->name} добавлен!");
+            return redirect()->back()->with('success', "Модель {$model->name} добавлен!");
         }
 
-        return redirect()->route('cabinet.model.list')->with('danger', 'Ошибка, модель не удалось добавить!');
+        return redirect()->back()->with('danger', 'Ошибка, модель не удалось добавить!');
     }
 
     public function edit(Request $request)

@@ -7,7 +7,7 @@
         <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
             <div class="d-sm-flex align-items-center justify-content-between">
                 <div>
-                    <h4 class="mg-b-0">Модели</h4>
+                    <h4 class="mg-b-0">База данных смартфонов @if($network) торговой сети {{ $network->name }} @endif</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
                     <a href="#modal-network" class="btn btn-sm btn-dark btn-block" data-toggle="modal">Создать</a>
@@ -20,54 +20,67 @@
 @section('content')
     <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
         <div class="row">
-            <div class="col-lg-12 col-xl-12">
+            <div class="col-lg-10 col-xl-10">
                 @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
                 @if (session('danger'))
                     <div class="alert alert-danger">{{ session('danger') }}</div>
                 @endif
-                <table class="table table-sm table-dark table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col" width="40px">ID</th>
-                        <th scope="col">Название</th>
-                        <th scope="col">Бренд</th>
-                        <th scope="col">Цена</th>
-                        <th scope="col">Цена 1</th>
-                        <th scope="col">Цена 2</th>
-                        <th scope="col">Цена 3</th>
-                        <th scope="col">Цена 4</th>
-                        <th scope="col">Цена 5</th>
-                        <th scope="col" width="80px"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($models as $model)
-                        <tr data-id="{{ $model->id }}">
-                            <td>{{ $model->id }}</td>
-                            <td class="td-name">{{ $model->name }}</td>
-                            <td class="td-brand"><span class="badge badge-success">{{ $model->brand->name }}</span></td>
-                            <td class="td-price">{{ $model->price }}</td>
-                            <td class="td-price1">{{ $model->price_1 }}</td>
-                            <td class="td-price2">{{ $model->price_2 }}</td>
-                            <td class="td-price3">{{ $model->price_3 }}</td>
-                            <td class="td-price4">{{ $model->price_4 }}</td>
-                            <td class="td-price5">{{ $model->price_5 }}</td>
-                            <td>
-                                <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                    <i class="far fa-edit"></i>
-                                </a>
-                                <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </td>
+                @if(count($models))
+                    <table class="table table-sm table-dark table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col">Название</th>
+                            <th scope="col">Бренд</th>
+                            <th scope="col">Цена</th>
+                            <th scope="col">Цена 1</th>
+                            <th scope="col">Цена 2</th>
+                            <th scope="col">Цена 3</th>
+                            <th scope="col">Цена 4</th>
+                            <th scope="col">Цена 5</th>
+                            <th scope="col" width="80px"></th>
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-
+                        </thead>
+                        <tbody>
+                        @foreach($models as $model)
+                            <tr data-id="{{ $model->id }}">
+                                <td class="td-name">{{ $model->name }}</td>
+                                <td class="td-brand"><span class="badge badge-success">{{ $model->brand->name }}</span></td>
+                                <td class="td-price">{{ $model->price }}</td>
+                                <td class="td-price1">{{ $model->price_1 }}</td>
+                                <td class="td-price2">{{ $model->price_2 }}</td>
+                                <td class="td-price3">{{ $model->price_3 }}</td>
+                                <td class="td-price4">{{ $model->price_4 }}</td>
+                                <td class="td-price5">{{ $model->price_5 }}</td>
+                                <td>
+                                    <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="alert alert-primary d-flex align-items-center" role="alert">
+                        <i data-feather="alert-circle" class="mg-r-10"></i> В торговой сети нет базы данных смартфонов
+                    </div>
+                @endif
             </div>
+
+            <div class="col-sm-7 col-md-5 col-lg-2 col-xl-2 mg-t-40 mg-lg-t-0">
+                <h6 class="tx-uppercase tx-semibold mg-b-10">Торговые сети</h6>
+
+                <nav class="nav nav-classic tx-13">
+                    @foreach($networks as $singlNetwork)
+                        <a href="{{ route('cabinet.model.list', ['network_id' => $singlNetwork->id]) }}" class="nav-link vertical-border-list @if(Request::get('network_id') == $singlNetwork->id) active @endif">{{ $singlNetwork->name }}</a>
+                    @endforeach
+                </nav>
+            </div><!-- col -->
         </div>
     </div>
 @endsection
@@ -86,6 +99,7 @@
                     </div>
                     <div class="modal-body">
                         @csrf
+                        <input type="hidden" name="network_id" value="{{ $network ? $network->id : null }}">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="brand">Бренд</label>
@@ -156,6 +170,7 @@
                     <div class="modal-body">
                         @csrf
                         <input type="hidden" name="id" value="">
+                        <input type="hidden" name="network_id" value="">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="brand">Бренд</label>
@@ -241,6 +256,7 @@
                             modalNetwork.modal('toggle');
                             modalNetwork.find('input[name=name]').val(response.data.name);
                             modalNetwork.find('input[name=id]').val(response.data.id);
+                            modalNetwork.find('input[name=network_id]').val(response.data.network_id);
                             modalNetwork.find('select option').attr('selected', false);
                             modalNetwork.find('select option[value='+response.data.brand_id+']').attr('selected', 'selected');
                             modalNetwork.find('input[name=price]').val(response.data.price);

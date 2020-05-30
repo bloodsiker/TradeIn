@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class BuybackRequest extends Model
 {
+    protected $attributes = [
+        'status_id' => Status::STATUS_NEW,
+    ];
+
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');

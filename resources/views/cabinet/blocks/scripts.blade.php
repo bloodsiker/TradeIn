@@ -5,6 +5,7 @@
 <script src="{{ asset('lib/feather-icons/feather.min.js') }}"></script>
 <script src="{{ asset('lib/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
 
+<script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/dashforge.js') }}"></script>
 
 <script src="{{ asset('lib/js-cookie/js.cookie.js') }}"></script>

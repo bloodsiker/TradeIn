@@ -10,7 +10,7 @@
                     <h4 class="mg-b-0">Заявки на выкуп</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
-
+                    <a href="#modal-network" class="btn btn-sm btn-dark btn-block" data-toggle="modal"><i class="fa fa-cog"></i> Фильтры</a>
                 </div>
             </div>
         </div><!-- container -->
@@ -19,6 +19,51 @@
 
 @section('content')
     <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
+        <div class="row mg-b-15">
+            <div class="col-lg-12 col-xl-12">
+                <form action="{{ route('cabinet.buyback_request.list') }}" method="GET" novalidate>
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <select class="custom-select network-filter" name="network_id">
+                                <option value=""></option>
+                                @foreach($networks as $network)
+                                    <option value="{{ $network->id }}" @if(request('network_id') == $network->id) selected @endif>{{ $network->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <select class="custom-select shop-filter" name="shop_id">
+                                <option value=""></option>
+                                @foreach($shops as $shop)
+                                    <option value="{{ $shop->id }}" @if(request('shop_id') == $shop->id) selected @endif>{{ $shop->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <input type="text" class="form-control filter_date" name="date_from" value="{{ request('date_from') ?: null }}" placeholder="Дата с" autocomplete="off">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <input type="text" class="form-control filter_date" name="date_to" value="{{ request('date_to') ?: null }}" placeholder="Дата по" autocomplete="off">
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <select class="custom-select status-filter" name="status_id">
+                                <option value=""></option>
+                                @foreach($statuses as $status)
+                                    <option value="{{ $status->id }}" @if(request('status_id') == $status->id) selected @endif>{{ $status->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <button type="submit" class="btn btn-block btn-dark">Применить</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 @if (session('success'))
@@ -55,7 +100,7 @@
                             <td class="td-cost">{{ $buyRequest->cost }}</td>
                             <td class="td-status">{{ $buyRequest->status->name }}</td>
                             <td>{{ $buyRequest->bonus }}</td>
-                            <td>{{ $buyRequest->created_at }}</td>
+                            <td>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('Y-m-d H:i') }}</td>
                             <td>
                                 <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                     <i class="far fa-edit"></i>
@@ -137,6 +182,34 @@
     <script>
         $(function(){
             'use strict'
+
+            $('.filter_date').datepicker({
+                todayHighlight: true,
+                orientation: "bottom left",
+                language: "{{app()->getLocale()}}",
+                isRTL: false,
+                autoclose: true,
+                format: "dd.mm.yyyy",
+            });
+
+            $('.network-filter').select2({
+                placeholder: 'Торговая сеть',
+                searchInputPlaceholder: 'Поиск торговой сети',
+                allowClear: true,
+            });
+
+            $('.shop-filter').select2({
+                placeholder: 'Магазин',
+                searchInputPlaceholder: 'Поиск магазина',
+                allowClear: true,
+            });
+
+            $('.status-filter').select2({
+                minimumResultsForSearch: -1,
+                placeholder: 'Статус',
+                allowClear: true,
+                se
+            });
 
             deleteObject('.table', '.btnDelete', "{{ route('cabinet.buyback_request.delete') }}");
 
