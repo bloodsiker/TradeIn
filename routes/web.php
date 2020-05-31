@@ -29,7 +29,9 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::match(['post', 'get'], '/login', 'LoginController@login')->name('login');
     Route::post('/auth', 'LoginController@auth')->name('auth');
-    Route::match(['post', 'get'], '/reset-password', 'LoginController@resetPassword')->name('reset_password');
+    Route::match(['post', 'get'], '/password/reset', 'LoginController@resetPassword')->name('password.reset');
+    Route::match(['post', 'get'], '/verify', 'LoginController@verify')->name('verify');
+    Route::match(['post', 'get'], '/password/recovery', 'LoginController@passwordRecovery')->name('password.recovery');
 
     Route::get('/auth/{provider}', 'SocialAuthController@providerRedirect')->name('provider.redirect');
     Route::get('/auth/facebook/callback', 'SocialAuthController@facebookCallback')->name('auth.facebook.callback');

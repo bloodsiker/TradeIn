@@ -36,7 +36,7 @@
                         <div class="form-group">
                             <div class="d-flex justify-content-between mg-b-5">
                                 <label class="mg-b-0-f" for="password">Пароль</label>
-                                <a href="{{ route('reset_password') }}" class="tx-13">Забыли пароль?</a>
+                                <a href="{{ route('password.reset') }}" class="tx-13">Забыли пароль?</a>
                             </div>
                             <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Введите ваш пароль">
                             @error('password')

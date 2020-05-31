@@ -42,8 +42,9 @@ const GET_MODEL_ID = document.getElementById("model_id");
 const GET_COST = document.getElementById("cost");
 const FORM = document.getElementById("form");
 const TEXT_NO_RESULT = "К сожалению состояние устройства не соответствует условиям программе Trade-in";
-const API_URL_BRANDS = 'http://tradein.loc/api/brands';
-const API_URL_MODELS = 'http://tradein.loc/api/brand/{id}/models';
+const API_URL_BRANDS = document.getElementById("brandList").getAttribute('data-url');
+const API_URL_MODELS = document.getElementById("modelList").getAttribute('data-url');
+
 
 BRAND_SEARCH.onclick = function () {
     MODEL_LIST.classList.remove("disabled")
