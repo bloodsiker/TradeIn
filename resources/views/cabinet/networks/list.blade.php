@@ -27,35 +27,36 @@
                 @if (session('danger'))
                     <div class="alert alert-danger">{{ session('danger') }}</div>
                 @endif
-                <table class="table table-sm table-dark table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col" width="40px">ID</th>
-                        <th scope="col">Название</th>
-                        <th scope="col" width="110px"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($networks as $network)
-                        <tr data-id="{{ $network->id }}">
-                            <td>{{ $network->id }}</td>
-                            <td class="td-name">{{ $network->name }}</td>
-                            <td>
-                                <a href="{{ route('cabinet.network.users', ['id' => $network->id]) }}" data-toggle="tooltip" title="Сотрудники сети" class="btn btn-xxs btn-info btn-icon">
-                                    <i class="fas fa-users"></i>
-                                </a>
-                                <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                    <i class="far fa-edit"></i>
-                                </a>
-                                <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </td>
+                <div class="table-responsive">
+                    <table class="table table-sm table-dark table-striped table-bordered ">
+                        <thead>
+                        <tr>
+                            <th scope="col" width="40px">ID</th>
+                            <th scope="col">Название</th>
+                            <th scope="col" width="110px"></th>
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-
+                        </thead>
+                        <tbody>
+                        @foreach($networks as $network)
+                            <tr data-id="{{ $network->id }}">
+                                <td>{{ $network->id }}</td>
+                                <td class="td-name">{{ $network->name }}</td>
+                                <td>
+                                    <a href="{{ route('cabinet.network.users', ['id' => $network->id]) }}" data-toggle="tooltip" title="Сотрудники сети" class="btn btn-xxs btn-info btn-icon">
+                                        <i class="fas fa-users"></i>
+                                    </a>
+                                    <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

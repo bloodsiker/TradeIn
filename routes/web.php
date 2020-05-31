@@ -39,10 +39,12 @@ Route::group(['middleware' => ['web']], function () {
     Route::group(['prefix' => 'cabinet', 'middleware' => ['auth']], function () {
         Route::get('/', 'Cabinet\MainController@index')->name('cabinet.main');
 
-        Route::group(['middleware' => ['admin']], function () {
-            Route::post('/get-ajax-date', 'Cabinet\AjaxController@getAjaxData')->name('cabinet.ajax_date');
 
-            Route::get('/users', 'Cabinet\UserController@list')->name('cabinet.user.list');
+        Route::post('/get-ajax-date', 'Cabinet\AjaxController@getAjaxData')->name('cabinet.ajax_date');
+        Route::get('/users', 'Cabinet\UserController@list')->name('cabinet.user.list')->middleware(['network']);
+
+        Route::group(['middleware' => ['admin']], function () {
+
             Route::match(['post', 'get'], '/user/add', 'Cabinet\UserController@add')->name('cabinet.user.add');
             Route::match(['post', 'get'], '/user/{id}/edit', 'Cabinet\UserController@edit')->name('cabinet.user.edit');
             Route::post('/user/delete', 'Cabinet\UserController@delete')->name('cabinet.user.delete');

@@ -27,35 +27,37 @@
                 @if (session('danger'))
                     <div class="alert alert-danger">{{ session('danger') }}</div>
                 @endif
-                <table class="table table-sm table-dark table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col" width="40px">ID</th>
-                        <th scope="col">Стоимость от</th>
-                        <th scope="col">Стоимость до</th>
-                        <th scope="col">Бонус (грн)</th>
-                        <th scope="col" width="80px"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($bonuses as $bonus)
-                        <tr data-id="{{ $bonus->id }}">
-                            <td>{{ $bonus->id }}</td>
-                            <td class="td-cost-from">{{ $bonus->cost_from }}</td>
-                            <td class="td-cost-to">{{ $bonus->cost_to }}</td>
-                            <td class="bonus">{{ $bonus->bonus }}</td>
-                            <td>
-                                <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                    <i class="far fa-edit"></i>
-                                </a>
-                                <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </td>
+                <div class="table-responsive">
+                    <table class="table table-sm table-dark table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col" width="40px">ID</th>
+                            <th scope="col">Стоимость от</th>
+                            <th scope="col">Стоимость до</th>
+                            <th scope="col">Бонус (грн)</th>
+                            <th scope="col" width="80px"></th>
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        @foreach($bonuses as $bonus)
+                            <tr data-id="{{ $bonus->id }}">
+                                <td>{{ $bonus->id }}</td>
+                                <td class="td-cost-from">{{ $bonus->cost_from }}</td>
+                                <td class="td-cost-to">{{ $bonus->cost_to }}</td>
+                                <td class="bonus">{{ $bonus->bonus }}</td>
+                                <td>
+                                    <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
         </div>

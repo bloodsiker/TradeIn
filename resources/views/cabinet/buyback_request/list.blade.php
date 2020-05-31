@@ -10,36 +10,51 @@
                     <h4 class="mg-b-0">Заявки на выкуп</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
-                    <a href="#modal-network" class="btn btn-sm btn-dark btn-block" data-toggle="modal"><i class="fa fa-cog"></i> Фильтры</a>
+{{--                    <a href="" class="btn btn-sm btn-dark btn-block" id="show-filter"><i class="fa fa-cog"></i> Фильтры</a>--}}
                 </div>
             </div>
-        </div><!-- container -->
-    </div><!-- content -->
+        </div>
+    </div>
 @endsection
 
 @section('content')
     <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
-        <div class="row mg-b-15">
+        <div class="row mg-b-15" id="filters">
             <div class="col-lg-12 col-xl-12">
                 <form action="{{ route('cabinet.buyback_request.list') }}" method="GET" novalidate>
                     <div class="form-row">
-                        <div class="form-group col-md-2">
-                            <select class="custom-select network-filter" name="network_id">
-                                <option value=""></option>
-                                @foreach($networks as $network)
-                                    <option value="{{ $network->id }}" @if(request('network_id') == $network->id) selected @endif>{{ $network->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if(Auth::user()->isAdmin())
+                            <div class="form-group col-md-2">
+                                <select class="custom-select network-filter" name="network_id">
+                                    <option value=""></option>
+                                    @foreach($networks as $network)
+                                        <option value="{{ $network->id }}" @if(request('network_id') == $network->id) selected @endif>{{ $network->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
 
-                        <div class="form-group col-md-2">
-                            <select class="custom-select shop-filter" name="shop_id">
-                                <option value=""></option>
-                                @foreach($shops as $shop)
-                                    <option value="{{ $shop->id }}" @if(request('shop_id') == $shop->id) selected @endif>{{ $shop->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if(Auth::user()->isAdmin() || Auth::user()->isNetwork())
+                            <div class="form-group col-md-2">
+                                <select class="custom-select shop-filter" name="shop_id">
+                                    <option value=""></option>
+                                    @foreach($shops as $shop)
+                                        <option value="{{ $shop->id }}" @if(request('shop_id') == $shop->id) selected @endif>{{ $shop->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
+                        @if(Auth::user()->isShop())
+                            <div class="form-group col-md-3">
+                                <select class="custom-select user-filter" name="user_id">
+                                    <option value=""></option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}" @if(request('user_id') == $user->id) selected @endif>{{ $user->fullName() }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
 
                         <div class="form-group col-md-2">
                             <input type="text" class="form-control filter_date" name="date_from" value="{{ request('date_from') ?: null }}" placeholder="Дата с" autocomplete="off">
@@ -72,48 +87,58 @@
                 @if (session('danger'))
                     <div class="alert alert-danger">{{ session('danger') }}</div>
                 @endif
-                <table class="table table-sm table-dark table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col" width="40px">ID</th>
-                        <th scope="col">Пользователь</th>
-                        <th scope="col">Производитель</th>
-                        <th scope="col">Модель</th>
-                        <th scope="col">IMEI</th>
-                        <th scope="col">Номер сейф-пакета</th>
-                        <th scope="col">Стоимость (грн)</th>
-                        <th scope="col">Статус</th>
-                        <th scope="col">Бонус</th>
-                        <th scope="col">Дата</th>
-                        <th scope="col" width="80px"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($buyRequests as $buyRequest)
-                        <tr data-id="{{ $buyRequest->id }}">
-                            <td>{{ $buyRequest->id }}</td>
-                            <td>{{ $buyRequest->user->fullName()  }}</td>
-                            <td>{{ $buyRequest->model->brand->name }}</td>
-                            <td>{{ $buyRequest->model->name }}</td>
-                            <td class="td-imei">{{ $buyRequest->imei }}</td>
-                            <td class="td-packet">{{ $buyRequest->packet }}</td>
-                            <td class="td-cost">{{ $buyRequest->cost }}</td>
-                            <td class="td-status">{{ $buyRequest->status->name }}</td>
-                            <td>{{ $buyRequest->bonus }}</td>
-                            <td>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('Y-m-d H:i') }}</td>
-                            <td>
-                                <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                    <i class="far fa-edit"></i>
-                                </a>
-                                <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
 
+                @if(count($buyRequests))
+                    <div class="table-responsive">
+                        <table class="table table-sm table-dark table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col" width="40px">ID</th>
+                                <th scope="col">Пользователь</th>
+                                <th scope="col">Производитель</th>
+                                <th scope="col">Модель</th>
+                                <th scope="col">IMEI</th>
+                                <th scope="col">Номер сейф-пакета</th>
+                                <th scope="col">Стоимость (грн)</th>
+                                <th scope="col">Статус</th>
+                                <th scope="col">Бонус</th>
+                                <th scope="col">Дата</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($buyRequests as $buyRequest)
+                                <tr data-id="{{ $buyRequest->id }}">
+                                    <td>{{ $buyRequest->id }}</td>
+                                    <td>{{ $buyRequest->user->fullName()  }}</td>
+                                    <td>{{ $buyRequest->model->brand->name }}</td>
+                                    <td>{{ $buyRequest->model->name }}</td>
+                                    <td class="td-imei">{{ $buyRequest->imei }}</td>
+                                    <td class="td-packet">{{ $buyRequest->packet }}</td>
+                                    <td class="td-cost">{{ $buyRequest->cost }}</td>
+                                    <td class="td-status">{{ $buyRequest->status->name }}</td>
+                                    <td>{{ $buyRequest->bonus }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('Y-m-d H:i') }}</td>
+                                    <td>
+                                        <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        @if(Auth::user()->isAdmin())
+                                            <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="alert alert-primary d-flex align-items-center" role="alert">
+                        <i data-feather="alert-circle" class="mg-r-10"></i> Нет заявок
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -163,7 +188,7 @@
                             <select class="custom-select" id="status" name="status_id">
                                 <option selected></option>
                                 @foreach($statuses as $status)
-                                    <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                    <option value="{{ $status->id }}" @if(!in_array($status->id, $allowStatuses)) disabled @endif>{{ $status->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -204,14 +229,21 @@
                 allowClear: true,
             });
 
+            $('.user-filter').select2({
+                placeholder: 'Пользователь',
+                searchInputPlaceholder: 'Поиск пользователя',
+                allowClear: true,
+            });
+
             $('.status-filter').select2({
                 minimumResultsForSearch: -1,
                 placeholder: 'Статус',
                 allowClear: true,
-                se
             });
 
-            deleteObject('.table', '.btnDelete', "{{ route('cabinet.buyback_request.delete') }}");
+            @if(Auth::user()->isAdmin())
+                deleteObject('.table', '.btnDelete', "{{ route('cabinet.buyback_request.delete') }}");
+            @endif
 
             $('.editModal').click(function (e) {
                 e.preventDefault();

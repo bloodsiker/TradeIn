@@ -27,41 +27,42 @@
                 @if (session('danger'))
                     <div class="alert alert-danger">{{ session('danger') }}</div>
                 @endif
-                <table class="table table-sm table-dark table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col" width="40px">ID</th>
-                        <th scope="col">Название</th>
-                        <th scope="col">Торговая сеть</th>
-                        <th scope="col">Город</th>
-                        <th scope="col">Адрес</th>
-                        <th scope="col" width="110px"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($shops as $shop)
-                        <tr data-id="{{ $shop->id }}">
-                            <td>{{ $shop->id }}</td>
-                            <td class="td-name">{{ $shop->name }}</td>
-                            <td class="td-network"><span class="badge badge-success">{{ $shop->network->name }}</span></td>
-                            <td class="td-city">{{ $shop->city }}</td>
-                            <td class="td-address">{{ $shop->address }}</td>
-                            <td>
-                                <a href="{{ route('cabinet.shop.users', ['id' => $shop->id]) }}" data-toggle="tooltip" title="Сотрудники магазина" class="btn btn-xxs btn-info btn-icon">
-                                    <i class="fas fa-users"></i>
-                                </a>
-                                <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                    <i class="far fa-edit"></i>
-                                </a>
-                                <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </td>
+                <div class="table-responsive">
+                    <table class="table table-sm table-dark table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col" width="40px">ID</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Торговая сеть</th>
+                            <th scope="col">Город</th>
+                            <th scope="col">Адрес</th>
+                            <th scope="col" width="110px"></th>
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-
+                        </thead>
+                        <tbody>
+                        @foreach($shops as $shop)
+                            <tr data-id="{{ $shop->id }}">
+                                <td>{{ $shop->id }}</td>
+                                <td class="td-name">{{ $shop->name }}</td>
+                                <td class="td-network"><span class="badge badge-success">{{ $shop->network->name }}</span></td>
+                                <td class="td-city">{{ $shop->city }}</td>
+                                <td class="td-address">{{ $shop->address }}</td>
+                                <td>
+                                    <a href="{{ route('cabinet.shop.users', ['id' => $shop->id]) }}" data-toggle="tooltip" title="Сотрудники магазина" class="btn btn-xxs btn-info btn-icon">
+                                        <i class="fas fa-users"></i>
+                                    </a>
+                                    <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

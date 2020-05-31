@@ -28,43 +28,45 @@
                     <div class="alert alert-danger">{{ session('danger') }}</div>
                 @endif
                 @if(count($models))
-                    <table class="table table-sm table-dark table-striped table-bordered">
-                        <thead>
-                        <tr>
-                            <th scope="col">Название</th>
-                            <th scope="col">Бренд</th>
-                            <th scope="col">Цена</th>
-                            <th scope="col">Цена 1</th>
-                            <th scope="col">Цена 2</th>
-                            <th scope="col">Цена 3</th>
-                            <th scope="col">Цена 4</th>
-                            <th scope="col">Цена 5</th>
-                            <th scope="col" width="80px"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($models as $model)
-                            <tr data-id="{{ $model->id }}">
-                                <td class="td-name">{{ $model->name }}</td>
-                                <td class="td-brand"><span class="badge badge-success">{{ $model->brand->name }}</span></td>
-                                <td class="td-price">{{ $model->price }}</td>
-                                <td class="td-price1">{{ $model->price_1 }}</td>
-                                <td class="td-price2">{{ $model->price_2 }}</td>
-                                <td class="td-price3">{{ $model->price_3 }}</td>
-                                <td class="td-price4">{{ $model->price_4 }}</td>
-                                <td class="td-price5">{{ $model->price_5 }}</td>
-                                <td>
-                                    <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                </td>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-dark table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">Название</th>
+                                <th scope="col">Бренд</th>
+                                <th scope="col">Цена</th>
+                                <th scope="col">Цена 1</th>
+                                <th scope="col">Цена 2</th>
+                                <th scope="col">Цена 3</th>
+                                <th scope="col">Цена 4</th>
+                                <th scope="col">Цена 5</th>
+                                <th scope="col" width="80px"></th>
                             </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            @foreach($models as $model)
+                                <tr data-id="{{ $model->id }}">
+                                    <td class="td-name">{{ $model->name }}</td>
+                                    <td class="td-brand"><span class="badge badge-success">{{ $model->brand->name }}</span></td>
+                                    <td class="td-price">{{ $model->price }}</td>
+                                    <td class="td-price1">{{ $model->price_1 }}</td>
+                                    <td class="td-price2">{{ $model->price_2 }}</td>
+                                    <td class="td-price3">{{ $model->price_3 }}</td>
+                                    <td class="td-price4">{{ $model->price_4 }}</td>
+                                    <td class="td-price5">{{ $model->price_5 }}</td>
+                                    <td>
+                                        <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @else
                     <div class="alert alert-primary d-flex align-items-center" role="alert">
                         <i data-feather="alert-circle" class="mg-r-10"></i> В торговой сети нет базы данных смартфонов

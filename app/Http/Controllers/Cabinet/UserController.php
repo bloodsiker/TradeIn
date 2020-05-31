@@ -17,11 +17,36 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
 
-    public function list()
+    public function list(Request $request)
     {
-        $users = User::all()->sortByDesc('id');
+        $roles = $networks = [];
+        $query = User::select('users.*');
 
-        return view('cabinet.users.list', compact('users'));
+        if ($request->has('network_id') && $request->get('network_id')) {
+            $query->where('network_id', $request->get('network_id'));
+        }
+
+        if ($request->has('shop_id') && $request->get('shop_id')) {
+            $query->where('shop_id', $request->get('shop_id'));
+        }
+
+        if ($request->has('role_id') && $request->get('role_id')) {
+            $query->where('role_id', $request->get('role_id'));
+        }
+
+        if (\Auth::user()->isAdmin()) {
+            $networks = Network::all();
+            $shops = Shop::all();
+            $roles = Role::all();
+        } elseif (\Auth::user()->isNetwork()) {
+            $shops = Shop::where('network_id', \Auth::user()->network_id)->get();
+            $roles = Role::whereIn('id', [Role::ROLE_NETWORK, Role::ROLE_SHOP])->get();
+            $query->where('network_id', \Auth::user()->network_id);
+        }
+
+        $users = $query->get()->sortByDesc('id');
+
+        return view('cabinet.users.list', compact('users', 'networks', 'shops', 'roles'));
     }
 
     public function add(Request $request)
@@ -108,12 +133,5 @@ class UserController extends Controller
         }
 
         return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при удалении!']);
-    }
-
-    public function getAjaxData(Request $request)
-    {
-        $data = Shop::where('network_id', $request->get('network_id'))->get();
-
-        return response(['status' => 1, 'data' => $data]);
     }
 }

@@ -58,6 +58,16 @@ class User extends Authenticatable
         return $this->name .' ' . $this->surname .' ' .$this->patronymic;
     }
 
+    public function getShop()
+    {
+        return $this->shop ? $this->shop->name : null;
+    }
+
+    public function getNetwork()
+    {
+        return $this->network ? $this->network->name : null;
+    }
+
     public function getAvatar()
     {
         return $this->avatar ?: 'assets/img/no-avatar.png';
@@ -78,28 +88,16 @@ class User extends Authenticatable
      */
     public function isAdmin()
     {
-        if (Auth::user()->role_id == Role::ROLE_ADMIN){
-            return true;
-        }
-
-        return false;
+        return Auth::user()->role_id === Role::ROLE_ADMIN;
     }
 
     public function isNetwork()
     {
-        if (Auth::user()->role_id == Role::ROLE_NETWORK){
-            return true;
-        }
-
-        return false;
+        return Auth::user()->role_id === Role::ROLE_NETWORK;
     }
 
     public function isShop()
     {
-        if (Auth::user()->role_id == Role::ROLE_SHOP){
-            return true;
-        }
-
-        return false;
+        return Auth::user()->role_id === Role::ROLE_SHOP;
     }
 }

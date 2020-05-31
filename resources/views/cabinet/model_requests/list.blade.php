@@ -29,48 +29,49 @@
                 @if (session('danger'))
                     <div class="alert alert-danger">{{ session('danger') }}</div>
                 @endif
-                <table class="table table-sm table-dark table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col" width="40px">ID</th>
-                        <th scope="col">Пользователь</th>
-                        <th scope="col">Торговая сеть</th>
-                        <th scope="col">Магазин</th>
-                        <th scope="col">Бренд</th>
-                        <th scope="col">Модель</th>
-                        <th scope="col">Статус</th>
-                        @if(Auth::user()->isAdmin())
-                            <th scope="col" width="80px"></th>
-                        @endif
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($requests as $request)
-                        <tr data-id="{{ $request->id }}">
-                            <td>{{ $request->id }}</td>
-                            <td>{{ $request->user->fullName() }}</td>
-                            <td>{{ $request->user->network ? $request->user->network->name : null }}</td>
-                            <td>{{ $request->user->shop ? $request->user->shop->name : null }}</td>
-                            <td class="td-brand">{{ $request->brand }}</td>
-                            <td class="td-model">{{ $request->model }}</td>
-                            <td class="td-is-done">
-                                <span class="badge badge-{{ $request->attributeStatus('color') }}">{{ $request->attributeStatus('text') }}</span>
-                            </td>
+                <div class="table-responsive">
+                    <table class="table table-sm table-dark table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col" width="40px">ID</th>
+                            <th scope="col">Пользователь</th>
+                            <th scope="col">Торговая сеть</th>
+                            <th scope="col">Магазин</th>
+                            <th scope="col">Бренд</th>
+                            <th scope="col">Модель</th>
+                            <th scope="col">Статус</th>
                             @if(Auth::user()->isAdmin())
-                                <td>
-                                    <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                </td>
+                                <th scope="col" width="80px"></th>
                             @endif
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-
+                        </thead>
+                        <tbody>
+                        @foreach($requests as $request)
+                            <tr data-id="{{ $request->id }}">
+                                <td>{{ $request->id }}</td>
+                                <td>{{ $request->user->fullName() }}</td>
+                                <td>{{ $request->user->network ? $request->user->network->name : null }}</td>
+                                <td>{{ $request->user->shop ? $request->user->shop->name : null }}</td>
+                                <td class="td-brand">{{ $request->brand }}</td>
+                                <td class="td-model">{{ $request->model }}</td>
+                                <td class="td-is-done">
+                                    <span class="badge badge-{{ $request->attributeStatus('color') }}">{{ $request->attributeStatus('text') }}</span>
+                                </td>
+                                @if(Auth::user()->isAdmin())
+                                    <td>
+                                        <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                @endif
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -8,6 +8,7 @@ use App\Models\BuybackRequest;
 use App\Models\Network;
 use App\Models\Shop;
 use App\Models\Status;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -19,16 +20,21 @@ class BuybackRequestController extends Controller
     public function list(Request $request)
     {
         $statuses = Status::all();
-        $shops = $networks = [];
-        $query = BuybackRequest::with('user');
-        $query->join('users', 'users.id', '=', 'buyback_requests.user_id');
+        $allowStatuses = [];
+        $shops = $networks = $users = [];
+        $query = BuybackRequest::select('buyback_requests.*');
+        $query->join('users', 'users.id', '=', 'buyback_requests.user_id')
+            ->join('shops', 'users.shop_id', '=', 'shops.id');
 
         if (\Auth::user()->isAdmin()) {
             $networks = Network::all();
             $shops = Shop::all();
 
+
         } elseif (\Auth::user()->isShop()) {
-            $query->where('user_id', \Auth::user()->id);
+            $allowStatuses = [Status::STATUS_NEW, Status::STATUS_SENT];
+            $users = User::where('shop_id', \Auth::user()->shop_id)->get();
+            $query->where('shops.id', \Auth::user()->shop_id);
         }
 
         if ($request->has('network_id') && $request->get('network_id')) {
@@ -37,8 +43,11 @@ class BuybackRequestController extends Controller
         }
 
         if ($request->has('shop_id') && $request->get('shop_id')) {
-            $query->join('shops', 'users.shop_id', '=', 'shops.id')
-                ->where('shops.id', $request->get('shop_id'));
+            $query->where('shops.id', $request->get('shop_id'));
+        }
+
+        if ($request->has('user_id') && $request->get('user_id')) {
+            $query->where('user_id', $request->get('user_id'));
         }
 
         if ($request->get('date_from') && $request->get('date_to')) {
@@ -55,9 +64,10 @@ class BuybackRequestController extends Controller
             $query->where('status_id', $request->get('status_id'));
         }
 
-        $buyRequests = $query->select('buyback_requests.*')->get()->sortByDesc('id');
+        $buyRequests = $query->get()->sortByDesc('id');
 
-        return view('cabinet.buyback_request.list', compact('buyRequests', 'statuses', 'shops', 'networks'));
+        return view('cabinet.buyback_request.list',
+            compact('buyRequests', 'statuses', 'shops', 'networks', 'users', 'allowStatuses'));
     }
 
     public function add(Request $request)

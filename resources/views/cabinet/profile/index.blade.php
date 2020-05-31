@@ -230,6 +230,7 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('lib/jquery.inputmask/jquery.inputmask.js') }}"></script>
     <script>
         $('#birthday').datepicker({
             todayHighlight: true,
@@ -238,6 +239,10 @@
             isRTL: false,
             autoclose: true,
             format: "dd.mm.yyyy",
+        });
+
+        $(".phone-mask").inputmask("mask", {
+            "mask": "+38 (999) 999-99-99"
         });
     </script>
 @endpush

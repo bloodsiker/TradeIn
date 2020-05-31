@@ -25,32 +25,34 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 @if(count($users))
-                    <table class="table table-sm table-dark table-striped table-bordered">
-                        <thead>
-                        <tr>
-                            <th scope="col" width="40px">ID</th>
-                            <th scope="col">Имя</th>
-                            <th scope="col">Фамилия</th>
-                            <th scope="col">E-mail</th>
-                            <th scope="col">Телефон</th>
-                            <th scope="col">Торговая сеть</th>
-                            <th scope="col">Статус</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($users as $user)
+                    <div class="table-responsive">
+                        <table class="table table-sm table-dark table-striped table-bordered">
+                            <thead>
                             <tr>
-                                <td>{{ $user->id }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->surname }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->phone }}</td>
-                                <td><span class="badge badge-success">{{ $user->network ? $user->network->name : null }}</span></td>
-                                <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
+                                <th scope="col" width="40px">ID</th>
+                                <th scope="col">Имя</th>
+                                <th scope="col">Фамилия</th>
+                                <th scope="col">E-mail</th>
+                                <th scope="col">Телефон</th>
+                                <th scope="col">Торговая сеть</th>
+                                <th scope="col">Статус</th>
                             </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            @foreach($users as $user)
+                                <tr>
+                                    <td>{{ $user->id }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->surname }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->phone }}</td>
+                                    <td><span class="badge badge-success">{{ $user->network ? $user->network->name : null }}</span></td>
+                                    <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @else
                     <div class="alert alert-primary d-flex align-items-center" role="alert">
                         <i data-feather="alert-circle" class="mg-r-10"></i> В магазине нет сотрудников

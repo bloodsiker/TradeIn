@@ -10,7 +10,7 @@
                     <h4 class="mg-b-0">Добавить пользователя</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
-                    <a href="{{ route('cabinet.user.list') }}" type="button" class="btn btn-sm btn-secondary">
+                    <a href="{{ route('cabinet.user.list') }}" class="btn btn-sm btn-dark btn-block">
                         <i class="fa fa-undo"></i>
                         Назад
                     </a>
@@ -121,7 +121,9 @@
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-save"></i> Создать</button>
+                        <div class="form-row d-flex justify-content-end mt-1">
+                            <button type="submit" class="btn btn-sm btn-dark"><i class="far fa-save"></i> Создать</button>
+                        </div>
                     </fieldset>
                 </form>
 
@@ -131,6 +133,7 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('lib/jquery.inputmask/jquery.inputmask.js') }}"></script>
     <script>
         $('#birthday').datepicker({
             todayHighlight: true,
@@ -139,6 +142,10 @@
             isRTL: false,
             autoclose: true,
             format: "dd.mm.yyyy",
+        });
+
+        $(".phone-mask").inputmask("mask", {
+            "mask": "+38 (999) 999-99-99"
         });
 
         $('form#infoUser').on('change', '#network', function (e) {
