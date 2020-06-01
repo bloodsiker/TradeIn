@@ -20,7 +20,7 @@ class BuybackRequestController extends Controller
     public function list(Request $request)
     {
         $statuses = Status::all();
-        $allowStatuses = [];
+        $allowStatuses = [Status::STATUS_NEW, Status::STATUS_SENT, Status::STATUS_TAKE, Status::STATUS_RETURN];
         $shops = $networks = $users = [];
         $query = BuybackRequest::select('buyback_requests.*');
         $query->join('users', 'users.id', '=', 'buyback_requests.user_id')
