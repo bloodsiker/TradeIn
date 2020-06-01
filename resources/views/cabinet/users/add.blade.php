@@ -47,7 +47,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="patronymic">Отчество</label>
-                                <input type="text" class="form-control @error('patronymic') is-invalid @enderror" name="patronymic" value="{{ old('surname') }}" id="patronymic" placeholder="Отчество">
+                                <input type="text" class="form-control @error('patronymic') is-invalid @enderror" name="patronymic" value="{{ old('patronymic') }}" id="patronymic" placeholder="Отчество">
                                 @error('patronymic')
                                     <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror

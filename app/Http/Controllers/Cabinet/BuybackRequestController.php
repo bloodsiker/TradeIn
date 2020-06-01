@@ -24,7 +24,7 @@ class BuybackRequestController extends Controller
         $shops = $networks = $users = [];
         $query = BuybackRequest::select('buyback_requests.*');
         $query->join('users', 'users.id', '=', 'buyback_requests.user_id')
-            ->join('shops', 'users.shop_id', '=', 'shops.id');
+            ->leftJoin('shops', 'users.shop_id', '=', 'shops.id');
 
         if (\Auth::user()->isAdmin()) {
             $networks = Network::all();

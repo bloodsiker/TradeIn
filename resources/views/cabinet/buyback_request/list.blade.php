@@ -103,7 +103,7 @@
                                 <th scope="col">Статус</th>
                                 <th scope="col">Бонус</th>
                                 <th scope="col">Дата</th>
-                                <th scope="col"></th>
+                                <th scope="col" width="80px"></th>
                             </tr>
                             </thead>
                             <tbody>

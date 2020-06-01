@@ -135,7 +135,7 @@
                     </div>
                 </div>
 
-                <div class="card mg-b-20 mg-lg-b-25">
+                <div class="card mg-b-20 mg-lg-b-25" style="display: none">
                     <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
                         <h6 class="tx-uppercase tx-semibold mg-b-0">Education</h6>
                         <nav class="nav nav-with-icon tx-13">
@@ -164,7 +164,7 @@
                     </div><!-- card-footer -->
                 </div><!-- card -->
 
-                <div class="card card-profile-interest">
+                <div class="card card-profile-interest" style="display: none">
                     <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
                         <h6 class="tx-uppercase tx-semibold mg-b-0">Interests</h6>
                         <nav class="nav nav-with-icon tx-13">

@@ -66,7 +66,6 @@ class UserController extends Controller
                 'password'   => ['required', 'string', 'min:6'],
             ]);
 
-
             $user = new User([
                 'role_id'    => $request->get('role_id'),
                 'network_id' => $request->get('network_id'),
