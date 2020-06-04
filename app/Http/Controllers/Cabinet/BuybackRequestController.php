@@ -21,8 +21,8 @@ class BuybackRequestController extends Controller
 {
     public function list(Request $request)
     {
-        Excel::import(new DeviceModelImport, public_path('upload/2500.xlsx'));
-
+//        Excel::import(new DeviceModelImport, public_path('upload/2500.xlsx'));
+//
         $statuses = Status::all();
         $allowStatuses = [Status::STATUS_NEW, Status::STATUS_SENT, Status::STATUS_TAKE, Status::STATUS_RETURN];
         $shops = $networks = $users = [];
