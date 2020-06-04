@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
+use App\Imports\DeviceModelImport;
 use App\Models\BuybackBonus;
 use App\Models\BuybackRequest;
 use App\Models\Network;
@@ -11,6 +12,7 @@ use App\Models\Status;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class BuybackRequestController
@@ -19,6 +21,8 @@ class BuybackRequestController extends Controller
 {
     public function list(Request $request)
     {
+        Excel::import(new DeviceModelImport, public_path('upload/2500.xlsx'));
+
         $statuses = Status::all();
         $allowStatuses = [Status::STATUS_NEW, Status::STATUS_SENT, Status::STATUS_TAKE, Status::STATUS_RETURN];
         $shops = $networks = $users = [];
