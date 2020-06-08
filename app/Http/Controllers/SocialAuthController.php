@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SocialAccount;
 use App\Services\SocialAccountService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
-use Session;
 
 /**
  * Class SocialAuthController
@@ -22,62 +25,77 @@ class SocialAuthController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param SocialAccountService $service
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function facebookCallback(SocialAccountService $service)
+    public function facebookCallback(Request $request, SocialAccountService $service)
     {
         if(Session::has('social_facebook')){
             $service->linkSocialAccount(Socialite::driver('facebook')->user(), 'facebook');
             Session::forget('social_facebook');
-            return redirect()->route('user.setting')->with(['message' => ' facebook аккаунт привязан']);
+            return redirect()->route('cabinet.profile')->with(['success' => 'Facebook аккаунт привязан']);
         }
 
-        $user = $service->createOrGetUser(Socialite::driver('facebook')->user(), 'facebook');
+        $user = $service->getUser(Socialite::driver('facebook')->user(), 'facebook');
 
-        auth()->login($user);
+        if ($user) {
+            auth()->login($user);
 
-        return redirect()->route('cabinet.main');
+            return redirect()->route('cabinet.main');
+        }
+
+        return redirect()->back()->with('danger', 'Пользователь не найден');
     }
 
     /**
+     * @param Request $request
      * @param SocialAccountService $service
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function googleCallback(SocialAccountService $service)
+    public function googleCallback(Request $request, SocialAccountService $service)
     {
         if(Session::has('social_google')){
             $service->linkSocialAccount(Socialite::driver('google')->user(), 'google');
             Session::forget('social_google');
-            return redirect()->route('user.setting')->with(['message' => ' google аккаунт привязан']);
+            return redirect()->route('cabinet.profile')->with(['success' => 'Google аккаунт привязан']);
         }
 
-        $user = $service->createOrGetUser(Socialite::driver('google')->user(), 'google');
+        $user = $service->getUser(Socialite::driver('google')->user(), 'google');
 
-        auth()->login($user);
+        if ($user) {
+            auth()->login($user);
 
-        return redirect()->route('cabinet.main');
+            return redirect()->route('cabinet.main');
+        }
+
+        return redirect()->back()->with('danger', 'Пользователь не найден');
     }
 
     /**
+     * @param Request $request
      * @param SocialAccountService $service
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function linkedinCallback(SocialAccountService $service)
+    public function linkedinCallback(Request $request, SocialAccountService $service)
     {
         if(Session::has('social_linkedin')){
             $service->linkSocialAccount(Socialite::driver('linkedin')->user(), 'linkedin');
             Session::forget('social_linkedin');
-            return redirect()->route('user.setting')->with(['message' => ' linkedin аккаунт привязан']);
+            return redirect()->route('cabinet.profile')->with(['success' => 'Linkedin аккаунт привязан']);
         }
 
-        $user = $service->createOrGetUser(Socialite::driver('linkedin')->user(), 'linkedin');
+        $user = $service->getUser(Socialite::driver('linkedin')->user(), 'linkedin');
 
-        auth()->login($user);
+        if ($user) {
+            auth()->login($user);
 
-        return redirect()->route('cabinet.main');
+            return redirect()->route('cabinet.main');
+        }
+
+        return redirect()->back()->with('danger', 'Пользователь не найден');
     }
 }

@@ -11,6 +11,19 @@ use Laravel\Socialite\Contracts\User as ProviderUser;
 class SocialAccountService
 {
 
+    public function getUser(ProviderUser $providerUser, $provider)
+    {
+        $account = SocialAccount::whereProvider($provider)
+            ->whereProviderUserId($providerUser->getId())
+            ->first();
+
+        if ($account) {
+            return $account->user;
+        }
+
+        return null;
+    }
+
     /**
      * @param ProviderUser $providerUser
      * @param $provider

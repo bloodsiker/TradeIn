@@ -135,64 +135,43 @@
                     </div>
                 </div>
 
-                <div class="card mg-b-20 mg-lg-b-25" style="display: none">
+                <div class="card card-profile-interest">
                     <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
-                        <h6 class="tx-uppercase tx-semibold mg-b-0">Education</h6>
-                        <nav class="nav nav-with-icon tx-13">
-                            <a href="" class="nav-link"><i data-feather="plus"></i> Add New</a>
-                        </nav>
-                    </div><!-- card-header -->
-                    <div class="card-body pd-25">
-                        <div class="media">
-                            <div class="wd-80 ht-80 bg-ui-04 rounded d-flex align-items-center justify-content-center">
-                                <i data-feather="book-open" class="tx-white-7 wd-40 ht-40"></i>
-                            </div>
-                            <div class="media-body pd-l-25">
-                                <h5 class="mg-b-5">BS in Computer Science</h5>
-                                <p class="mg-b-3"><span class="tx-medium tx-color-02">Holy Name University</span>,  Tagbilaran City, Bohol</p>
-                                <span class="d-block tx-13 tx-color-03">2002-2006</span>
-                            </div>
-                        </div><!-- media -->
+                        <h6 class="tx-uppercase tx-semibold mg-b-0">Авторизация через социальные сети</h6>
                     </div>
-                    <div class="card-footer bg-transparent pd-y-15 pd-x-20">
-                        <nav class="nav nav-with-icon tx-13">
-                            <a href="" class="nav-link">
-                                Show More Education (2)
-                                <i data-feather="chevron-down" class="mg-l-2 mg-r-0 mg-t-2"></i>
-                            </a>
-                        </nav>
-                    </div><!-- card-footer -->
-                </div><!-- card -->
-
-                <div class="card card-profile-interest" style="display: none">
-                    <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
-                        <h6 class="tx-uppercase tx-semibold mg-b-0">Interests</h6>
-                        <nav class="nav nav-with-icon tx-13">
-                            <a href="" class="nav-link">Browse Interests <i data-feather="arrow-right" class="mg-l-5 mg-r-0"></i></a>
-                        </nav>
-                    </div><!-- card-header -->
                     <div class="card-body pd-25">
                         <div class="row">
                             <div class="col-sm col-lg-12 col-xl">
                                 <div class="media">
-                                    <div class="wd-45 ht-45 bg-gray-900 rounded d-flex align-items-center justify-content-center">
-                                        <i data-feather="github" class="tx-white-7 wd-20 ht-20"></i>
+                                    <div class="wd-45 ht-45 rounded d-flex align-items-center justify-content-center" style="background: #e64a41">
+{{--                                        <i data-feather="github" class="tx-white-7 wd-20 ht-20"></i>--}}
+                                        <i class="fab fa-google tx-white-7 fz-20"></i>
                                     </div>
                                     <div class="media-body pd-l-25">
-                                        <h6 class="tx-color-01 mg-b-5">Github, Inc.</h6>
-                                        <p class="tx-12 mg-b-10">Web-based hosting service for version control using Git... <a href="">Learn more</a></p>
-                                        <span class="tx-12 tx-color-03">6,182,220 Followers</span>
+                                        <h6 class="tx-color-01 mg-b-5">Google</h6>
+                                        <p class="tx-12 mg-b-10">
+                                            @if ($account['google'])
+                                                <a href="{{ route('cabinet.profile.social_unlink', ['provider' => 'google']) }}" class="btn btn-danger btn-xxs">Отвязать акканут</a>
+                                            @else
+                                                <a href="{{ route('cabinet.profile.social_link', ['provider' => 'google', 'social_google' => 1]) }}" class="btn btn-success btn-xxs">Привязать акканут</a>
+                                            @endif
+                                        </p>
                                     </div>
-                                </div><!-- media -->
+                                </div>
 
                                 <div class="media">
-                                    <div class="wd-45 ht-45 bg-warning rounded d-flex align-items-center justify-content-center">
-                                        <i data-feather="truck" class="tx-white-7 wd-20 ht-20"></i>
+                                    <div class="wd-45 ht-45 rounded d-flex align-items-center justify-content-center" style="background: #00a7e6">
+                                        <i data-feather="linkedin" class="tx-white-7 wd-20 ht-20"></i>
                                     </div>
                                     <div class="media-body pd-l-25">
-                                        <h6 class="tx-color-01 mg-b-5">DHL Express</h6>
-                                        <p class="tx-12 mg-b-10">Logistics company providing international courier service... <a href="">Learn more</a></p>
-                                        <span class="tx-12 tx-color-03">3,005,192 Followers</span>
+                                        <h6 class="tx-color-01 mg-b-5">Linkedin</h6>
+                                        <p class="tx-12 mg-b-10">
+                                            @if ($account['linkedin'])
+                                                <a href="{{ route('cabinet.profile.social_unlink', ['provider' => 'linkedin']) }}" class="btn btn-danger btn-xxs">Отвязать акканут</a>
+                                            @else
+                                                <a href="{{ route('cabinet.profile.social_link', ['provider' => 'linkedin', 'social_linkedin' => 1]) }}" class="btn btn-success btn-xxs">Привязать акканут</a>
+                                            @endif
+                                        </p>
                                     </div>
                                 </div><!-- media -->
                             </div><!-- col -->
@@ -202,22 +181,26 @@
                                         <i data-feather="facebook" class="tx-white-7 wd-20 ht-20"></i>
                                     </div>
                                     <div class="media-body pd-l-25">
-                                        <h6 class="tx-color-01 mg-b-5">Facebook, Inc.</h6>
-                                        <p class="tx-12 mg-b-10">Online social media and social networking service company... <a href="">Learn more</a></p>
-                                        <span class="tx-12 tx-color-03">12,182,220 Followers</span>
-                                    </div>
-                                </div><!-- media -->
-
-                                <div class="media">
-                                    <div class="wd-45 ht-45 bg-pink rounded d-flex align-items-center justify-content-center">
-                                        <i data-feather="instagram" class="tx-white-7 wd-20 ht-20"></i>
-                                    </div>
-                                    <div class="media-body pd-l-25">
-                                        <h6 class="tx-color-01 mg-b-5">Instagram</h6>
-                                        <p class="tx-12 mg-b-10">Photo and video-sharing social networking service by Facebook... <a href="">Learn more</a></p>
-                                        <span class="tx-12 tx-color-03">3,005,192 Followers</span>
+                                        <h6 class="tx-color-01 mg-b-5">Facebook</h6>
+                                        <p class="tx-12 mg-b-10">
+                                            @if ($account['facebook'])
+                                                <a href="{{ route('cabinet.profile.social_unlink', ['provider' => 'facebook']) }}" class="btn btn-danger btn-xxs">Отвязать акканут</a>
+                                            @else
+                                                <a href="{{ route('cabinet.profile.social_link', ['provider' => 'facebook', 'social_facebook' => 1]) }}" class="btn btn-success btn-xxs">Привязать акканут</a>
+                                            @endif
+                                        </p>
                                     </div>
                                 </div>
+
+{{--                                <div class="media">--}}
+{{--                                    <div class="wd-45 ht-45 bg-pink rounded d-flex align-items-center justify-content-center">--}}
+{{--                                        <i data-feather="instagram" class="tx-white-7 wd-20 ht-20"></i>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="media-body pd-l-25">--}}
+{{--                                        <h6 class="tx-color-01 mg-b-5">Instagram</h6>--}}
+{{--                                        <p class="tx-12 mg-b-10"><a href="" class="btn btn-success btn-xxs">Привязать акканут</a></p>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                             </div>
                         </div>
                     </div>

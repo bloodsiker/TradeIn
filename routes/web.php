@@ -88,6 +88,8 @@ Route::group(['middleware' => ['web']], function () {
 
         Route::match(['post', 'get'], '/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
         Route::get('/logout', 'Cabinet\ProfileController@logout')->name('cabinet.profile.logout');
+        Route::get('/social/link', 'Cabinet\ProfileController@linkSocialAccount')->name('cabinet.profile.social_link');
+        Route::get('/social/unlink', 'Cabinet\ProfileController@unlinkSocialAccount')->name('cabinet.profile.social_unlink');
 
         Route::get('/model-requests', 'Cabinet\ModelRequestController@list')->name('cabinet.model_request.list');
         Route::post('/model-request/add', 'Cabinet\ModelRequestController@add')->name('cabinet.model_request.add');
