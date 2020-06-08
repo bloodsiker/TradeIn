@@ -43,7 +43,7 @@ return [
     ],
 
     'linkedin' => [
-        'client_id' => env('LINKEDIN_KEY'),
+        'client_id' => env('LINKEDIN_CLIENT_ID'),
         'client_secret' => env('LINKEDIN_SECRET'),
         'redirect' => env('LINKEDIN_URI'),
     ],

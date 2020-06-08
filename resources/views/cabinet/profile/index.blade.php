@@ -108,7 +108,7 @@
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="phone">Телефон</label>
-                                    <input type="text" class="form-control phone-mask @error('phone') is-invalid @enderror" name="phone" value="{{  Auth::user()->phone }}" id="phone" placeholder="">
+                                    <input type="text" class="form-control phone-mask @error('phone') is-invalid @enderror" name="phone" value="{{  Auth::user()->phone }}" id="phone" autocomplete="off">
                                     @error('phone')
                                         <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                     @enderror

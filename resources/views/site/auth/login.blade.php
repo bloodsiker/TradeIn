@@ -50,8 +50,8 @@
 
                     <div class="divider-text">или</div>
                     <a href="{{ route('login.social', ['provider' => 'facebook']) }}" class="btn btn-outline-facebook btn-block">Войти через Facebook</a>
-                    <a href="" class="btn btn-outline-twitter btn-block">Войти через Twitter</a>
-                    <a href="" class="btn btn-outline-google btn-block">Войти через Google</a>
+                    <a href="{{ route('login.social', ['provider' => 'linkedin']) }}" class="btn btn-outline-twitter btn-block">Войти через Linkedin</a>
+                    <a href="{{ route('login.social', ['provider' => 'google']) }}" class="btn btn-outline-google btn-block">Войти через Google</a>
                 </div>
             </div>
         </div>
