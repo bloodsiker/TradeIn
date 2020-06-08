@@ -46,7 +46,7 @@ class SocialAuthController extends Controller
             return redirect()->route('cabinet.main');
         }
 
-        return redirect()->back()->with('danger', 'Пользователь не найден');
+        return redirect()->route('login')->with('danger', 'Пользователь не найден');
     }
 
     /**
@@ -71,7 +71,7 @@ class SocialAuthController extends Controller
             return redirect()->route('cabinet.main');
         }
 
-        return redirect()->back()->with('danger', 'Пользователь не найден');
+        return redirect()->route('login')->with('danger', 'Пользователь не найден');
     }
 
     /**
@@ -96,6 +96,6 @@ class SocialAuthController extends Controller
             return redirect()->route('cabinet.main');
         }
 
-        return redirect()->back()->with('danger', 'Пользователь не найден');
+        return redirect()->route('login')->with('danger', 'Пользователь не найден');
     }
 }
