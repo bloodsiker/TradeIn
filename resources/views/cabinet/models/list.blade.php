@@ -9,18 +9,62 @@
                 <div>
                     <h4 class="mg-b-0">База данных смартфонов @if($network) торговой сети {{ $network->name }} @endif</h4>
                 </div>
-                <div class="mg-t-20 mg-sm-t-0">
-                    <a href="#modal-network" class="btn btn-sm btn-dark btn-block" data-toggle="modal">Создать</a>
+                <div class="mg-t-20 mg-sm-t-0 d-sm-flex justify-content-end">
+                    @if (Auth::user()->isAdmin())
+                        <a href="#modal-import" class="btn btn-sm btn-dark" data-toggle="modal">Импорт</a>
+                        <a href="#modal-data" class="btn btn-sm btn-dark mg-l-10" data-toggle="modal">Создать</a>
+                    @endif
                 </div>
             </div>
-        </div><!-- container -->
-    </div><!-- content -->
+        </div>
+    </div>
 @endsection
 
 @section('content')
     <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
+        <div class="row mg-b-15" id="filters">
+            <div class="col-lg-12 col-xl-12">
+                <form action="{{ route('cabinet.model.list') }}" method="GET" novalidate>
+                    <div class="form-row">
+                        @if(Auth::user()->isAdmin())
+                            <div class="form-group col-md-3">
+                                <select class="custom-select network-filter" name="network_id">
+                                    <option value=""></option>
+                                    @foreach($networks as $network)
+                                        <option value="{{ $network->id }}" @if(request('network_id') == $network->id) selected @endif>{{ $network->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
+                        @if(Auth::user()->isAdmin() || Auth::user()->isNetwork())
+                            <div class="form-group col-md-3">
+                                <select class="custom-select brand-filter" name="brand_id">
+                                    <option value=""></option>
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->id }}" @if(request('brand_id') == $brand->id) selected @endif>{{ $brand->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
+                        <div class="form-group col-md-3">
+                            <input type="text" class="form-control" name="model" value="{{ request('model') ?: null }}" placeholder="Модель" autocomplete="off">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-dark">Применить</button>
+                                <a href="{{ route('cabinet.model.list') }}" class="btn btn-danger">Сбросить</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="row">
-            <div class="col-lg-10 col-xl-10">
+            <div class="col-lg-12 col-xl-12">
                 @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
@@ -69,172 +113,232 @@
                     </div>
                 @else
                     <div class="alert alert-primary d-flex align-items-center" role="alert">
-                        <i data-feather="alert-circle" class="mg-r-10"></i> В торговой сети нет базы данных смартфонов
+                        @if(request('network_id'))
+                            <i data-feather="alert-circle" class="mg-r-10"></i> В торговой сети нет базы данных смартфонов
+                        @elseif(request('brand_id'))
+                            <i data-feather="alert-circle" class="mg-r-10"></i> Не найденно смартфонов от производителя {{ $brand->name }}
+                        @elseif(request('model'))
+                            <i data-feather="alert-circle" class="mg-r-10"></i> По запросу "{{ request('model') }}" ничего не найдено
+                        @else
+                            <i data-feather="alert-circle" class="mg-r-10"></i> В базе данных смартфонов нет позиций
+                        @endif
                     </div>
                 @endif
             </div>
-
-            <div class="col-sm-7 col-md-5 col-lg-2 col-xl-2 mg-t-40 mg-lg-t-0">
-                <h6 class="tx-uppercase tx-semibold mg-b-10">Торговые сети</h6>
-
-                <nav class="nav nav-classic tx-13">
-                    @foreach($networks as $singlNetwork)
-                        <a href="{{ route('cabinet.model.list', ['network_id' => $singlNetwork->id]) }}" class="nav-link vertical-border-list @if(Request::get('network_id') == $singlNetwork->id) active @endif">{{ $singlNetwork->name }}</a>
-                    @endforeach
-                </nav>
-            </div><!-- col -->
         </div>
     </div>
 @endsection
 
 @push('modals')
+    @if (Auth::user()->isAdmin())
+        <div class="modal fade" id="modal-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content tx-14">
+                    <form action="{{ route('cabinet.model.add') }}" method="POST" data-parsley-validate novalidate>
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="titleModal">Добавить модель</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @csrf
+                            <input type="hidden" name="network_id" value="{{ $network ? $network->id : null }}">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="brand">Бренд<span class="text-danger">*</span></label>
+                                    <select class="custom-select" id="brand" name="brand_id">
+                                        @foreach($brands as $brand)
+                                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="name">Модель<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="name" id="name" placeholder="Модель" autocomplete="off" required>
+                                </div>
+                            </div>
 
-    <div class="modal fade" id="modal-network" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.model.add') }}" method="POST" novalidate>
-                    <div class="modal-header">
-                        <h6 class="modal-title" id="titleModal">Добавить модель</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @csrf
-                        <input type="hidden" name="network_id" value="{{ $network ? $network->id : null }}">
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="brand">Бренд</label>
-                                <select class="custom-select" id="brand" name="brand_id">
-                                    @foreach($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="price">Цена</label>
+                                    <input type="text" class="form-control" name="price" id="price" placeholder="Цена 1" autocomplete="off" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="price_1">Цена 1</label>
+                                    <input type="text" class="form-control" name="price_1" id="price_1" placeholder="Цена 1" autocomplete="off" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="price_2">Цена 2</label>
+                                    <input type="text" class="form-control" name="price_2" id="price_2" placeholder="Цена 2" autocomplete="off" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="price_3">Цена 3</label>
+                                    <input type="text" class="form-control" name="price_3" id="price_3" placeholder="Цена 3" autocomplete="off" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="price_4">Цена 4</label>
+                                    <input type="text" class="form-control" name="price_4" id="price_4" placeholder="Цена 4" autocomplete="off" required>
+                                </div>
+                                <div class="form-grou col-md-6">
+                                    <label for="price_5">Цена 5</label>
+                                    <input type="text" class="form-control" name="price_5" id="price_5" placeholder="Цена 5" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
+                            <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-save"></i> Создать</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content tx-14">
+                    <form action="{{ route('cabinet.model.edit') }}" id="formEdit" method="POST" data-parsley-validate novalidate>
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="titleModal">Редактировать модель</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @csrf
+                            <input type="hidden" name="id" value="">
+                            <input type="hidden" name="network_id" value="">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="brand">Бренд<span class="text-danger">*</span></label>
+                                    <select class="custom-select" id="brand" name="brand_id">
+                                        @foreach($brands as $brand)
+                                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="name">Модель<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="name" id="name" placeholder="Модель" autocomplete="off" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="price">Цена</label>
+                                    <input type="text" class="form-control" name="price" id="price" placeholder="Цена 1" autocomplete="off" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="price_1">Цена 1</label>
+                                    <input type="text" class="form-control" name="price_1" id="price_1" placeholder="Цена 1" autocomplete="off" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="price_2">Цена 2</label>
+                                    <input type="text" class="form-control" name="price_2" id="price_2" placeholder="Цена 2" autocomplete="off" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="price_3">Цена 3</label>
+                                    <input type="text" class="form-control" name="price_3" id="price_3" placeholder="Цена 3" autocomplete="off" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="price_4">Цена 4</label>
+                                    <input type="text" class="form-control" name="price_4" id="price_4" placeholder="Цена 4" autocomplete="off" required>
+                                </div>
+                                <div class="form-grou col-md-6">
+                                    <label for="price_5">Цена 5</label>
+                                    <input type="text" class="form-control" name="price_5" id="price_5" placeholder="Цена 5" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
+                            <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-save"></i> Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal-import" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content tx-14">
+                    <form action="{{ route('cabinet.model.import') }}" method="POST" enctype="multipart/form-data" data-parsley-validate novalidate>
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="titleModal">Иморт базы данных смартфонов</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @csrf
+                            <div class="form-group">
+                                <label for="action">Действие<span class="text-danger">*</span></label>
+                                <select class="custom-select" id="action" name="action" required>
+                                    <option value="0">Обновить</option>
+                                    <option value="1">Добавить новые позиции</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="network_id">Торговая сеть</label>
+                                <select class="custom-select" id="network_id" name="network_id">
+                                    <option value="">Общая база</option>
+                                    @foreach($networks as $network)
+                                        <option value="{{ $network->id }}">{{ $network->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="name">Модель</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Модель" autocomplete="off" required>
-                            </div>
-                        </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="price">Цена</label>
-                                <input type="text" class="form-control" name="price" id="price" placeholder="Цена 1" autocomplete="off" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="price_1">Цена 1</label>
-                                <input type="text" class="form-control" name="price_1" id="price_1" placeholder="Цена 1" autocomplete="off" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="price_2">Цена 2</label>
-                                <input type="text" class="form-control" name="price_2" id="price_2" placeholder="Цена 2" autocomplete="off" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="price_3">Цена 3</label>
-                                <input type="text" class="form-control" name="price_3" id="price_3" placeholder="Цена 3" autocomplete="off" required>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" name="file" class="custom-file-input" id="file"
+                                               aria-describedby="file" required>
+                                        <label class="custom-file-label" for="avatar">Выберете файт</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="price_4">Цена 4</label>
-                                <input type="text" class="form-control" name="price_4" id="price_4" placeholder="Цена 4" autocomplete="off" required>
-                            </div>
-                            <div class="form-grou col-md-6">
-                                <label for="price_5">Цена 5</label>
-                                <input type="text" class="form-control" name="price_5" id="price_5" placeholder="Цена 5" autocomplete="off" required>
-                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
+                            <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-file-excel"></i> Импортировать</button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
-                        <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-save"></i> Создать</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.model.edit') }}" id="formEdit" method="POST" novalidate>
-                    <div class="modal-header">
-                        <h6 class="modal-title" id="titleModal">Редактировать модель</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        @csrf
-                        <input type="hidden" name="id" value="">
-                        <input type="hidden" name="network_id" value="">
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="brand">Бренд</label>
-                                <select class="custom-select" id="brand" name="brand_id">
-                                    @foreach($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="name">Модель</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Модель" autocomplete="off" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="price">Цена</label>
-                                <input type="text" class="form-control" name="price" id="price" placeholder="Цена 1" autocomplete="off" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="price_1">Цена 1</label>
-                                <input type="text" class="form-control" name="price_1" id="price_1" placeholder="Цена 1" autocomplete="off" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="price_2">Цена 2</label>
-                                <input type="text" class="form-control" name="price_2" id="price_2" placeholder="Цена 2" autocomplete="off" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="price_3">Цена 3</label>
-                                <input type="text" class="form-control" name="price_3" id="price_3" placeholder="Цена 3" autocomplete="off" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="price_4">Цена 4</label>
-                                <input type="text" class="form-control" name="price_4" id="price_4" placeholder="Цена 4" autocomplete="off" required>
-                            </div>
-                            <div class="form-grou col-md-6">
-                                <label for="price_5">Цена 5</label>
-                                <input type="text" class="form-control" name="price_5" id="price_5" placeholder="Цена 5" autocomplete="off" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
-                        <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-save"></i> Сохранить</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    @endif
 @endpush
 
 @push('scripts')
     <script>
         $(function(){
             'use strict'
+
+            $('.network-filter').select2({
+                placeholder: 'Торговая сеть',
+                searchInputPlaceholder: 'Поиск торговой сети',
+                allowClear: true,
+            });
+
+            $('.brand-filter').select2({
+                placeholder: 'Производитель',
+                searchInputPlaceholder: 'Поиск бренда',
+                allowClear: true,
+            });
 
             deleteObject('.table', '.btnDelete', "{{ route('cabinet.model.delete') }}");
 

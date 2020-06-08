@@ -237,7 +237,7 @@
             orientation: "bottom left",
             language: "{{app()->getLocale()}}",
             isRTL: false,
-            autoclose: true,
+            autoClose: true,
             format: "dd.mm.yyyy",
         });
 

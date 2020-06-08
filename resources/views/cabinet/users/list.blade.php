@@ -10,7 +10,9 @@
                     <h4 class="mg-b-0">Пользователи</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
-                    <a href="{{ route('cabinet.user.add') }}" class="btn btn-sm btn-dark btn-block">Создать</a>
+                    @if(Auth::user()->isAdmin())
+                        <a href="{{ route('cabinet.user.add') }}" class="btn btn-sm btn-dark btn-block">Создать</a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -52,8 +54,11 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-md-2">
-                            <button type="submit" class="btn btn-block btn-dark">Применить</button>
+                        <div class="form-group col-md-3">
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-dark">Применить</button>
+                                <a href="{{ route('cabinet.user.list') }}" class="btn btn-danger">Сбросить</a>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -80,7 +85,9 @@
                             <th scope="col">Телефон</th>
                             <th scope="col">Роль</th>
                             <th scope="col">Статус</th>
-                            <th scope="col" width="80px"></th>
+                            @if(Auth::user()->isAdmin())
+                                <th scope="col" width="80px"></th>
+                            @endif
                         </tr>
                         </thead>
                         <tbody>
@@ -94,14 +101,16 @@
                                 <td>{{ $user->phone }}</td>
                                 <td>{{ $user->role->name }}</td>
                                 <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
-                                <td>
-                                    <a href="{{ route('cabinet.user.edit', ['id' => $user->id]) }}" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon">
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                </td>
+                                @if(Auth::user()->isAdmin())
+                                    <td>
+                                        <a href="{{ route('cabinet.user.edit', ['id' => $user->id]) }}" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                         </tbody>
@@ -118,11 +127,13 @@
         $(function() {
             'use strict'
 
-            $('.network-filter').select2({
-                placeholder: 'Торговая сеть',
-                searchInputPlaceholder: 'Поиск торговой сети',
-                allowClear: true,
-            });
+            @if(Auth::user()->isAdmin())
+                $('.network-filter').select2({
+                    placeholder: 'Торговая сеть',
+                    searchInputPlaceholder: 'Поиск торговой сети',
+                    allowClear: true,
+                });
+            @endif
 
             $('.shop-filter').select2({
                 placeholder: 'Магазин',

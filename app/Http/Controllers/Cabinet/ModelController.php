@@ -3,31 +3,45 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
+use App\Imports\DeviceModelImport;
 use App\Models\Brand;
 use App\Models\DeviceModel;
 use App\Models\Network;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class ModelController
  */
 class ModelController extends Controller
 {
-
     public function list(Request $request)
     {
-        $brands = Brand::all()->sortByDesc('id');
+        $brands = Brand::orderBy('name')->get();
         $networks = Network::all();
 
-        $network = null;
-        if ($request->has('network_id')) {
+        $network = $brand = null;
+        $query = DeviceModel::select('device_models.*')->with('brand');
+
+        if ($request->has('network_id') && $request->get('network_id')) {
             $network = Network::find($request->get('network_id'));
-            $models = DeviceModel::where('network_id', $network->id)->get()->sortByDesc('id');
+            $query->where('network_id', $request->get('network_id'));
         } else {
-            $models = DeviceModel::all()->sortByDesc('id');
+            $query->where('network_id', null);
         }
 
-        return view('cabinet.models.list', compact('models', 'brands', 'networks', 'network'));
+        if ($request->get('brand_id')) {
+            $brand = Brand::find($request->get('brand_id'));
+            $query->where('brand_id', $request->get('brand_id'));
+        }
+
+        if ($request->get('model')) {
+            $query->where('name', 'LIKE', "%{$request->get('model')}%");
+        }
+
+        $models = $query->get();
+
+        return view('cabinet.models.list', compact('models', 'brands', 'networks', 'network', 'brand'));
     }
 
     public function add(Request $request)
@@ -90,5 +104,26 @@ class ModelController extends Controller
         }
 
         return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при удалении!']);
+    }
+
+    public function import(Request $request)
+    {
+        if ($request->hasFile('file')) {
+
+            $action = (int) $request->get('action');
+            Excel::import(new DeviceModelImport($request), $request->file('file'));
+
+            if ($request->has('action') && $action === 0) {
+
+                return redirect()->back()->with('success', "Импорт прошел успешно, данные обновленны!");
+            } elseif ($request->has('action') && $action === 1) {
+
+                return redirect()->back()->with('success', "Импорт прошел успешно, новые данные внесены в базу");
+            }
+
+            return redirect()->back()->with('danger', "Не выбрано действия для импорта");
+        }
+
+        return redirect()->back()->with('danger', 'Ошибка при импорте!');
     }
 }

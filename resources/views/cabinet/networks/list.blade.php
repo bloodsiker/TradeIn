@@ -67,7 +67,7 @@
     <div class="modal fade" id="modal-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.network.add') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.network.add') }}" method="POST" data-parsley-validate novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Создать торговую сеть</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -77,7 +77,7 @@
                     <div class="modal-body">
                         @csrf
                         <div class="form-group">
-                            <label for="name">Название</label>
+                            <label for="name">Название<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="name" id="name" placeholder="Название" autocomplete="off" required>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
     <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.network.edit') }}" id="formEdit" method="POST" novalidate>
+                <form action="{{ route('cabinet.network.edit') }}" id="formEdit" method="POST" data-parsley-validate novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Редактировать торговую сеть</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -103,7 +103,7 @@
                     <div class="modal-body">
                         @csrf
                         <div class="form-group">
-                            <label for="edit-name">Название</label>
+                            <label for="edit-name">Название<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="name" id="edit-name" placeholder="Название" autocomplete="off" required>
                             <input type="hidden" name="id" value="">
                         </div>

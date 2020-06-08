@@ -33,7 +33,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::match(['post', 'get'], '/verify', 'LoginController@verify')->name('verify');
     Route::match(['post', 'get'], '/password/recovery', 'LoginController@passwordRecovery')->name('password.recovery');
 
-    Route::get('/auth/{provider}', 'SocialAuthController@providerRedirect')->name('provider.redirect');
+    Route::get('/auth/{provider}', 'SocialAuthController@providerRedirect')->name('login.social');
     Route::get('/auth/facebook/callback', 'SocialAuthController@facebookCallback')->name('auth.facebook.callback');
     Route::get('/auth/google/callback', 'SocialAuthController@googleCallback')->name('auth.google.callback');
     Route::get('/auth/linkedin/callback', 'SocialAuthController@linkedinCallback')->name('auth.linkedin.callback');
@@ -72,6 +72,7 @@ Route::group(['middleware' => ['web']], function () {
             Route::post('/model/add', 'Cabinet\ModelController@add')->name('cabinet.model.add');
             Route::post('/model/edit', 'Cabinet\ModelController@edit')->name('cabinet.model.edit');
             Route::post('/model/delete', 'Cabinet\ModelController@delete')->name('cabinet.model.delete');
+            Route::post('/model/import', 'Cabinet\ModelController@import')->name('cabinet.model.import');
 
             Route::get('/buyback-bonus', 'Cabinet\BuybackBonusController@list')->name('cabinet.buyback_bonus.list');
             Route::post('/buyback-bonus/add', 'Cabinet\BuybackBonusController@add')->name('cabinet.buyback_bonus.add');
@@ -83,6 +84,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::post('/buyback-request/add', 'Cabinet\BuybackRequestController@add')->name('cabinet.buyback_request.add');
         Route::post('/buyback-request/edit', 'Cabinet\BuybackRequestController@edit')->name('cabinet.buyback_request.edit');
         Route::post('/buyback-request/delete', 'Cabinet\BuybackRequestController@delete')->name('cabinet.buyback_request.delete');
+        Route::get('/buyback-request/export', 'Cabinet\BuybackRequestController@export')->name('cabinet.buyback_request.export');
 
         Route::match(['post', 'get'], '/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
         Route::get('/logout', 'Cabinet\ProfileController@logout')->name('cabinet.profile.logout');

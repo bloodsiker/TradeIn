@@ -13,23 +13,39 @@ use Symfony\Component\HttpFoundation\Request;
 class ApiController extends Controller
 {
 
-    public function brand()
+    public function brand(Request $request)
     {
-        return response()->json(['status' => 200, 'data' => Brand::select('id', 'name')->get()]);
+        return response()->json([
+            'status' => 200,
+            'data' => DeviceModel::select('brands.id', 'brands.name')
+                ->where('network_id', $request->get('network_id'))
+                ->join('brands', 'brands.id', '=', 'device_models.brand_id')
+                ->groupBy('brands.id')->get()
+        ]);
     }
 
-    public function model(Request $request, $id)
+    public function model(Request $request)
     {
-        $brand = Brand::find($id);
-        if ($brand) {
-            return response()->json(['status' => 200, 'data' => DeviceModel::where('brand_id', $brand->id)->get()]);
+        if ($request->get('brand_id')) {
+            $brand = Brand::find($request->get('brand_id'));
+            if ($brand) {
+                return response()->json([
+                    'status' => 200,
+                    'data' => DeviceModel::where(['brand_id' => $brand->id, 'network_id' => $request->get('network_id')])
+                        ->select(['id', 'brand_id', 'name', 'price', 'price_1', 'price_2', 'price_3', 'price_4', 'price_5'])
+                        ->get()
+                ]);
+            }
         }
 
-        return response()->json(['status' => 404, 'message' => 'Brand not found']);
+        return response()->json(['status' => 404, 'message' => 'Brand not specified']);
     }
 
-    public function allModels()
+    public function allModels(Request $request)
     {
-        return response()->json(['status' => 200, 'data' => DeviceModel::with('brand')->get()]);
+        return response()->json([
+            'status' => 200,
+            'data' => DeviceModel::with('brand')->where('network_id', $request->get('network_id'))->get()
+        ]);
     }
 }

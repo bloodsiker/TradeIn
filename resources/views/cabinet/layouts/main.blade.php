@@ -14,6 +14,7 @@
     <link href="{{ asset('lib/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/ionicons/css/ionicons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('lib/datepicker/css/datepicker.min.css') }}" rel="stylesheet">
 
     <link href="{{ asset('assets/css/dashforge.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/dashforge.profile.css') }}" rel="stylesheet">

@@ -10,7 +10,7 @@
                     <h4 class="mg-b-0">Заявки на выкуп</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
-{{--                    <a href="" class="btn btn-sm btn-dark btn-block" id="show-filter"><i class="fa fa-cog"></i> Фильтры</a>--}}
+                    <a href="{{ route('cabinet.buyback_request.export', [request()->getQueryString()]) }}" class="btn btn-sm btn-dark btn-block" id="show-filter">Экспорт в Excel</a>
                 </div>
             </div>
         </div>
@@ -72,7 +72,10 @@
                             </select>
                         </div>
                         <div class="form-group col-md-2">
-                            <button type="submit" class="btn btn-block btn-dark">Применить</button>
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-dark">Применить</button>
+                                <a href="{{ route('cabinet.buyback_request.list') }}" class="btn btn-danger">Сбросить</a>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -149,7 +152,7 @@
     <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.buyback_request.edit') }}" id="formEdit" method="POST" novalidate>
+                <form action="{{ route('cabinet.buyback_request.edit') }}" id="formEdit" method="POST" data-parsley-validate novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Редактировать заявку на выкуп</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -176,11 +179,11 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="imei">IMEI-номер</label>
-                                <input type="text" class="form-control" name="imei" id="imei" placeholder="IMEI-номер" autocomplete="off" required>
+                                <input type="text" class="form-control" name="imei" id="imei" placeholder="IMEI-номер" autocomplete="off">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="packet">Номер сейф-пакета</label>
-                                <input type="text" class="form-control" name="packet" id="packet" placeholder="Номер сейф-пакета" autocomplete="off" required>
+                                <input type="text" class="form-control" name="packet" id="packet" placeholder="Номер сейф-пакета" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group">
@@ -213,7 +216,7 @@
                 orientation: "bottom left",
                 language: "{{app()->getLocale()}}",
                 isRTL: false,
-                autoclose: true,
+                autoClose: true,
                 format: "dd.mm.yyyy",
             });
 

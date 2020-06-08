@@ -3,14 +3,14 @@
     <div class="select_cost">
         <div class="left_block">
             <div class="select">
-                <div class="brand" id="brandList" data-url="{{ route('api.brands') }}">
+                <div class="brand" id="brandList" data-url="{{ route('api.brands', ['network_id' => Auth::check() ? Auth::user()->network_id : null]) }}">
                     <div class="brand-search-one">
                         <p class="brand-search-text"></p>
                         <input class="brand-search" type="text" placeholder="Выберите производителя">
                     </div>
                     <ul class="brand-list" id="brand-list"></ul>
                 </div>
-                <div class="model" id="modelList" data-url="{{ route('main') }}/api/brand/{id}/models">
+                <div class="model" id="modelList" data-url="{{ route('api.models', ['brand_id'  => '', 'network_id' => Auth::check() ? Auth::user()->network_id : null]) }}">
                     <div class="model-search-one">
                         <p class="model-search-text"></p>
                         <input class="model-search" type="text" placeholder="Выберите модель">

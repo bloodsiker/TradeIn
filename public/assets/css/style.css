@@ -2,7 +2,17 @@
 body {background-color: #f5f6fa;font-size: 0.80rem;!important;}
 .content {padding-bottom: 70px;}
 .sub-content {padding: 8px;}
+.btn-group {width: 100%}
 .btn-xxs {padding-top: 2px; padding-bottom: 2px; padding-left: 6px; padding-right: 6px; font-size: 12px;}
 .vertical-border-list {border: 1px solid #1b2e4b;border-radius: 3px;padding: 3px!important;}
 .nav-classic .vertical-border-list + .vertical-border-list {margin-top: 4px;}
 .vertical-border-list.active { background: #49597b!important; color: #fff!important;}
+
+/*select2*/
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #3c4962;
+}
+.select2-container--default .select2-search--dropdown .select2-search__field:focus {
+    outline: none;
+    border-color: #3c4962;
+}

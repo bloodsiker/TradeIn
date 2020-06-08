@@ -64,7 +64,7 @@
     <div class="modal fade" id="modal-network" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.brand.add') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.brand.add') }}" method="POST" data-parsley-validate novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Добавить бренд</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -74,7 +74,7 @@
                     <div class="modal-body">
                         @csrf
                         <div class="form-group">
-                            <label for="name">Название</label>
+                            <label for="name">Название<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="name" id="name" placeholder="Название" autocomplete="off" required>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
     <div class="modal fade" id="edit-network" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.brand.edit') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.brand.edit') }}" method="POST" data-parsley-validate novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Редактировать бренд</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -100,7 +100,7 @@
                     <div class="modal-body">
                         @csrf
                         <div class="form-group">
-                            <label for="name">Название</label>
+                            <label for="name">Название<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="name" id="name" placeholder="Название" autocomplete="off" required>
                             <input type="hidden" name="id" value="">
                         </div>

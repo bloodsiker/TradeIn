@@ -69,7 +69,7 @@
     <div class="modal fade" id="modal-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.buyback_bonus.add') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.buyback_bonus.add') }}" method="POST" data-parsley-validate novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Добавить бонус</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -80,16 +80,16 @@
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="cost_from">Стоимость от</label>
+                                <label for="cost_from">Стоимость от<span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" name="cost_from" id="cost_from" placeholder="Стоимость от" autocomplete="off" required>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="cost_to">Стоимость до</label>
+                                <label for="cost_to">Стоимость до<span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" name="cost_to" id="cost_to" placeholder="Стоимость до" autocomplete="off" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="bonus">Бонус</label>
+                            <label for="bonus">Бонус<span class="text-danger">*</span></label>
                             <input type="number" class="form-control" name="bonus" id="bonus" placeholder="Бонус" autocomplete="off" required>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
     <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.buyback_bonus.edit') }}" id="formEdit" method="POST" novalidate>
+                <form action="{{ route('cabinet.buyback_bonus.edit') }}" id="formEdit" method="POST" data-parsley-validate novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModal">Редактировать бонус</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -117,16 +117,16 @@
                         <input type="hidden" name="id" value="">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="cost_from">Стоимость от</label>
+                                <label for="cost_from">Стоимость от<span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" name="cost_from" id="cost_from" placeholder="Стоимость от" autocomplete="off" required>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="cost_to">Стоимость до</label>
+                                <label for="cost_to">Стоимость до<span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" name="cost_to" id="cost_to" placeholder="Стоимость до" autocomplete="off" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="bonus">Бонус</label>
+                            <label for="bonus">Бонус<span class="text-danger">*</span></label>
                             <input type="number" class="form-control" name="bonus" id="bonus" placeholder="Бонус" autocomplete="off" required>
                         </div>
                     </div>

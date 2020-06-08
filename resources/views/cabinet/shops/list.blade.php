@@ -72,7 +72,7 @@
     <div class="modal fade" id="modal-data" tabindex="-1" role="dialog" aria-labelledby="titleModalAdd" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.shop.add') }}" method="POST" novalidate>
+                <form action="{{ route('cabinet.shop.add') }}" method="POST" data-parsley-validate novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModalAdd">Создать магазин</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -82,12 +82,12 @@
                     <div class="modal-body">
                         @csrf
                         <div class="form-group">
-                            <label for="name">Название</label>
+                            <label for="name">Название<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="name" id="name" placeholder="Название" autocomplete="off" required>
                         </div>
                         <div class="form-group">
-                            <label for="network">Торговая сеть</label>
-                            <select class="custom-select" id="network" name="network_id">
+                            <label for="network">Торговая сеть<span class="text-danger">*</span></label>
+                            <select class="custom-select" id="network" name="network_id" required>
                                 @foreach($networks as $network)
                                     <option value="{{ $network->id }}">{{ $network->name }}</option>
                                 @endforeach
@@ -95,11 +95,11 @@
                         </div>
                         <div class="form-group">
                             <label for="edit-city">Город</label>
-                            <input type="text" class="form-control" name="city" id="edit-city" placeholder="Название" autocomplete="off" required>
+                            <input type="text" class="form-control" name="city" id="edit-city" placeholder="Название" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="edit-address">Адрес</label>
-                            <input type="text" class="form-control" name="address" id="edit-address" placeholder="Название" autocomplete="off" required>
+                            <input type="text" class="form-control" name="address" id="edit-address" placeholder="Название" autocomplete="off">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -114,7 +114,7 @@
     <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModalEdit" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
-                <form action="{{ route('cabinet.shop.edit') }}" id="formEdit" method="POST" novalidate>
+                <form action="{{ route('cabinet.shop.edit') }}" id="formEdit" method="POST" data-parsley-validate novalidate>
                     <div class="modal-header">
                         <h6 class="modal-title" id="titleModalEdit">Редактировать магазин</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -124,13 +124,13 @@
                     <div class="modal-body">
                         @csrf
                         <div class="form-group">
-                            <label for="name">Название</label>
+                            <label for="name">Название<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="name" id="name" placeholder="Название" autocomplete="off" required>
                             <input type="hidden" name="id" value="">
                         </div>
                         <div class="form-group">
-                            <label for="select-network">Торговая сеть</label>
-                            <select class="custom-select" id="select-network" name="network_id">
+                            <label for="select-network">Торговая сеть<span class="text-danger">*</span></label>
+                            <select class="custom-select" id="select-network" name="network_id" required>
                                 @foreach($networks as $network)
                                     <option value="{{ $network->id }}">{{ $network->name }}</option>
                                 @endforeach
@@ -138,11 +138,11 @@
                         </div>
                         <div class="form-group">
                             <label for="city">Город</label>
-                            <input type="text" class="form-control" name="city" id="city" placeholder="Название" autocomplete="off" required>
+                            <input type="text" class="form-control" name="city" id="city" placeholder="Название" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="address">Адрес</label>
-                            <input type="text" class="form-control" name="address" id="address" placeholder="Название" autocomplete="off" required>
+                            <input type="text" class="form-control" name="address" id="address" placeholder="Название" autocomplete="off">
                         </div>
                     </div>
                     <div class="modal-footer">

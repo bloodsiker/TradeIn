@@ -82,7 +82,7 @@
         <div class="modal fade" id="modal-data" tabindex="-1" role="dialog" aria-labelledby="titleModalAdd" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content tx-14">
-                    <form action="{{ route('cabinet.model_request.add') }}" method="POST" novalidate>
+                    <form action="{{ route('cabinet.model_request.add') }}" method="POST" data-parsley-validate novalidate>
                         <div class="modal-header">
                             <h6 class="modal-title" id="titleModalAdd">Создать заявку на добавление смартфона</h6>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -114,7 +114,7 @@
         <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="titleModalEdit" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content tx-14">
-                    <form action="{{ route('cabinet.model_request.edit') }}" id="formEdit" method="POST" novalidate>
+                    <form action="{{ route('cabinet.model_request.edit') }}" id="formEdit" method="POST" data-parsley-validate novalidate>
                         <div class="modal-header">
                             <h6 class="modal-title" id="titleModalEdit">Редактировать заявку</h6>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -125,11 +125,11 @@
                             @csrf
                             <input type="hidden" name="id" value="">
                             <div class="form-group">
-                                <label for="edit-brand">Производитель</label>
+                                <label for="edit-brand">Производитель<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="brand" id="edit-brand" placeholder="Название" autocomplete="off" required>
                             </div>
                             <div class="form-group">
-                                <label for="edit-model">Модель</label>
+                                <label for="edit-model">Модель<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="model" id="edit-model" placeholder="Название" autocomplete="off" required>
                             </div>
                             <div class="form-group">

@@ -49,7 +49,7 @@
                     </form>
 
                     <div class="divider-text">или</div>
-                    <a href="" class="btn btn-outline-facebook btn-block">Войти через Facebook</a>
+                    <a href="{{ route('login.social', ['provider' => 'facebook']) }}" class="btn btn-outline-facebook btn-block">Войти через Facebook</a>
                     <a href="" class="btn btn-outline-twitter btn-block">Войти через Twitter</a>
                     <a href="" class="btn btn-outline-google btn-block">Войти через Google</a>
                 </div>

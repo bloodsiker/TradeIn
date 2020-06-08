@@ -20,28 +20,45 @@ class UserController extends Controller
     public function list(Request $request)
     {
         $roles = $networks = [];
-        $query = User::select('users.*');
-
-        if ($request->has('network_id') && $request->get('network_id')) {
-            $query->where('network_id', $request->get('network_id'));
-        }
-
-        if ($request->has('shop_id') && $request->get('shop_id')) {
-            $query->where('shop_id', $request->get('shop_id'));
-        }
-
-        if ($request->has('role_id') && $request->get('role_id')) {
-            $query->where('role_id', $request->get('role_id'));
-        }
+        $query = User::select('users.*')->with('role', 'shop', 'network');
 
         if (\Auth::user()->isAdmin()) {
             $networks = Network::all();
             $shops = Shop::all();
             $roles = Role::all();
-        } elseif (\Auth::user()->isNetwork()) {
+        }
+
+        if (\Auth::user()->isNetwork()) {
+            if ($request->get('role_id') && !in_array((int) $request->get('role_id'), [Role::ROLE_NETWORK, Role::ROLE_SHOP], true)) {
+                return redirect()->route('cabinet.user.list')
+                    ->with('danger', 'У вас нет прав для фильтрации пользователей по этой роли!');
+            }
+
             $shops = Shop::where('network_id', \Auth::user()->network_id)->get();
             $roles = Role::whereIn('id', [Role::ROLE_NETWORK, Role::ROLE_SHOP])->get();
+
+            $allowShop = $shops->contains(function ($value, $key) use ($request) {
+                return $value->id === (int) $request->get('shop_id');
+            });
+
+            if ($request->get('shop_id') && !$allowShop) {
+                return redirect()->route('cabinet.user.list')
+                    ->with('danger', 'Вы не можете просматривать пользователей которые не находятся в вашей торговой сети!');
+            }
+
             $query->where('network_id', \Auth::user()->network_id);
+        }
+
+        if ($request->get('network_id')) {
+            $query->where('network_id', $request->get('network_id'));
+        }
+
+        if ($request->get('shop_id')) {
+            $query->where('shop_id', $request->get('shop_id'));
+        }
+
+        if ($request->get('role_id')) {
+            $query->where('role_id', $request->get('role_id'));
         }
 
         $users = $query->get()->sortByDesc('id');

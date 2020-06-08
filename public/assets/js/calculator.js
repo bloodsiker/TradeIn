@@ -129,7 +129,7 @@ UL_BRAND_LIST.onclick = function (e) {
 
         var brandId = e.target.getAttribute('id');
 
-        $.getJSON(API_URL_MODELS.replace('{id}', brandId), function (data) {
+        $.getJSON(API_URL_MODELS.replace('brand_id=', 'brand_id='+brandId), function (data) {
             MODEL_LIST.classList.add("disabled");
             modelList(data.data);
             MODEL_SEARCH.focus();
