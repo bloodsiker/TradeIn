@@ -19,9 +19,22 @@ class SocialAccountService
 
         if ($account) {
             return $account->user;
-        }
+        } else {
+            $account = new SocialAccount([
+                'provider_user_id' => $providerUser->getId(),
+                'provider' => $provider
+            ]);
 
-        return null;
+            $user = User::whereEmail($providerUser->getEmail())->first();
+            if ($user) {
+                $account->user()->associate($user);
+                $account->save();
+
+                return $user;
+            }
+
+            return null;
+        }
     }
 
     /**

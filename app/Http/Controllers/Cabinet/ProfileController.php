@@ -104,7 +104,7 @@ class ProfileController extends Controller
     public function unlinkSocialAccount(Request $request)
     {
         SocialAccount::whereProvider($request->get('provider'))->where('user_id', Auth::id())->delete();
-        return redirect()->back()->with(['message' => $request->get('provider') . ' аккаунт отвязан']);
+        return redirect()->back()->with(['success' => $request->get('provider') . ' аккаунт отвязан']);
     }
 
     public function logout(Request $request)
