@@ -22,7 +22,7 @@ class BuybackRequestController extends Controller
     public function list(Request $request)
     {
         $statuses = Status::all();
-        $allowStatuses = [Status::STATUS_NEW, Status::STATUS_SENT, Status::STATUS_TAKE, Status::STATUS_RETURN];
+        $allowStatuses = [];
         $shops = $networks = $users = [];
         $query = BuybackRequest::select('buyback_requests.*')->with('status');
         $query->join('users', 'users.id', '=', 'buyback_requests.user_id')
@@ -32,6 +32,7 @@ class BuybackRequestController extends Controller
         if (\Auth::user()->isAdmin()) {
             $networks = Network::all();
             $shops = Shop::all();
+            $allowStatuses = [Status::STATUS_TAKE, Status::STATUS_RETURN];
         }
 
         if (\Auth::user()->isNetwork()) {
@@ -122,9 +123,14 @@ class BuybackRequestController extends Controller
 
     public function edit(Request $request)
     {
-        if ($request->isMethod('post') && $request->filled('id')) {
+        if ($request->isMethod('post') && $request->get('id')) {
 
             $buyRequest = BuybackRequest::find($request->get('id'));
+
+            if (!$buyRequest->is_accrued && $request->get('status_id') == Status::STATUS_TAKE) {
+                $buyRequest->is_accrued = true;
+            }
+
             $buyRequest->status_id = $request->get('status_id');
             $buyRequest->imei = $request->get('imei');
             $buyRequest->packet = $request->get('packet');
@@ -132,15 +138,35 @@ class BuybackRequestController extends Controller
             $buyRequest->save();
             $buyRequest->load('user', 'status', 'model');
 
-            return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $buyRequest]);
+            $btnPay = (int) $request->get('status_id') === Status::STATUS_TAKE ? 1 : 0;
+
+            return response(['status' => 1, 'btn_pay' => $btnPay, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $buyRequest]);
         }
 
         return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при обновлении!']);
     }
 
+    public function paid(Request $request)
+    {
+        $buyRequest = BuybackRequest::find($request->get('id'));
+
+        if ($buyRequest) {
+            if (!$buyRequest->is_paid && $buyRequest->is_accrued) {
+                $buyRequest->is_paid = true;
+                $buyRequest->paid_at = Carbon::now();
+            }
+
+            $buyRequest->save();
+
+            return response(['status' => 1, 'type' => 'success', 'message' => "Бонус по заявке выплачен!"]);
+        }
+
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка, бонус не выплачен!']);
+    }
+
     public function delete(Request $request)
     {
-        $buyRequest = BuybackRequest::findOrFail($request->get('id'));
+        $buyRequest = BuybackRequest::find($request->get('id'));
 
         if ($buyRequest) {
             $buyRequest->delete();

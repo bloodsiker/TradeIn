@@ -26,23 +26,13 @@
                         <label class="tx-sans tx-10 tx-semibold tx-uppercase tx-color-01 tx-spacing-1 mg-b-15">Контакты</label>
                         <ul class="list-unstyled profile-info-list">
                             @if ( Auth::user()->network)
-                                <li><i data-feather="home"></i> <span class="tx-color-03">{{ Auth::user()->network->name }}</span></li>
+                                <li><i data-feather="home"></i> <span class="tx-color-03">Сеть: {{ Auth::user()->network->name }}</span></li>
                             @endif
                             @if (Auth::user()->shop)
-                                    <li><i data-feather="home"></i> <span class="tx-color-03">{{ Auth::user()->shop->name }}</span></li>
+                                    <li><i data-feather="home"></i> <span class="tx-color-03">Магазин: {{ Auth::user()->shop->name }}</span></li>
                             @endif
                             <li><i data-feather="smartphone"></i> {{ Auth::user()->phone ?: '(___)__-__-__' }}</li>
                             <li><i data-feather="mail"></i> <a href="mailto:{{ Auth::user()->email }}">{{ Auth::user()->email }}</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-6 col-md-5 col-lg mg-t-40">
-                        <label class="tx-sans tx-10 tx-semibold tx-uppercase tx-color-01 tx-spacing-1 mg-b-15">Социальные сеты</label>
-                        <ul class="list-unstyled profile-info-list">
-                            <li><i data-feather="globe"></i> <a href="">http://fenchiumao.me/</a></li>
-                            <li><i data-feather="github"></i> <a href="">@fenchiumao</a></li>
-                            <li><i data-feather="twitter"></i> <a href="">@fenmao</a></li>
-                            <li><i data-feather="instagram"></i> <a href="">@fenchiumao</a></li>
-                            <li><i data-feather="facebook"></i> <a href="">@fenchiumao</a></li>
                         </ul>
                     </div>
                 </div>

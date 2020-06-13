@@ -10,7 +10,7 @@
         </div>
         <ul class="nav navbar-menu">
             <li class="nav-label pd-l-20 pd-lg-l-25 d-lg-none">Навигация</li>
-            <li class="nav-item"><a href="{{ route('cabinet.main') }}" class="nav-link"><i data-feather="box"></i> Калькулятор</a></li>
+            <li class="nav-item {{ request()->is('cabinet/calculator*') ? 'active' : null }}"><a href="{{ route('cabinet.main') }}" class="nav-link"><i data-feather="box"></i> Калькулятор</a></li>
             <li class="nav-item with-sub">
                 <a href="" class="nav-link"><i data-feather="package"></i> Заявки</a>
                 <ul class="navbar-menu-sub">
@@ -33,8 +33,10 @@
                 </li>
             @endif
 
+            <li class="nav-item {{ request()->is('cabinet/help*') ? 'active' : null }}"><a href="{{ route('cabinet.help.list') }}" class="nav-link"><i data-feather="box"></i> Инструкции</a></li>
+
             @if(Auth::user()->isAdmin() || Auth::user()->isNetwork())
-                <li class="nav-item"><a href="{{ route('cabinet.user.list') }}" class="nav-link"><i data-feather="box"></i> Пользователи</a></li>
+                <li class="nav-item {{ request()->is('cabinet/users*') ? 'active' : null }}"><a href="{{ route('cabinet.user.list') }}" class="nav-link"><i data-feather="box"></i> Пользователи</a></li>
             @endif
         </ul>
     </div>
@@ -144,10 +146,10 @@
                 <h6 class="tx-semibold mg-b-5">{{ Auth::user()->fullName() }}</h6>
                 <p class="mg-b-25 tx-12 tx-color-03">{{ Auth::user()->role->name }}</p>
 
-                <a href="{{ route('cabinet.profile') }}" class="dropdown-item"><i data-feather="edit-3"></i> Edit Profile</a>
-{{--                <a href="page-profile-view.html" class="dropdown-item"><i data-feather="user"></i> View Profile</a>--}}
+                <a href="{{ route('cabinet.profile') }}" class="dropdown-item"><i data-feather="edit-3"></i> Редактировать профиль</a>
+                <a href="" class="dropdown-item"><i data-feather="dollar-sign"></i> Бонусы</a>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item"><i data-feather="help-circle"></i> Help Center</a>
+                <a href="{{ route('cabinet.help.list') }}" class="dropdown-item"><i data-feather="help-circle"></i> Help Center</a>
 {{--                <a href="" class="dropdown-item"><i data-feather="settings"></i>Account Settings</a>--}}
                 <a href="{{ route('cabinet.profile.logout') }}" class="dropdown-item"><i data-feather="log-out"></i>Выйти</a>
             </div>

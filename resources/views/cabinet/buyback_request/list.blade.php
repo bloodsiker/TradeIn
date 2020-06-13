@@ -93,40 +93,49 @@
 
                 @if(count($buyRequests))
                     <div class="table-responsive">
-                        <table class="table table-sm table-dark table-striped table-bordered">
+                        <table class="table table-sm table-white table-hover table-bordered">
                             <thead>
                             <tr>
                                 <th scope="col" width="40px">ID</th>
                                 <th scope="col">Пользователь</th>
-                                <th scope="col">Производитель</th>
-                                <th scope="col">Модель</th>
+                                <th scope="col">Устройство</th>
                                 <th scope="col">IMEI</th>
                                 <th scope="col">Номер сейф-пакета</th>
                                 <th scope="col">Стоимость (грн)</th>
                                 <th scope="col">Статус</th>
                                 <th scope="col">Бонус</th>
                                 <th scope="col">Дата</th>
-                                <th scope="col" width="80px"></th>
+                                <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($buyRequests as $buyRequest)
-                                <tr data-id="{{ $buyRequest->id }}">
+                                <tr data-id="{{ $buyRequest->id }}" class="@if($buyRequest->is_paid) paid @endif">
                                     <td>{{ $buyRequest->id }}</td>
                                     <td>{{ $buyRequest->user->fullName()  }}</td>
-                                    <td>{{ $buyRequest->model->brand->name }}</td>
-                                    <td>{{ $buyRequest->model->name }}</td>
+                                    <td>
+                                        @if( $buyRequest->model)
+                                            <small><b>Производитель:</b> {{ $buyRequest->model->brand->name }}</small>
+                                            <br>
+                                            <small><b>Модель:</b> {{ $buyRequest->model->name }}</small>
+                                        @endif
+                                    </td>
                                     <td class="td-imei">{{ $buyRequest->imei }}</td>
                                     <td class="td-packet">{{ $buyRequest->packet }}</td>
                                     <td class="td-cost">{{ $buyRequest->cost }}</td>
                                     <td class="td-status">{{ $buyRequest->status->name }}</td>
                                     <td>{{ $buyRequest->bonus }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('Y-m-d H:i') }}</td>
+                                    <td><small>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('d.m.Y H:i') }}</small></td>
                                     <td>
                                         <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                             <i class="far fa-edit"></i>
                                         </a>
                                         @if(Auth::user()->isAdmin())
+                                            @if (\App\Models\Status::STATUS_TAKE === $buyRequest->status_id && !$buyRequest->is_paid && $buyRequest->is_accrued)
+                                                <a href="#" data-toggle="tooltip" title="Выплатить" class="btn btn-xxs btn-primary btn-icon btnPaid">
+                                                    <i class="fas fa-hryvnia"></i>
+                                                </a>
+                                            @endif
                                             <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
@@ -189,7 +198,6 @@
                         <div class="form-group">
                             <label for="status">Статус</label>
                             <select class="custom-select" id="status" name="status_id">
-                                <option selected></option>
                                 @foreach($statuses as $status)
                                     <option value="{{ $status->id }}" @if(!in_array($status->id, $allowStatuses)) disabled @endif>{{ $status->name }}</option>
                                 @endforeach
@@ -246,6 +254,32 @@
 
             @if(Auth::user()->isAdmin())
                 deleteObject('.table', '.btnDelete', "{{ route('cabinet.buyback_request.delete') }}");
+
+                $('table').on('click', '.btnPaid', function (e) {
+                    e.preventDefault();
+
+                    let _this = $(this),
+                        id = _this.parent().parent('tr').data('id');
+
+                    $.ajax({
+                        url: "{{ route('cabinet.buyback_request.paid') }}",
+                        type: "POST",
+                        data: { id: id },
+                        cache: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            if (response.status === 1) {
+                                _this.parent().parent('tr').addClass('paid')
+                                _this.css('pointer-events', 'none');
+                                $.notify(response.message, response.type);
+                            } else {
+                                $.notify(response.message, response.type);
+                            }
+                        }
+                    });
+                });
             @endif
 
             $('.editModal').click(function (e) {
@@ -304,6 +338,16 @@
                             tr.find('td.td-packet').text(response.data.packet);
                             tr.find('td.td-cost').text(response.data.cost);
                             tr.find('td.td-status').text(response.data.status.name);
+
+                            // if (response.btn_pay === 1) {
+                            //     const btn_pay = `<a href="#" data-toggle="tooltip" title="Выплатить" class="btn btn-xxs btn-primary btn-icon paidModal">
+                            //                         <i class="fas fa-hryvnia"></i>
+                            //                     </a>`;
+                            //     tr.find('.editModal').after(btn_pay);
+                            // } else {
+                            //     tr.find('.btnPaid').remove();
+                            // }
+
 
                             $.notify(response.message, response.type);
                             $('#edit-data').modal('toggle');

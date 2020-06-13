@@ -4,25 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 //Auth::routes();
 
-Route::group(['middleware' => ['web']], function (){
-//    Route::get('about', 'SiteController@getAbout')->name('about');
-//    Route::get('support', 'SiteController@getSupport')->name('support');
-//    Route::post('support', 'SiteController@postSupport')->name('support');
-//
-//
-//    Route::get('user/registration', 'RegisterController@getUserIndex')->name('user.registration');
-//    Route::post('user/registration', 'RegisterController@postUserRegister')->name('user.registration');
-//
-//    Route::get('service-center/login', 'LoginController@getServiceLogin')->name('service.login');
-//    Route::post('service-center/login', 'LoginController@postServiceLogin')->name('service.login');
-//    Route::get('service-center/registration', 'RegisterController@getServiceRegister')->name('service.registration');
-//    Route::post('service-center/registration', 'RegisterController@postServiceRegister')->name('service.registration');
-//
-//    Route::get('user/password/recovery', 'RecoveryPasswordController@getRecovery')->name('user.password.recovery');
-//    Route::post('user/password/send-email', 'RecoveryPasswordController@sendResetLinkEmail')->name('user.password.send-email');
-
-});
-
 Route::group(['middleware' => ['web']], function () {
 
     Route::get('/', 'SiteController@index')->name('main');
@@ -83,13 +64,20 @@ Route::group(['middleware' => ['web']], function () {
         Route::get('/buyback-request', 'Cabinet\BuybackRequestController@list')->name('cabinet.buyback_request.list');
         Route::post('/buyback-request/add', 'Cabinet\BuybackRequestController@add')->name('cabinet.buyback_request.add');
         Route::post('/buyback-request/edit', 'Cabinet\BuybackRequestController@edit')->name('cabinet.buyback_request.edit');
-        Route::post('/buyback-request/delete', 'Cabinet\BuybackRequestController@delete')->name('cabinet.buyback_request.delete');
+        Route::post('/buyback-request/delete', 'Cabinet\BuybackRequestController@delete')->name('cabinet.buyback_request.delete')->middleware('admin');
+        Route::post('/buyback-request/paid', 'Cabinet\BuybackRequestController@paid')->name('cabinet.buyback_request.paid')->middleware('admin');
         Route::get('/buyback-request/export', 'Cabinet\BuybackRequestController@export')->name('cabinet.buyback_request.export');
 
         Route::match(['post', 'get'], '/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
         Route::get('/logout', 'Cabinet\ProfileController@logout')->name('cabinet.profile.logout');
         Route::get('/social/link', 'Cabinet\ProfileController@linkSocialAccount')->name('cabinet.profile.social_link');
         Route::get('/social/unlink', 'Cabinet\ProfileController@unlinkSocialAccount')->name('cabinet.profile.social_unlink');
+
+        Route::get('/help', 'Cabinet\HelpController@list')->name('cabinet.help.list');
+        Route::match(['post', 'get'], '/help/add', 'Cabinet\HelpController@add')->name('cabinet.help.add')->middleware('admin');
+        Route::match(['post', 'get'], '/help/edit/{id}', 'Cabinet\HelpController@edit')->name('cabinet.help.edit')->middleware('admin');
+        Route::get('/help/delete/{id}', 'Cabinet\HelpController@delete')->name('cabinet.help.delete')->middleware('admin');
+        Route::get('/help/{id}', 'Cabinet\HelpController@view')->name('cabinet.help.view');
 
         Route::get('/model-requests', 'Cabinet\ModelRequestController@list')->name('cabinet.model_request.list');
         Route::post('/model-request/add', 'Cabinet\ModelRequestController@add')->name('cabinet.model_request.add');

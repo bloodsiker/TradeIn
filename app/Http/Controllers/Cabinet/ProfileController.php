@@ -51,7 +51,7 @@ class ProfileController extends Controller
             $user->phone = $request->get('phone');
             $user->birthday = Carbon::parse($request->get('birthday'))->format('Y-m-d');
 
-            if ($request->has('avatar')) {
+            if ($request->hasFile('avatar')) {
                 $path = '/image/profile/';
                 $image = $request->file('avatar');
                 $name = sha1(time().random_bytes(5)) . '.' . trim($image->getClientOriginalExtension());

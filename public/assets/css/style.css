@@ -7,6 +7,26 @@ body {background-color: #f5f6fa;font-size: 0.80rem;!important;}
 .vertical-border-list {border: 1px solid #1b2e4b;border-radius: 3px;padding: 3px!important;}
 .nav-classic .vertical-border-list + .vertical-border-list {margin-top: 4px;}
 .vertical-border-list.active { background: #49597b!important; color: #fff!important;}
+.paid {background-color: rgba(35, 204, 239, 0.2);}
+.table-white {background: #fff;box-shadow: 6px 0 6px rgba(0,0,0,0.3);}
+.table-white thead {background-color: #3b4863;color: #fff}
+.table-white th, .table-white td, .table-white thead th, .table-white tbody + tbody {border-color: #99a0ae;}
+
+#editor-container {
+    height: auto;
+    min-height: 100%;
+}
+#scrolling-container {
+    height: 250px;
+    min-height: 100%;
+    overflow-y: auto;
+}
+.ql-toolbar {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+}
 
 /*select2*/
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
