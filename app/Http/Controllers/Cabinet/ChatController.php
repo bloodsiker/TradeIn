@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Chat;
 use App\Models\ChatMessage;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 /**
@@ -27,6 +28,8 @@ class ChatController extends Controller
         $chatsPrivate = Chat::where('type_chat', Chat::TYPE_PRIVATE)->get();
         $chatsGroup = Chat::where('type_chat', Chat::TYPE_GROUP)->get();
 
+        $users = User::all();
+
         $messages = [];
         $chat = Chat::where('uniq_id', $uniqId)->first();
         if ($chat) {
@@ -45,7 +48,7 @@ class ChatController extends Controller
             return view('cabinet.chat.blocks.message', compact('message'));
         }
 
-        return view('cabinet.chat.view', compact('chatsGroup', 'chatsPrivate', 'messages', 'chat'));
+        return view('cabinet.chat.view', compact('chatsGroup', 'chatsPrivate', 'messages', 'chat', 'users'));
     }
 
     public function groupAdd(Request $request)
@@ -55,9 +58,27 @@ class ChatController extends Controller
             $chat->name = $request->get('name');
             $chat->type_chat = Chat::TYPE_GROUP;
             $chat->uniq_id = \Str::random(32);
+
             $chat->save();
 
-            return redirect()->route('cabinet.chat.index');
+            $chat->users()->attach(\Auth::id());
+
+
+            return redirect()->route('cabinet.chat.view', ['uniq_id' => $chat->uniq_id]);
+        }
+
+        return redirect()->route('cabinet.chat.index');
+    }
+
+    public function inviteUser(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $chat = Chat::find($request->get('chat_id'));
+            $chat->users()->attach($request->get('user_id'));
+
+            $chat->save();
+
+            return redirect()->route('cabinet.chat.view', ['uniq_id' => $chat->uniq_id]);
         }
 
         return redirect()->route('cabinet.chat.index');

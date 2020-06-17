@@ -1,4 +1,4 @@
-<div class="media">
+<div class="media" data-id="{{ $message->id }}">
     @if ($message->user->avatar)
         <div class="avatar avatar-sm avatar-online"><img src="{{ asset($message->user->avatar) }}" class="rounded-circle" alt=""></div>
     @else

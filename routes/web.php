@@ -88,6 +88,7 @@ Route::group(['middleware' => ['web']], function () {
 
         Route::get('/chat', 'Cabinet\ChatController@index')->name('cabinet.chat.index');
         Route::post('/chat/group/add', 'Cabinet\ChatController@groupAdd')->name('cabinet.chat.group_add');
+        Route::post('/chat/invite/user', 'Cabinet\ChatController@inviteUser')->name('cabinet.chat.invite_user');
         Route::match(['post', 'get'], '/chat/{uniq_id}', 'Cabinet\ChatController@view')->name('cabinet.chat.view');
     });
 });

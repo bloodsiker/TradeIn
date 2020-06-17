@@ -216,7 +216,7 @@
                             <span aria-hidden="true"><i data-feather="x" class="wd-20"></i></span>
                         </button>
                         <h6 class="tx-uppercase tx-spacing-1 tx-semibold mg-b-20">Создать группу</h6>
-                        <input type="text" class="form-control" placeholder="Название" name="name">
+                        <input type="text" class="form-control" placeholder="Название" name="name" autocomplete="off">
                     </div>
                     <div class="modal-footer pd-x-20 pd-b-20 pd-t-0 bd-t-0">
                         <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>

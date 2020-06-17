@@ -194,7 +194,7 @@
                             <span aria-hidden="true"><i data-feather="x" class="wd-20"></i></span>
                         </button>
                         <h6 class="tx-uppercase tx-spacing-1 tx-semibold mg-b-20">Создать группу</h6>
-                        <input type="text" class="form-control" placeholder="Название" name="name">
+                        <input type="text" class="form-control" placeholder="Название" name="name" autocomplete="off">
                     </div>
                     <div class="modal-footer pd-x-20 pd-b-20 pd-t-0 bd-t-0">
                         <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
@@ -215,12 +215,20 @@
 
                     <h6 class="tx-18 tx-sm-20 mg-b-5">Пригласить пользователя</h6>
                     <p class="tx-color-03 mg-b-20">Share this link to your friend to grant access and join to this channel</p>
-                    <div class="input-group mg-b-5">
-                        <input type="text" class="form-control" value="http://themepixels.me/dashforge" readonly>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-light" type="button" id="button-addon2">Copy</button>
+                    <form action="{{ route('cabinet.chat.invite_user') }}" method="post" novalidate>
+                        @csrf
+                        <div class="input-group mg-b-5">
+                            <input type="hidden" name="chat_id" value="{{ $chat->id }}">
+                            <select class="custom-select" name="user_id" required>
+                                @foreach($users as $inviteUser)
+                                    <option value="{{ $inviteUser->id }}">{{ $inviteUser->fullName() }}</option>
+                                @endforeach
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-light" id="button-addon2">Пригласить</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
