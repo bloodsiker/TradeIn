@@ -19,7 +19,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/auth/google/callback', 'SocialAuthController@googleCallback')->name('auth.google.callback');
     Route::get('/auth/linkedin/callback', 'SocialAuthController@linkedinCallback')->name('auth.linkedin.callback');
 
-    Route::group(['prefix' => 'cabinet', 'middleware' => ['auth']], function () {
+    Route::group(['prefix' => 'cabinet', 'middleware' => ['auth', 'last_online']], function () {
         Route::get('/', 'Cabinet\MainController@index')->name('cabinet.main');
 
 
@@ -69,6 +69,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::get('/buyback-request/export', 'Cabinet\BuybackRequestController@export')->name('cabinet.buyback_request.export');
 
         Route::match(['post', 'get'], '/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
+        Route::get('/bonus', 'Cabinet\ProfileController@bonus')->name('cabinet.profile.bonus');
         Route::get('/logout', 'Cabinet\ProfileController@logout')->name('cabinet.profile.logout');
         Route::get('/social/link', 'Cabinet\ProfileController@linkSocialAccount')->name('cabinet.profile.social_link');
         Route::get('/social/unlink', 'Cabinet\ProfileController@unlinkSocialAccount')->name('cabinet.profile.social_unlink');
@@ -77,11 +78,16 @@ Route::group(['middleware' => ['web']], function () {
         Route::match(['post', 'get'], '/help/add', 'Cabinet\HelpController@add')->name('cabinet.help.add')->middleware('admin');
         Route::match(['post', 'get'], '/help/edit/{id}', 'Cabinet\HelpController@edit')->name('cabinet.help.edit')->middleware('admin');
         Route::get('/help/delete/{id}', 'Cabinet\HelpController@delete')->name('cabinet.help.delete')->middleware('admin');
+        Route::post('/help/upload', 'Cabinet\HelpController@upload')->name('cabinet.help.upload')->middleware('admin');
         Route::get('/help/{id}', 'Cabinet\HelpController@view')->name('cabinet.help.view');
 
         Route::get('/model-requests', 'Cabinet\ModelRequestController@list')->name('cabinet.model_request.list');
         Route::post('/model-request/add', 'Cabinet\ModelRequestController@add')->name('cabinet.model_request.add');
         Route::post('/model-request/edit', 'Cabinet\ModelRequestController@edit')->name('cabinet.model_request.edit');
         Route::post('/model-request/delete', 'Cabinet\ModelRequestController@delete')->name('cabinet.model_request.delete');
+
+        Route::get('/chat', 'Cabinet\ChatController@index')->name('cabinet.chat.index');
+        Route::post('/chat/group/add', 'Cabinet\ChatController@groupAdd')->name('cabinet.chat.group_add');
+        Route::match(['post', 'get'], '/chat/{uniq_id}', 'Cabinet\ChatController@view')->name('cabinet.chat.view');
     });
 });

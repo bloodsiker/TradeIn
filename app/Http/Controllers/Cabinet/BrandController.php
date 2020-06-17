@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
-use App\Models\Network;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 /**

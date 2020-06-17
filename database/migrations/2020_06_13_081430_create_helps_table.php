@@ -17,6 +17,7 @@ class CreateHelpsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('image')->nullable();
+            $table->text('short_description')->nullable();
             $table->text('description');
             $table->boolean('is_active');
             $table->timestamps();

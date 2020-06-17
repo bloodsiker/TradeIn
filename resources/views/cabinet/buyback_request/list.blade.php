@@ -112,7 +112,7 @@
                             @foreach($buyRequests as $buyRequest)
                                 <tr data-id="{{ $buyRequest->id }}" class="@if($buyRequest->is_paid) paid @endif">
                                     <td>{{ $buyRequest->id }}</td>
-                                    <td>{{ $buyRequest->user->fullName()  }}</td>
+                                    <td>{{ $buyRequest->user->fullName() }}</td>
                                     <td>
                                         @if( $buyRequest->model)
                                             <small><b>Производитель:</b> {{ $buyRequest->model->brand->name }}</small>
@@ -132,10 +132,18 @@
                                         </a>
                                         @if(Auth::user()->isAdmin())
                                             @if (\App\Models\Status::STATUS_TAKE === $buyRequest->status_id && !$buyRequest->is_paid && $buyRequest->is_accrued)
-                                                <a href="#" data-toggle="tooltip" title="Выплатить" class="btn btn-xxs btn-primary btn-icon btnPaid">
-                                                    <i class="fas fa-hryvnia"></i>
-                                                </a>
+                                                @php
+                                                    $display = ''
+                                                @endphp
+                                            @else
+                                                @php
+                                                    $display = 'd-none'
+                                                @endphp
                                             @endif
+                                            <a href="#" data-toggle="tooltip" title="Выплатить" class="btn btn-xxs btn-primary btn-icon btnPaid {{ $display ?? '' }}">
+                                                <i class="fas fa-hryvnia"></i>
+                                            </a>
+
                                             <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
@@ -272,6 +280,7 @@
                         success: function (response) {
                             if (response.status === 1) {
                                 _this.parent().parent('tr').addClass('paid')
+                                _this.addClass('d-none');
                                 _this.css('pointer-events', 'none');
                                 $.notify(response.message, response.type);
                             } else {
@@ -339,15 +348,9 @@
                             tr.find('td.td-cost').text(response.data.cost);
                             tr.find('td.td-status').text(response.data.status.name);
 
-                            // if (response.btn_pay === 1) {
-                            //     const btn_pay = `<a href="#" data-toggle="tooltip" title="Выплатить" class="btn btn-xxs btn-primary btn-icon paidModal">
-                            //                         <i class="fas fa-hryvnia"></i>
-                            //                     </a>`;
-                            //     tr.find('.editModal').after(btn_pay);
-                            // } else {
-                            //     tr.find('.btnPaid').remove();
-                            // }
-
+                            if (response.btn_pay === 1) {
+                                tr.find('.btnPaid').removeClass('d-none');
+                            }
 
                             $.notify(response.message, response.type);
                             $('#edit-data').modal('toggle');

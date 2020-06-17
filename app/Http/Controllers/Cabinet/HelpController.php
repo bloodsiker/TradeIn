@@ -43,6 +43,7 @@ class HelpController extends Controller
 
             $help = new Help();
             $help->title = $request->get('title');
+            $help->short_description = $request->get('short_description');
             $help->description = $request->get('description');
             $help->is_active = $request->get('is_active');
 
@@ -77,6 +78,7 @@ class HelpController extends Controller
             ]);
 
             $help->title = $request->get('title');
+            $help->short_description = $request->get('short_description');
             $help->description = $request->get('description');
             $help->is_active = $request->get('is_active');
 
@@ -110,5 +112,29 @@ class HelpController extends Controller
         }
 
         return redirect()->route('cabinet.help.list')->with('danger', 'Ошибка при удалении!');
+    }
+
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $filenamewithextension = $request->file('upload')->getClientOriginalName();
+            $filename = pathinfo($filenamewithextension, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+
+            $filenametostore = $filename.'_'.time().'.'.$extension;
+
+            $path = '/image/help/';
+
+            $request->file('upload')->storeAs($path, $filenametostore, 'publicImage');
+
+            $CKEditorFuncNum = $request->input('CKEditorFuncNum');
+            $url = asset($path.$filenametostore);
+            $re = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url')</script>";
+
+            @header('Content-type: text/html; charset=utf-8');
+            echo $re;
+        }
+
+        return true;
     }
 }

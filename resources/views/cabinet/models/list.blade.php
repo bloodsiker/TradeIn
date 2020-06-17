@@ -73,7 +73,7 @@
                 @endif
                 @if(count($models))
                     <div class="table-responsive">
-                        <table class="table table-sm table-dark table-striped table-bordered">
+                        <table class="table table-sm table-white table-hover table-bordered">
                             <thead>
                             <tr>
                                 <th scope="col">Название</th>

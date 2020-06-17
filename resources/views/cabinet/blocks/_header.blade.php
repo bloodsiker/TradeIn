@@ -33,64 +33,66 @@
                 </li>
             @endif
 
-            <li class="nav-item {{ request()->is('cabinet/help*') ? 'active' : null }}"><a href="{{ route('cabinet.help.list') }}" class="nav-link"><i data-feather="box"></i> Инструкции</a></li>
+            <li class="nav-item {{ request()->is('cabinet/help*') ? 'active' : null }}"><a href="{{ route('cabinet.help.list') }}" class="nav-link"><i data-feather="file-text"></i> Инструкции</a></li>
 
             @if(Auth::user()->isAdmin() || Auth::user()->isNetwork())
-                <li class="nav-item {{ request()->is('cabinet/users*') ? 'active' : null }}"><a href="{{ route('cabinet.user.list') }}" class="nav-link"><i data-feather="box"></i> Пользователи</a></li>
+                <li class="nav-item {{ request()->is('cabinet/user*') ? 'active' : null }}"><a href="{{ route('cabinet.user.list') }}" class="nav-link"><i data-feather="box"></i> Пользователи</a></li>
             @endif
+
+            <li class="nav-item {{ request()->is('cabinet/chat*') ? 'active' : null }}"><a href="{{ route('cabinet.chat.index') }}" class="nav-link"><i data-feather="message-square"></i> Чат</a></li>
         </ul>
     </div>
     <div class="navbar-right">
-{{--        <div class="dropdown dropdown-message">--}}
-{{--            <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">--}}
-{{--                <i data-feather="message-square"></i>--}}
-{{--                <span>5</span>--}}
-{{--            </a>--}}
-{{--            <div class="dropdown-menu dropdown-menu-right">--}}
-{{--                <div class="dropdown-header">New Messages</div>--}}
-{{--                <a href="" class="dropdown-item">--}}
-{{--                    <div class="media">--}}
-{{--                        <div class="avatar avatar-sm avatar-online"><img src="../https://via.placeholder.com/350" class="rounded-circle" alt=""></div>--}}
-{{--                        <div class="media-body mg-l-15">--}}
-{{--                            <strong>Socrates Itumay</strong>--}}
-{{--                            <p>nam libero tempore cum so...</p>--}}
-{{--                            <span>Mar 15 12:32pm</span>--}}
-{{--                        </div><!-- media-body -->--}}
-{{--                    </div><!-- media -->--}}
-{{--                </a>--}}
-{{--                <a href="" class="dropdown-item">--}}
-{{--                    <div class="media">--}}
-{{--                        <div class="avatar avatar-sm avatar-online"><img src="../https://via.placeholder.com/500" class="rounded-circle" alt=""></div>--}}
-{{--                        <div class="media-body mg-l-15">--}}
-{{--                            <strong>Joyce Chua</strong>--}}
-{{--                            <p>on the other hand we denounce...</p>--}}
-{{--                            <span>Mar 13 04:16am</span>--}}
-{{--                        </div><!-- media-body -->--}}
-{{--                    </div><!-- media -->--}}
-{{--                </a>--}}
-{{--                <a href="" class="dropdown-item">--}}
-{{--                    <div class="media">--}}
-{{--                        <div class="avatar avatar-sm avatar-online"><img src="../https://via.placeholder.com/600" class="rounded-circle" alt=""></div>--}}
-{{--                        <div class="media-body mg-l-15">--}}
-{{--                            <strong>Althea Cabardo</strong>--}}
-{{--                            <p>is there anyone who loves...</p>--}}
-{{--                            <span>Mar 13 02:56am</span>--}}
-{{--                        </div><!-- media-body -->--}}
-{{--                    </div><!-- media -->--}}
-{{--                </a>--}}
-{{--                <a href="" class="dropdown-item">--}}
-{{--                    <div class="media">--}}
-{{--                        <div class="avatar avatar-sm avatar-online"><img src="../https://via.placeholder.com/500" class="rounded-circle" alt=""></div>--}}
-{{--                        <div class="media-body mg-l-15">--}}
-{{--                            <strong>Adrian Monino</strong>--}}
-{{--                            <p>duis aute irure dolor in repre...</p>--}}
-{{--                            <span>Mar 12 10:40pm</span>--}}
-{{--                        </div><!-- media-body -->--}}
-{{--                    </div><!-- media -->--}}
-{{--                </a>--}}
-{{--                <div class="dropdown-footer"><a href="">View all Messages</a></div>--}}
-{{--            </div><!-- dropdown-menu -->--}}
-{{--        </div><!-- dropdown -->--}}
+        <div class="dropdown dropdown-message">
+            <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">
+                <i data-feather="message-square"></i>
+                <span>5</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-header">New Messages</div>
+                <a href="" class="dropdown-item">
+                    <div class="media">
+                        <div class="avatar avatar-sm avatar-online"><img src="https://via.placeholder.com/350" class="rounded-circle" alt=""></div>
+                        <div class="media-body mg-l-15">
+                            <strong>Socrates Itumay</strong>
+                            <p>nam libero tempore cum so...</p>
+                            <span>Mar 15 12:32pm</span>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </a>
+                <a href="" class="dropdown-item">
+                    <div class="media">
+                        <div class="avatar avatar-sm avatar-online"><img src="https://via.placeholder.com/500" class="rounded-circle" alt=""></div>
+                        <div class="media-body mg-l-15">
+                            <strong>Joyce Chua</strong>
+                            <p>on the other hand we denounce...</p>
+                            <span>Mar 13 04:16am</span>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </a>
+                <a href="" class="dropdown-item">
+                    <div class="media">
+                        <div class="avatar avatar-sm avatar-online"><img src="https://via.placeholder.com/600" class="rounded-circle" alt=""></div>
+                        <div class="media-body mg-l-15">
+                            <strong>Althea Cabardo</strong>
+                            <p>is there anyone who loves...</p>
+                            <span>Mar 13 02:56am</span>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </a>
+                <a href="" class="dropdown-item">
+                    <div class="media">
+                        <div class="avatar avatar-sm avatar-online"><img src="https://via.placeholder.com/500" class="rounded-circle" alt=""></div>
+                        <div class="media-body mg-l-15">
+                            <strong>Adrian Monino</strong>
+                            <p>duis aute irure dolor in repre...</p>
+                            <span>Mar 12 10:40pm</span>
+                        </div>
+                    </div>
+                </a>
+                <div class="dropdown-footer"><a href="{{ route('cabinet.chat.index') }}">View all Messages</a></div>
+            </div>
+        </div>
 {{--        <div class="dropdown dropdown-notification">--}}
 {{--            <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">--}}
 {{--                <i data-feather="bell"></i>--}}
@@ -147,7 +149,7 @@
                 <p class="mg-b-25 tx-12 tx-color-03">{{ Auth::user()->role->name }}</p>
 
                 <a href="{{ route('cabinet.profile') }}" class="dropdown-item"><i data-feather="edit-3"></i> Редактировать профиль</a>
-                <a href="" class="dropdown-item"><i data-feather="dollar-sign"></i> Бонусы</a>
+                <a href="{{ route('cabinet.profile.bonus') }}" class="dropdown-item"><i data-feather="dollar-sign"></i> Бонусы</a>
                 <div class="dropdown-divider"></div>
                 <a href="{{ route('cabinet.help.list') }}" class="dropdown-item"><i data-feather="help-circle"></i> Help Center</a>
 {{--                <a href="" class="dropdown-item"><i data-feather="settings"></i>Account Settings</a>--}}

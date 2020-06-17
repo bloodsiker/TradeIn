@@ -178,6 +178,7 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Jenssegers\Date\DateServiceProvider::class,
 
     ],
 
@@ -233,6 +234,7 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Date' => Jenssegers\Date\Date::class,
 
     ],
 

@@ -26,7 +26,7 @@
             <div class="col-lg-12 col-xl-12">
                 @if(count($users))
                     <div class="table-responsive">
-                        <table class="table table-sm table-dark table-striped table-bordered">
+                        <table class="table table-sm table-white table-hover table-bordered">
                             <thead>
                             <tr>
                                 <th scope="col" width="40px">ID</th>

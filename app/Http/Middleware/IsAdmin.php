@@ -17,7 +17,6 @@ class IsAdmin
     public function handle($request, Closure $next)
     {
         if (Auth::user() &&  Auth::user()->isAdmin()) {
-//            Auth::user()->updateLastOnline();
             return $next($request);
         }
         return redirect()->route('cabinet.main')->with(['danger' => 'У вас нету прав доступа в эту часть кабинета!']);

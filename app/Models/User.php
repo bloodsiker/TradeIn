@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -53,6 +54,11 @@ class User extends Authenticatable
         return $this->hasOne(Shop::class, 'id', 'shop_id');
     }
 
+    public function chats()
+    {
+        return $this->belongsToMany(Chat::class);
+    }
+
     public function fullName()
     {
         return $this->name .' ' . $this->surname .' ' .$this->patronymic;
@@ -99,5 +105,15 @@ class User extends Authenticatable
     public function isShop()
     {
         return Auth::user()->role_id === Role::ROLE_SHOP;
+    }
+
+    /**
+     * Update last online time User
+     *
+     * @return bool
+     */
+    public function updateLastOnline()
+    {
+        return self::where('id', Auth::id())->update(['last_online' => Carbon::now()]);
     }
 }

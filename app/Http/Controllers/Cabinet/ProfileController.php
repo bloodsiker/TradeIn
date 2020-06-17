@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
+use App\Models\BuybackRequest;
 use App\Models\Network;
 use App\Models\Role;
 use App\Models\Shop;
@@ -72,6 +73,38 @@ class ProfileController extends Controller
         }
 
         return view('cabinet.profile.index', compact('user', 'account'));
+    }
+
+    public function bonus(Request $request)
+    {
+        $now = Carbon::now();
+        $lastMonth = Carbon::now()->modify('- 1 month');
+
+        $query = BuybackRequest::where('user_id', Auth::id());
+
+        if ($request->get('date_from') && $request->get('date_to')) {
+            $from = Carbon::parse($request->get('date_from'))->format('Y-m-d 00:00');
+            $to = Carbon::parse($request->get('date_to'))->format('Y-m-d 23:59');
+            $query->whereBetween('created_at', [$from, $to]);
+        } elseif ($request->get('date_from') && empty($request->get('date_to'))) {
+            $from = Carbon::parse($request->get('date_from'))->format('Y-m-d 00:00');
+            $to = Carbon::now()->format('Y-m-d 23:59');
+            $query->whereBetween('created_at', [$from, $to]);
+        } else {
+            $from = Carbon::now()->modify('- 1 month')->format('Y-m-d 00:00');
+            $to = Carbon::now()->format('Y-m-d 23:59');
+            $query->whereBetween('created_at', [$from, $to]);
+        }
+
+        $bonuses = $query->where('is_accrued', true)
+            ->orderBy('paid_at', 'DESC')->with('paidBy')->get();
+
+        $sumPaid['paid'] = BuybackRequest::whereBetween('created_at', [$from, $to])
+            ->where('is_paid', true)->sum('bonus');
+        $sumPaid['all'] = BuybackRequest::where('is_paid', true)->sum('bonus');
+        $sumPaid['not_paid'] = BuybackRequest::where(['is_paid' => false, 'is_accrued' => true])->sum('bonus');
+
+        return view('cabinet.profile.bonus', compact('now', 'lastMonth', 'bonuses', 'sumPaid'));
     }
 
     /**

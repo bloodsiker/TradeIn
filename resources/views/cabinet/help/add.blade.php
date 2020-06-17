@@ -54,7 +54,15 @@
                         </div>
 
                         <div class="form-group">
-                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="" rows="5"></textarea>
+                            <label for="short_description">Краткое описание</label>
+                            <textarea name="short_description" class="form-control @error('short_description') is-invalid @enderror" id="short_description" rows="2">{{ old('short_description') }}</textarea>
+                            @error('short_description')
+                                <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="description" rows="5"></textarea>
                             @error('description')
                                 <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                             @enderror
@@ -82,39 +90,13 @@
 @endsection
 
 @push('scripts')
-{{--    <script src="{{ asset('lib/quill/quill.min.js') }}"></script>--}}
-{{--    <script>--}}
-{{--        var quill = new Quill('#editor-container', {--}}
-{{--            modules: {--}}
-{{--                toolbar: [--}}
-{{--                    ['bold', 'italic'],--}}
-{{--                    ['link', 'blockquote', 'code-block', 'image'],--}}
-{{--                    [{ list: 'ordered' }, { list: 'bullet' }]--}}
-{{--                ]--}}
-{{--            },--}}
-{{--            scrollingContainer: '#scrolling-container',--}}
-{{--            placeholder: 'Инструкция',--}}
-{{--            theme: 'snow'--}}
-{{--        });--}}
+    <script src="{{ asset('lib/ckeditor/ckeditor.js') }}"></script>
 
-{{--        var form = document.getElementById('help');--}}
-{{--        form.onsubmit = function() {--}}
+    <script>
+        CKEDITOR.replace( 'description', {
+            filebrowserUploadUrl: "{{route('cabinet.help.upload', ['_token' => csrf_token() ])}}",
+            filebrowserUploadMethod: 'form'
+        });
+    </script>
 
-{{--            var post = document.querySelector('textarea[name=description]');--}}
-{{--            // post.value = JSON.stringify(quill.getContents());--}}
-{{--            post.value = document.getElementsByClassName('ql-editor').html();--}}
-
-{{--        };--}}
-
-{{--        // $('form#help').submit(function (e) {--}}
-{{--        //--}}
-{{--        //     let description = document.querySelector('textarea[name=description]');--}}
-{{--        //     description.value = quill.getContents();--}}
-{{--        //--}}
-{{--        //     console.log(description);--}}
-{{--        //--}}
-{{--        //     e.preventDefault();--}}
-{{--        // })--}}
-
-{{--    </script>--}}
 @endpush

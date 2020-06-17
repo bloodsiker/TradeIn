@@ -153,12 +153,13 @@ class BuybackRequestController extends Controller
         if ($buyRequest) {
             if (!$buyRequest->is_paid && $buyRequest->is_accrued) {
                 $buyRequest->is_paid = true;
+                $buyRequest->paid_by = \Auth::id();
                 $buyRequest->paid_at = Carbon::now();
             }
 
             $buyRequest->save();
 
-            return response(['status' => 1, 'type' => 'success', 'message' => "Бонус по заявке выплачен!"]);
+            return response(['status' => 1, 'type' => 'success', 'message' => "Бонус по заявке выплачен в размере {$buyRequest->bonus} грн!"]);
         }
 
         return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка, бонус не выплачен!']);

@@ -17,6 +17,7 @@ class CreateBuybackRequestsTable extends Migration
             $table->id();
             $table->bigInteger('model_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('paid_by')->unsigned()->nullable();
             $table->bigInteger('status_id')->unsigned();
             $table->string('imei')->nullable();
             $table->string('packet')->nullable();
@@ -29,6 +30,7 @@ class CreateBuybackRequestsTable extends Migration
 
             $table->foreign('model_id')->references('id')->on('device_models')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('paid_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
         });
     }

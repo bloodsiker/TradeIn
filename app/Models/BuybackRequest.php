@@ -15,6 +15,11 @@ class BuybackRequest extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    public function paidBy()
+    {
+        return $this->hasOne(User::class, 'id', 'paid_by');
+    }
+
     public function model()
     {
         return $this->hasOne(DeviceModel::class, 'id', 'model_id');
