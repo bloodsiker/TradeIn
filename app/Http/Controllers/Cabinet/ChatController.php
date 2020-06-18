@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -28,12 +29,16 @@ class ChatController extends Controller
         $chatsPrivate = Chat::where('type_chat', Chat::TYPE_PRIVATE)->get();
         $chatsGroup = Chat::where('type_chat', Chat::TYPE_GROUP)->get();
 
-        $users = User::all();
-
+        $users = [];
         $messages = [];
         $chat = Chat::where('uniq_id', $uniqId)->first();
         if ($chat) {
             $messages = ChatMessage::where('chat_id', $chat->id)->orderBy('created_at')->get();
+
+            $usersInChat = array_column($chat->users->toArray(), 'id');
+            $usersInChat[] = \Auth::id();
+
+            $users = User::whereNotIn('id', $usersInChat)->get();
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -73,10 +78,32 @@ class ChatController extends Controller
     public function inviteUser(Request $request)
     {
         if ($request->isMethod('post')) {
-            $chat = Chat::find($request->get('chat_id'));
-            $chat->users()->attach($request->get('user_id'));
+            if ($request->get('type_chat') == Chat::TYPE_PRIVATE) {
 
-            $chat->save();
+                $chat = Chat::select('chats.*')
+                    ->join('chat_user', 'chat_user.chat_id', '=', 'chats.id')
+                    ->leftJoin('chat_user as chat_user_2', 'chat_user.chat_id', '=', 'chat_user_2.chat_id')
+                    ->where(['chats.type_chat' => Chat::TYPE_PRIVATE, 'chat_user.user_id' => $request->get('user_id'), 'chat_user_2.user_id' => \Auth::id()])
+                    ->groupBy('chats.id')
+                    ->first();
+
+                if (!$chat) {
+                    $chat = new Chat();
+                    $chat->type_chat = Chat::TYPE_PRIVATE;
+                    $chat->uniq_id = \Str::random(32);
+
+                    $chat->save();
+
+                    $chat->users()->attach([\Auth::id(), $request->get('user_id')]);
+                }
+            }
+
+            if ($request->get('type_chat') == Chat::TYPE_GROUP) {
+                $chat = Chat::find($request->get('chat_id'));
+                $chat->users()->attach($request->get('user_id'));
+
+                $chat->save();
+            }
 
             return redirect()->route('cabinet.chat.view', ['uniq_id' => $chat->uniq_id]);
         }

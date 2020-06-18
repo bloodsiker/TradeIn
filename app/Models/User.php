@@ -116,4 +116,9 @@ class User extends Authenticatable
     {
         return self::where('id', Auth::id())->update(['last_online' => Carbon::now()]);
     }
+
+    public function statusOnline()
+    {
+        return $this->last_online ? Carbon::parse($this->last_online)->timestamp > Carbon::now()->addMinutes('-5')->timestamp : false;
+    }
 }

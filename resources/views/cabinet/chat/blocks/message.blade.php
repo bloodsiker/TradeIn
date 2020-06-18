@@ -1,8 +1,11 @@
 <div class="media" data-id="{{ $message->id }}">
+    @php
+        $onlineStatus = $message->user->statusOnline() ? 'avatar-online' : 'avatar-offline' ;
+    @endphp
     @if ($message->user->avatar)
-        <div class="avatar avatar-sm avatar-online"><img src="{{ asset($message->user->avatar) }}" class="rounded-circle" alt=""></div>
+        <div class="avatar avatar-sm {{ $onlineStatus }}"><img src="{{ asset($message->user->avatar) }}" class="rounded-circle" alt=""></div>
     @else
-        <div class="avatar avatar-sm avatar-online"><span class="avatar-initial rounded-circle">k</span></div>
+        <div class="avatar avatar-sm {{ $onlineStatus }}"><span class="avatar-initial rounded-circle">{{ substr($message->user->name, 0, 1) }}</span></div>
     @endif
 
     <div class="media-body">
