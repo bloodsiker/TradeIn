@@ -53,7 +53,7 @@
                             @endif
                             <div class="media-body mg-l-10">
                                 <h6 class="mg-b-0">{{ $directUser->fullName() }}</h6>
-                                <small class="d-block tx-color-04">{{ $directUser->last_online }}</small>
+                                <small class="d-block tx-color-04">{{ $directUser->last_online ? \Carbon\Carbon::parse($directUser->last_online)->format('d.m.Y H:i') : null }}</small>
                             </div>
                             <span class="badge badge-danger">3</span>
                         </a>
@@ -120,7 +120,7 @@
         </div><!-- chat-content-header -->
 
         <div class="chat-content-body" id="container-messages">
-            <div class="chat-group">
+            <div class="chat-group" id="chat_load" data-id="{{ $chat->id }}">
                 @php
                     $messageDate = null;
                 @endphp
@@ -135,7 +135,7 @@
 
                     @include('cabinet.chat.blocks.message')
                 @endforeach
-                <div class="container-message d-none"></div>
+                <div class="message_chat d-none"></div>
             </div>
         </div>
 
@@ -289,7 +289,7 @@
                 },
                 success: function (response) {
                     $('#message').val('')
-                    $('.container-message').before(response);
+                    $('.message_chat').before(response);
                     scrollToBottom();
                 }
             });
@@ -306,5 +306,27 @@
             e.preventDefault();
             sendMessage();
         })
+
+        function getMessages() {
+            const chat_id = '{{ $chat->id }}',
+                  last_id = $('#chat_load .media').last().data('id');
+
+            $.ajax({
+                url: '{{ route('cabinet.chat.load') }}',
+                type: "POST",
+                data: { chat_id: chat_id, last_id: last_id },
+                cache: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    $('#chat_load .message_chat').last().before(response);
+                    scrollToBottom();
+                }
+            });
+        }
+
+        setInterval(() => getMessages(), 10000);
+
     </script>
 @endpush

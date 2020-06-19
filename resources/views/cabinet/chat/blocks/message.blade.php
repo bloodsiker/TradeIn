@@ -1,4 +1,4 @@
-<div class="media" data-id="{{ $message->id }}">
+<div class="media message_chat" data-id="{{ $message->id }}">
     @php
         $onlineStatus = $message->user->statusOnline() ? 'avatar-online' : 'avatar-offline' ;
     @endphp

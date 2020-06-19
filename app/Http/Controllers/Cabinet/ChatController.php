@@ -111,19 +111,24 @@ class ChatController extends Controller
         return redirect()->route('cabinet.chat.index');
     }
 
-    public function edit(Request $request)
+    public function chatLoad(Request $request)
     {
-        if ($request->isMethod('post') && $request->filled('id')) {
+        if ($request->isXmlHttpRequest()) {
 
-            $brand = Brand::find($request->get('id'));
-            $brand->name = $request->get('name');
+            $chat = Chat::find($request->get('chat_id'));
 
-            $brand->save();
+            $query = ChatMessage::where('chat_id', $chat->id);
 
-            return redirect()->route('cabinet.brand.list')->with('success', 'Информация обновлена');
+            if ($request->get('last_id')) {
+                $query->where('id', '>', $request->get('last_id'));
+            }
+
+            $messages = $query->orderBy('created_at')->with('user')->get();
+
+            return view('cabinet.chat.blocks.messages', compact('messages'));
         }
 
-        return redirect()->route('cabinet.brand.list')->with('danger', 'Ошибка при обновлении!');
+        return response(['status' => 0]);
     }
 
     public function delete(Request $request)
