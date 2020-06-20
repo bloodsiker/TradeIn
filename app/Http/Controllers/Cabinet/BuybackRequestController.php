@@ -12,6 +12,7 @@ use App\Models\Status;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use LisDev\Delivery\NovaPoshtaApi2;
 use Maatwebsite\Excel\Facades\Excel;
 
 /**
@@ -183,6 +184,117 @@ class BuybackRequestController extends Controller
         return Excel::download(
             new BuybackRequestExport($request),
             sprintf('requests %s.xlsx', Carbon::now()->format('Y-m-d H:i'))
+        );
+    }
+
+    public function test(Request $request)
+    {
+        $np = new NovaPoshtaApi2('68cb6099fc69880122b1c572531a7d15');
+
+        $cities = $np->getCities();
+
+        $typeOfPayers = $np->getTypesOfPayers();
+        $paymentForms = $np->getPaymentForms();
+        $cargoTypes = $np->getCargoTypes();
+
+        if ($request->isXmlHttpRequest() && $request->get('action') === 'getWarehouse') {
+            $result = $np->getWarehouses($request->get('city'));
+            return response()->json($result);
+        }
+
+//        $counterparty = $np->model('Counterparty')->save([
+//            'FirstName' => 'Дмитрий',
+//            'MiddleName' => 'Овсийчук',
+//            'LastName' => 'Витальевич',
+//            'Phone' => '0935147288',
+//            'Email' => 'maldini2@ukr.net',
+//            'CounterpartyType' => 'PrivatePerson',
+//            'CounterpartyProperty' => 'Recipient',
+//        ]);
+
+        $senderInfo = $np->getCounterpartyContactPersons('2819ab78-d46b-11e7-becf-005056881c6b');
+//        $senderInfo = $np->getCounterparties('Sender', 1, '', '');
+        dump($senderInfo);die;
+
+//        $this->insertDocument($np);
+
+        return view('cabinet.buyback_request.test', compact('cities', 'typeOfPayers', 'paymentForms', 'cargoTypes'));
+    }
+
+    private function insertDocument(NovaPoshtaApi2 $np, Request $request)
+    {
+        $senderInfo = $np->getCounterparties('Sender', 1, '', '');
+//        dump($senderInfo);die;
+        // Выбор отправителя в конкретном городе (в данном случае - в первом попавшемся)
+        $sender = $senderInfo['data'][0];
+        // Информация о складе отправителя
+        $senderWarehouses = $np->getWarehouses($sender['City']);
+
+        $result = $np->newInternetDocument(
+        // Данные отправителя
+            [
+                // Данные пользователя
+                'FirstName' => $sender['FirstName'],
+                'MiddleName' => $sender['MiddleName'],
+                'LastName' => $sender['LastName'],
+                // Вместо FirstName, MiddleName, LastName можно ввести зарегистрированные ФИО отправителя или название фирмы для юрлиц
+                // (можно получить, вызвав метод getCounterparties('Sender', 1, '', ''))
+                // 'Description' => $sender['Description'],
+                // Необязательное поле, в случае отсутствия будет использоваться из данных контакта
+                // 'Phone' => '0631112233',
+                // Город отправления
+                // 'City' => 'Белгород-Днестровский',
+                // Область отправления
+                // 'Region' => 'Одесская',
+                'CitySender' => $sender['City'],
+                // Отделение отправления по ID (в данном случае - в первом попавшемся)
+                'SenderAddress' => $senderWarehouses['data'][0]['Ref'],
+                // Отделение отправления по адресу
+                // 'Warehouse' => $senderWarehouses['data'][0]['DescriptionRu'],
+            ],
+            // Данные получателя
+            [
+                'FirstName' => $request->get('FirstName'),
+                'MiddleName' => $request->get('MiddleName'),
+                'LastName' => $request->get('LastName'),
+                'Phone' => $request->get('RecipientsPhone'),
+                'City' => $request->get('RecipientCityName'),
+                'Region' => $request->get('RecipientArea'),
+                'Warehouse' => 'Отделение №3: ул. Калачевская, 13 (Старая Дарница)',
+            ],
+            [
+                // Дата отправления
+                'DateTime' => date('d.m.Y'),
+                // Тип доставки, дополнительно - getServiceTypes()
+                'ServiceType' => 'WarehouseWarehouse',
+                // Тип оплаты, дополнительно - getPaymentForms()
+                'PaymentMethod' => $request->get('PaymentMethod'),
+                // Кто оплачивает за доставку
+                'PayerType' => $request->get('PayerType'),
+                // Стоимость груза в грн
+                'Cost' => $request->get('Cost'),
+                // Кол-во мест
+                'SeatsAmount' => '1',
+                // Описание груза
+                'Description' => $request->get('Description'),
+                // Тип доставки, дополнительно - getCargoTypes
+                'CargoType' => $request->get('CargoType'),
+                // Вес груза
+                'Weight' => $request->get('Weight'),
+                // Объем груза в куб.м.
+                'VolumeGeneral' => $request->get('VolumeGeneral'),
+                // Обратная доставка
+//                'BackwardDeliveryData' => [
+//                    [
+//                        // Кто оплачивает обратную доставку
+//                        'PayerType' => 'Recipient',
+//                        // Тип доставки
+//                        'CargoType' => 'Money',
+//                        // Значение обратной доставки
+//                        'RedeliveryString' => 4552,
+//                    ]
+//                ]
+            ]
         );
     }
 }

@@ -268,6 +268,10 @@
       .chat-group .media-body p:last-child {
         margin-bottom: 0; }
 
+.chat-group-main {
+    justify-content: flex-start;
+}
+
 .chat-group-divider {
   position: relative;
   display: flex;

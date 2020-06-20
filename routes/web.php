@@ -67,6 +67,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::post('/buyback-request/delete', 'Cabinet\BuybackRequestController@delete')->name('cabinet.buyback_request.delete')->middleware('admin');
         Route::post('/buyback-request/paid', 'Cabinet\BuybackRequestController@paid')->name('cabinet.buyback_request.paid')->middleware('admin');
         Route::get('/buyback-request/export', 'Cabinet\BuybackRequestController@export')->name('cabinet.buyback_request.export');
+        Route::match(['post', 'get'], '/buyback-request/test', 'Cabinet\BuybackRequestController@test')->name('cabinet.buyback_request.test');
 
         Route::match(['post', 'get'], '/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
         Route::get('/bonus', 'Cabinet\ProfileController@bonus')->name('cabinet.profile.bonus');

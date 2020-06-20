@@ -151,7 +151,7 @@
                 <a href="{{ route('cabinet.profile') }}" class="dropdown-item"><i data-feather="edit-3"></i> Редактировать профиль</a>
                 <a href="{{ route('cabinet.profile.bonus') }}" class="dropdown-item"><i data-feather="dollar-sign"></i> Бонусы</a>
                 <div class="dropdown-divider"></div>
-                <a href="{{ route('cabinet.help.list') }}" class="dropdown-item"><i data-feather="help-circle"></i> Help Center</a>
+                <a href="{{ route('cabinet.help.list') }}" class="dropdown-item"><i data-feather="help-circle"></i> Инструкции</a>
 {{--                <a href="" class="dropdown-item"><i data-feather="settings"></i>Account Settings</a>--}}
                 <a href="{{ route('cabinet.profile.logout') }}" class="dropdown-item"><i data-feather="log-out"></i>Выйти</a>
             </div>

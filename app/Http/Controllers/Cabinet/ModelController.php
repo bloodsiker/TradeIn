@@ -23,7 +23,7 @@ class ModelController extends Controller
         $network = $brand = null;
         $query = DeviceModel::select('device_models.*')->with('brand');
 
-        if ($request->has('network_id') && $request->get('network_id')) {
+        if ($request->get('network_id')) {
             $network = Network::find($request->get('network_id'));
             $query->where('network_id', $request->get('network_id'));
         } else {
@@ -47,10 +47,6 @@ class ModelController extends Controller
     public function add(Request $request)
     {
         if ($request->isMethod('post')) {
-
-            $request->validate([
-                'name' => ['required', 'min:2', 'max:255']
-            ]);
 
             $model = new DeviceModel();
             $model->name = $request->get('name');

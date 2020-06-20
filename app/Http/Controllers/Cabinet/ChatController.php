@@ -21,7 +21,10 @@ class ChatController extends Controller
         $chatsPrivate = Chat::where('type_chat', Chat::TYPE_PRIVATE)->get();
         $chatsGroup = Chat::where('type_chat', Chat::TYPE_GROUP)->get();
 
-        return view('cabinet.chat.index', compact('chatsGroup', 'chatsPrivate'));
+        $usersInChat[] = \Auth::id();
+        $users = User::whereNotIn('id', $usersInChat)->get();
+
+        return view('cabinet.chat.index', compact('chatsGroup', 'chatsPrivate', 'users'));
     }
 
     public function view(Request $request, $uniqId)

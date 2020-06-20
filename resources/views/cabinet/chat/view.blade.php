@@ -6,10 +6,8 @@
 
     <div class="chat-sidebar">
 
-
         <div class="chat-sidebar-body">
 
-{{--            <div class="flex-fill pd-y-20 pd-x-10">--}}
             <div class="pd-y-20 pd-x-10">
                 <div class="d-flex align-items-center justify-content-between pd-x-10 mg-b-10">
                     <span class="tx-10 tx-uppercase tx-medium tx-color-03 tx-sans tx-spacing-1">Все группы</span>
@@ -22,7 +20,6 @@
                 </nav>
             </div>
 
-{{--            <div class="flex-fill pd-y-20 pd-x-10 bd-t">--}}
             <div class="pd-y-20 pd-x-10 bd-t">
                 <div class="d-flex align-items-center justify-content-between pd-x-10 mg-b-10">
                     <span class="tx-10 tx-uppercase tx-medium tx-color-03 tx-sans tx-spacing-1">Личные сообщения</span>
@@ -102,7 +99,7 @@
                         <a href="#modalInvitePeople" data-toggle="modal"><span data-toggle="tooltip" title="Добавить пользователя в группу"><i data-feather="user-plus"></i></span></a>
                         <a id="showMemberList" href="" data-toggle="tooltip" title="Список участников" class="d-flex align-items-center">
                             <i data-feather="users"></i>
-                            <span class="tx-medium mg-l-5">25</span>
+                            <span class="tx-medium mg-l-5">{{ $chat->users()->count() }}</span>
                         </a>
                     </nav>
                 @endif
@@ -113,8 +110,8 @@
 {{--                    <a href="" data-toggle="tooltip" title="Flag User"><i data-feather="flag"></i></a>--}}
 {{--                </nav>--}}
                 <div class="search-form mg-l-15 d-none d-sm-flex">
-                    <input type="search" class="form-control" placeholder="Search">
-                    <button class="btn" type="button"><i data-feather="search"></i></button>
+{{--                    <input type="search" class="form-control" placeholder="Search">--}}
+{{--                    <button class="btn" type="button"><i data-feather="search"></i></button>--}}
                 </div>
             </div>
         </div><!-- chat-content-header -->
@@ -237,7 +234,6 @@
                         @csrf
                         <div class="input-group mg-b-5">
                             <input type="hidden" name="type_chat" value="{{ \App\Models\Chat::TYPE_PRIVATE }}">
-                            <input type="hidden" name="chat_id" value="{{ $chat->id }}">
                             <select class="custom-select" name="user_id" required>
                                 @foreach($users as $inviteUser)
                                     <option value="{{ $inviteUser->id }}">{{ $inviteUser->fullName() }}</option>

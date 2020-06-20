@@ -9,8 +9,9 @@
                 <div>
                     <h4 class="mg-b-0">Заявки на выкуп</h4>
                 </div>
-                <div class="mg-t-20 mg-sm-t-0">
-                    <a href="{{ route('cabinet.buyback_request.export', [request()->getQueryString()]) }}" class="btn btn-sm btn-dark btn-block" id="show-filter">Экспорт в Excel</a>
+                <div class="mg-t-20 mg-sm-t-0 justify-content-end">
+                    <a href="#modal-data" class="btn btn-sm btn-dark" data-toggle="modal">Добавить</a>
+                    <a href="{{ route('cabinet.buyback_request.export', [request()->getQueryString()]) }}" class="btn btn-sm btn-dark" id="show-filter">Экспорт в Excel</a>
                 </div>
             </div>
         </div>

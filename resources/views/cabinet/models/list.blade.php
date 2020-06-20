@@ -30,8 +30,8 @@
                             <div class="form-group col-md-3">
                                 <select class="custom-select network-filter" name="network_id">
                                     <option value=""></option>
-                                    @foreach($networks as $network)
-                                        <option value="{{ $network->id }}" @if(request('network_id') == $network->id) selected @endif>{{ $network->name }}</option>
+                                    @foreach($networks as $networkSelect)
+                                        <option value="{{ $networkSelect->id }}" @if(request('network_id') == $networkSelect->id) selected @endif>{{ $networkSelect->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
