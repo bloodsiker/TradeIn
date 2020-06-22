@@ -79,32 +79,73 @@ class ProfileController extends Controller
     {
         $now = Carbon::now();
         $lastMonth = Carbon::now()->modify('- 1 month');
+        $sumPaid = $bonuses = $users = $networks = $shops = [];
 
-        $query = BuybackRequest::where('user_id', Auth::id());
+        if (Auth::user()->isShop()) {
+            $query = BuybackRequest::where('user_id', Auth::id());
 
-        if ($request->get('date_from') && $request->get('date_to')) {
-            $from = Carbon::parse($request->get('date_from'))->format('Y-m-d 00:00');
-            $to = Carbon::parse($request->get('date_to'))->format('Y-m-d 23:59');
-            $query->whereBetween('created_at', [$from, $to]);
-        } elseif ($request->get('date_from') && empty($request->get('date_to'))) {
-            $from = Carbon::parse($request->get('date_from'))->format('Y-m-d 00:00');
-            $to = Carbon::now()->format('Y-m-d 23:59');
-            $query->whereBetween('created_at', [$from, $to]);
-        } else {
-            $from = Carbon::now()->modify('- 1 month')->format('Y-m-d 00:00');
-            $to = Carbon::now()->format('Y-m-d 23:59');
-            $query->whereBetween('created_at', [$from, $to]);
+            if ($request->get('date_from') && $request->get('date_to')) {
+                $from = Carbon::parse($request->get('date_from'))->format('Y-m-d 00:00');
+                $to = Carbon::parse($request->get('date_to'))->format('Y-m-d 23:59');
+                $query->whereBetween('created_at', [$from, $to]);
+            } elseif ($request->get('date_from') && empty($request->get('date_to'))) {
+                $from = Carbon::parse($request->get('date_from'))->format('Y-m-d 00:00');
+                $to = Carbon::now()->format('Y-m-d 23:59');
+                $query->whereBetween('created_at', [$from, $to]);
+            } else {
+                $from = Carbon::now()->modify('- 1 month')->format('Y-m-d 00:00');
+                $to = Carbon::now()->format('Y-m-d 23:59');
+                $query->whereBetween('created_at', [$from, $to]);
+            }
+
+            $bonuses = $query->where('is_accrued', true)
+                ->orderBy('paid_at', 'DESC')->with('paidBy')->get();
+
+            $sumPaid['paid'] = BuybackRequest::whereBetween('created_at', [$from, $to])
+                ->where('is_paid', true)->sum('bonus');
+            $sumPaid['all'] = BuybackRequest::where('is_paid', true)->sum('bonus');
+            $sumPaid['not_paid'] = BuybackRequest::where(['is_paid' => false, 'is_accrued' => true])->sum('bonus');
         }
 
-        $bonuses = $query->where('is_accrued', true)
-            ->orderBy('paid_at', 'DESC')->with('paidBy')->get();
+        if (Auth::user()->isNetwork()) {
 
-        $sumPaid['paid'] = BuybackRequest::whereBetween('created_at', [$from, $to])
-            ->where('is_paid', true)->sum('bonus');
-        $sumPaid['all'] = BuybackRequest::where('is_paid', true)->sum('bonus');
-        $sumPaid['not_paid'] = BuybackRequest::where(['is_paid' => false, 'is_accrued' => true])->sum('bonus');
+            $shops = Shop::where('network_id', \Auth::user()->network_id)->get();
 
-        return view('cabinet.profile.bonus', compact('now', 'lastMonth', 'bonuses', 'sumPaid'));
+            $query = User::select('users.*')
+                ->selectRaw('SUM(buyback_requests.bonus) as bonus')
+                ->where('network_id', Auth::user()->network_id)
+                ->leftJoin('buyback_requests', 'buyback_requests.user_id', '=', 'users.id')
+                ->where('buyback_requests.is_paid', false)
+                ->where('buyback_requests.is_accrued', true)
+                ->groupBy('users.id');
+
+            $users = $query->get();
+        }
+
+        if (Auth::user()->isAdmin()) {
+
+            $networks = Network::all();
+            $shops = Shop::all();
+
+            $query = User::select('users.*')
+                ->selectRaw('SUM(buyback_requests.bonus) as bonus')
+                ->leftJoin('buyback_requests', 'buyback_requests.user_id', '=', 'users.id')
+                ->where('buyback_requests.is_paid', false)
+                ->where('buyback_requests.is_accrued', true)
+                ->groupBy('users.id');
+
+            if ($request->get('shop_id')) {
+                $query->where('users.shop_id', $request->get('shop_id'));
+            }
+
+            if ($request->get('network_id')) {
+                $query->where('users.network_id', $request->get('network_id'));
+            }
+
+            $users = $query->get();
+        }
+
+        return view('cabinet.profile.bonus', compact('now', 'lastMonth', 'bonuses', 'sumPaid', 'users', 'networks', 'shops'));
     }
 
     /**

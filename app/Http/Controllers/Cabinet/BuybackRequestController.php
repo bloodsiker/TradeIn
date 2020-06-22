@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Cabinet;
 
 use App\Exports\BuybackRequestExport;
 use App\Http\Controllers\Controller;
+use App\Mail\RequestChangeStatusShipped;
 use App\Models\BuybackBonus;
 use App\Models\BuybackRequest;
 use App\Models\Network;
+use App\Models\Role;
 use App\Models\Shop;
 use App\Models\Status;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use LisDev\Delivery\NovaPoshtaApi2;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -33,7 +36,7 @@ class BuybackRequestController extends Controller
         if (\Auth::user()->isAdmin()) {
             $networks = Network::all();
             $shops = Shop::all();
-            $allowStatuses = [Status::STATUS_TAKE, Status::STATUS_RETURN];
+            $allowStatuses = [Status::STATUS_TAKE, Status::STATUS_RETURN, Status::STATUS_SENT];
         }
 
         if (\Auth::user()->isNetwork()) {
@@ -139,6 +142,20 @@ class BuybackRequestController extends Controller
             $buyRequest->save();
             $buyRequest->load('user', 'status', 'model');
 
+            if ($buyRequest->wasChanged('status_id') && $buyRequest->status_id == Status::STATUS_SENT) {
+                $admins = User::where('role_id', Role::ROLE_ADMIN)->get();
+                foreach ($admins as $admin) {
+                    Mail::to($admin->email)
+                        ->send(new RequestChangeStatusShipped($buyRequest));
+                }
+            }
+
+            if ($buyRequest->wasChanged('status_id') && ($buyRequest->status_id == Status::STATUS_TAKE || $buyRequest->status_id == Status::STATUS_RETURN)) {
+                Mail::to($buyRequest->user->email)
+                    ->send(new RequestChangeStatusShipped($buyRequest));
+
+            }
+
             $btnPay = (int) $request->get('status_id') === Status::STATUS_TAKE ? 1 : 0;
 
             return response(['status' => 1, 'btn_pay' => $btnPay, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $buyRequest]);
@@ -187,6 +204,15 @@ class BuybackRequestController extends Controller
         );
     }
 
+    public function loadStock(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            return response(['status' => 1, 'type' => 'success', 'message' => "Бонус по заявке выплачен в размере грн!"]);
+        }
+
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка, бонус не выплачен!']);
+    }
+
     public function test(Request $request)
     {
         $np = new NovaPoshtaApi2('68cb6099fc69880122b1c572531a7d15');
@@ -204,39 +230,47 @@ class BuybackRequestController extends Controller
 
 //        $counterparty = $np->model('Counterparty')->save([
 //            'FirstName' => 'Дмитрий',
-//            'MiddleName' => 'Овсийчук',
-//            'LastName' => 'Витальевич',
+//            'MiddleName' => 'Витальевич',
+//            'LastName' => 'Овсийчук',
 //            'Phone' => '0935147288',
 //            'Email' => 'maldini2@ukr.net',
 //            'CounterpartyType' => 'PrivatePerson',
 //            'CounterpartyProperty' => 'Recipient',
 //        ]);
 
-        $senderInfo = $np->getCounterpartyContactPersons('2819ab78-d46b-11e7-becf-005056881c6b');
-//        $senderInfo = $np->getCounterparties('Sender', 1, '', '');
-        dump($senderInfo);die;
+        $senderInfo = $np->getCounterparties('Sender', 1, '', '');
+//        $senderInfo = $np->getCounterpartyContactPersons('2819ab78-d46b-11e7-becf-005056881c6b');
+//        dump($senderInfo);die;
 
-//        $this->insertDocument($np);
+//        $senderInfo = $np->getCounterparties('Sender', 1, 'c642e7d8-b2f9-11ea-8513-b88303659df5', '');
+
+        if ($request->isMethod('post')) {
+            $this->insertDocument($np, $request);
+        }
 
         return view('cabinet.buyback_request.test', compact('cities', 'typeOfPayers', 'paymentForms', 'cargoTypes'));
     }
 
     private function insertDocument(NovaPoshtaApi2 $np, Request $request)
     {
-        $senderInfo = $np->getCounterparties('Sender', 1, '', '');
+//        $senderInfo = $np->getCounterparties('Sender', 1, '', '');
+        $senderInfo = $np->getCounterpartyContactPersons('2819ab78-d46b-11e7-becf-005056881c6b');
 //        dump($senderInfo);die;
         // Выбор отправителя в конкретном городе (в данном случае - в первом попавшемся)
         $sender = $senderInfo['data'][0];
         // Информация о складе отправителя
-        $senderWarehouses = $np->getWarehouses($sender['City']);
+//        $senderWarehouses = $np->getWarehouses($sender['City']);
 
         $result = $np->newInternetDocument(
         // Данные отправителя
             [
                 // Данные пользователя
-                'FirstName' => $sender['FirstName'],
-                'MiddleName' => $sender['MiddleName'],
-                'LastName' => $sender['LastName'],
+                'Sender' => '2819ab78-d46b-11e7-becf-005056881c6b',
+                'ContactSender' => 'c642e7d8-b2f9-11ea-8513-b88303659df5',
+                'SendersPhone' => '0935147288',
+//                'FirstName' => $sender['FirstName'],
+//                'MiddleName' => $sender['MiddleName'],
+//                'LastName' => $sender['LastName'],
                 // Вместо FirstName, MiddleName, LastName можно ввести зарегистрированные ФИО отправителя или название фирмы для юрлиц
                 // (можно получить, вызвав метод getCounterparties('Sender', 1, '', ''))
                 // 'Description' => $sender['Description'],
@@ -246,9 +280,11 @@ class BuybackRequestController extends Controller
                 // 'City' => 'Белгород-Днестровский',
                 // Область отправления
                 // 'Region' => 'Одесская',
-                'CitySender' => $sender['City'],
+                'CitySender' => '69da41f3-3f5d-11de-b509-001d92f78698',
+//                'CitySender' => $sender['City'],
                 // Отделение отправления по ID (в данном случае - в первом попавшемся)
-                'SenderAddress' => $senderWarehouses['data'][0]['Ref'],
+                'SenderAddress' => '16922847-e1c2-11e3-8c4a-0050568002cf',
+//                'SenderAddress' => $senderWarehouses['data'][0]['Ref'],
                 // Отделение отправления по адресу
                 // 'Warehouse' => $senderWarehouses['data'][0]['DescriptionRu'],
             ],
@@ -259,8 +295,12 @@ class BuybackRequestController extends Controller
                 'LastName' => $request->get('LastName'),
                 'Phone' => $request->get('RecipientsPhone'),
                 'City' => $request->get('RecipientCityName'),
-                'Region' => $request->get('RecipientArea'),
-                'Warehouse' => 'Отделение №3: ул. Калачевская, 13 (Старая Дарница)',
+                'Region' => $request->get('RecipientArea', ''),
+                'Warehouse' => $request->get('RecipientAddressName'),
+                'CounterpartyType' => '',
+                'CityRecipient' => '',
+                'RecipientAddress' => '',
+                'Recipient' => '',
             ],
             [
                 // Дата отправления
@@ -296,5 +336,7 @@ class BuybackRequestController extends Controller
 //                ]
             ]
         );
+
+        dump($result);die;
     }
 }

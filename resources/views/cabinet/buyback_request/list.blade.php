@@ -10,7 +10,8 @@
                     <h4 class="mg-b-0">Заявки на выкуп</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
-                    <a href="#modal-data" class="btn btn-sm btn-dark" data-toggle="modal">Добавить</a>
+                    <a href="" class="btn btn-sm btn-dark" id="load-stock" data-toggle="modal">Склад</a>
+                    <a href="{{ route('cabinet.buyback_request.test') }}" class="btn btn-sm btn-dark">Создать ТТН</a>
                     <a href="{{ route('cabinet.buyback_request.export', [request()->getQueryString()]) }}" class="btn btn-sm btn-dark" id="show-filter">Экспорт в Excel</a>
                 </div>
             </div>
@@ -221,6 +222,31 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-stock" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <form action="{{ route('cabinet.network.add') }}" method="POST" data-parsley-validate novalidate>
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="titleModal">Создать торговую сеть</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        <div class="form-group">
+                            <label for="name">Название<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Название" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endpush
 
 @push('scripts')
@@ -355,6 +381,26 @@
 
                             $.notify(response.message, response.type);
                             $('#edit-data').modal('toggle');
+                        }
+                    }
+                });
+            })
+
+            $('#load-stock').on('click', function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '{{ route('cabinet.buyback_request.load_stock') }}',
+                    type: "POST",
+                    data: {},
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status === 1) {
+
+                            $('#modal-stock').modal('show');
                         }
                     }
                 });

@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
 
-                <form action="{{ route('cabinet.help.add') }}" id="nova-poshta" method="POST" enctype="multipart/form-data" data-parsley-validate novalidate>
+                <form action="{{ route('cabinet.buyback_request.test') }}" id="nova-poshta" method="POST" enctype="multipart/form-data" data-parsley-validate novalidate>
                     @csrf
                     <fieldset class="form-fieldset">
 
@@ -105,8 +105,8 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="Description">Дополнительное описание</label>
-                                <textarea name="Description" class="form-control @error('Description') is-invalid @enderror" id="Description" rows="2">{{ old('Description') }}</textarea>
+                                <label for="Description">Дополнительное описание <span class="text-danger">*</span></label>
+                                <textarea name="Description" class="form-control @error('Description') is-invalid @enderror" id="Description" rows="2" required>{{ old('Description') }}</textarea>
                                 @error('Description')
                                     <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
