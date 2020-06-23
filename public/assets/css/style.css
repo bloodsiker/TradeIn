@@ -28,6 +28,8 @@ body {background-color: #f5f6fa;font-size: 0.80rem;!important;}
     z-index: 1;
 }
 
+.accordion-shop {border: 1px solid #89aae0;border-radius: 3px;padding: 1px 8px;margin-bottom: 4px;}
+
 /*select2*/
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: #3c4962;

@@ -13,6 +13,8 @@ use App\Models\Shop;
 use App\Models\Status;
 use App\Models\User;
 use Carbon\Carbon;
+use DB;
+use Doctrine\DBAL\Schema\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use LisDev\Delivery\NovaPoshtaApi2;
@@ -207,7 +209,23 @@ class BuybackRequestController extends Controller
     public function loadStock(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            return response(['status' => 1, 'type' => 'success', 'message' => "Бонус по заявке выплачен в размере грн!"]);
+
+            $debtNetworks = DB::table('buyback_requests')->select('networks.*')
+                ->selectRaw('SUM(buyback_requests.cost) as debt')
+                ->join('users', 'users.id', '=', 'buyback_requests.user_id')
+                ->join('networks', 'networks.id', '=', 'users.network_id')
+                ->where('buyback_requests.status_id', Status::STATUS_NEW)
+                ->groupBy('networks.id')->get();
+
+            $debtShops = DB::table('buyback_requests')->select('shops.*')
+                ->selectRaw('SUM(buyback_requests.cost) as debt')
+                ->join('users', 'users.id', '=', 'buyback_requests.user_id')
+                ->leftJoin('shops', 'shops.id', '=', 'users.shop_id')
+                ->where('buyback_requests.status_id', Status::STATUS_NEW)
+                ->where('shops.id', '<>', null)
+                ->groupBy('shops.id')->get();
+
+            return view('cabinet.buyback_request.blocks.stock', compact('debtNetworks', 'debtShops'));
         }
 
         return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка, бонус не выплачен!']);
