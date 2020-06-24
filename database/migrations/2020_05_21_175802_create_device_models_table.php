@@ -24,6 +24,7 @@ class CreateDeviceModelsTable extends Migration
             $table->float('price_3', 8, 2)->default(0);
             $table->float('price_4', 8, 2)->default(0);
             $table->float('price_5', 8, 2)->default(0);
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
 
             $table->foreign('network_id')->references('id')->on('networks')->onDelete('set null');

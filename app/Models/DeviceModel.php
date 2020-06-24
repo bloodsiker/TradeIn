@@ -12,6 +12,10 @@ class DeviceModel extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
+    protected $attributes = [
+        'is_deleted' => false,
+    ];
+
     public function brand()
     {
         return $this->hasOne(Brand::class, 'id', 'brand_id');

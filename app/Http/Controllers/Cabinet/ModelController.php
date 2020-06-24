@@ -21,7 +21,8 @@ class ModelController extends Controller
         $networks = Network::all();
 
         $network = $brand = null;
-        $query = DeviceModel::select('device_models.*')->with('brand');
+        $query = DeviceModel::select('device_models.*')
+            ->where('device_models.is_deleted', false)->with('brand');
 
         if ($request->get('network_id')) {
             $network = Network::find($request->get('network_id'));
@@ -94,7 +95,8 @@ class ModelController extends Controller
         $model = DeviceModel::findOrFail($request->get('id'));
 
         if ($model) {
-            $model->delete();
+            $model->is_deleted = true;
+            $model->save();
 
             return response(['status' => 1, 'type' => 'success', 'message' => "Модель {$model->name} удалена!"]);
         }
