@@ -46,7 +46,7 @@
                             @if ($directUser && $directUser->avatar)
                                 <div class="avatar avatar-sm {{ $onlineStatus }}"><img src="{{ asset($directUser->avatar) }}" class="rounded-circle" alt=""></div>
                             @else
-                                <div class="avatar avatar-sm {{ $onlineStatus }}"><span class="avatar-initial rounded-circle">{{ substr($directUser->name, 0, 1) }}</span></div>
+                                <div class="avatar avatar-sm {{ $onlineStatus }}"><span class="avatar-initial rounded-circle">{{ mb_substr($directUser->name, 0, 1) }}</span></div>
                             @endif
                             <div class="media-body mg-l-10">
                                 <h6 class="mg-b-0">{{ $directUser->fullName() }}</h6>
@@ -149,7 +149,7 @@
                                 @if ($chatUser->avatar)
                                     <img src="{{ asset($chatUser->avatar) }}" class="rounded-circle" alt="">
                                 @else
-                                    <span class="avatar-initial rounded-circle">{{ substr($chatUser->name, 0, 1) }}</span>
+                                    <span class="avatar-initial rounded-circle">{{ mb_substr($chatUser->name, 0, 1) }}</span>
                                 @endif
                             </div>
                             <div class="media-body mg-l-10">
@@ -207,7 +207,7 @@
                             <input type="hidden" name="chat_id" value="{{ $chat->id }}">
                             <input type="hidden" name="type_chat" value="{{ \App\Models\Chat::TYPE_GROUP }}">
                             <select class="custom-select" name="user_id" required>
-                                @foreach($users as $inviteUser)
+                                @foreach($usersGroup as $inviteUser)
                                     <option value="{{ $inviteUser->id }}">{{ $inviteUser->fullName() }}</option>
                                 @endforeach
                             </select>
@@ -235,7 +235,7 @@
                         <div class="input-group mg-b-5">
                             <input type="hidden" name="type_chat" value="{{ \App\Models\Chat::TYPE_PRIVATE }}">
                             <select class="custom-select" name="user_id" required>
-                                @foreach($users as $inviteUser)
+                                @foreach($usersPrivate as $inviteUser)
                                     <option value="{{ $inviteUser->id }}">{{ $inviteUser->fullName() }}</option>
                                 @endforeach
                             </select>

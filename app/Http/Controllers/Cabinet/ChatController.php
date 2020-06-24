@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Chat;
 use App\Models\ChatMessage;
+use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,8 +22,17 @@ class ChatController extends Controller
         $chatsPrivate = Chat::where('type_chat', Chat::TYPE_PRIVATE)->get();
         $chatsGroup = Chat::where('type_chat', Chat::TYPE_GROUP)->get();
 
-        $usersInChat[] = \Auth::id();
-        $users = User::whereNotIn('id', $usersInChat)->get();
+        if (\Auth::user()->isAdmin()) {
+            $users = User::where('is_active', true)->get();
+        }
+
+        if (\Auth::user()->isNetwork()) {
+            $users = User::where(['network_id' => \Auth::user()->network_id, 'role_id' => Role::ROLE_ADMIN, 'is_active' => true])->get();
+        }
+
+        if (\Auth::user()->isShop()) {
+            $users = User::where(['network_id' => \Auth::user()->network_id, 'role_id' => Role::ROLE_ADMIN, 'is_active' => true])->get();
+        }
 
         return view('cabinet.chat.index', compact('chatsGroup', 'chatsPrivate', 'users'));
     }
@@ -32,7 +42,7 @@ class ChatController extends Controller
         $chatsPrivate = Chat::where('type_chat', Chat::TYPE_PRIVATE)->get();
         $chatsGroup = Chat::where('type_chat', Chat::TYPE_GROUP)->get();
 
-        $users = [];
+        $usersGroup = [];
         $messages = [];
         $chat = Chat::where('uniq_id', $uniqId)->first();
         if ($chat) {
@@ -41,7 +51,26 @@ class ChatController extends Controller
             $usersInChat = array_column($chat->users->toArray(), 'id');
             $usersInChat[] = \Auth::id();
 
-            $users = User::whereNotIn('id', $usersInChat)->get();
+            $usersGroup = User::whereNotIn('id', $usersInChat)->get();
+            $usersPrivate = User::all();
+
+            if (\Auth::user()->isAdmin()) {
+                $usersGroup = User::whereNotIn('id', $usersInChat)->get();
+                $usersPrivate = User::where('is_active', true)->get();
+            }
+
+            if (\Auth::user()->isNetwork()) {
+                $users = User::where(['network_id' => \Auth::user()->network_id, 'role_id' => Role::ROLE_ADMIN, 'is_active' => true])->get();
+                $usersGroup = User::whereNotIn('id', $usersInChat)->get();
+                $usersPrivate = User::where('is_active', true)->get();
+            }
+
+            if (\Auth::user()->isShop()) {
+                $users = User::where(['network_id' => \Auth::user()->network_id, 'role_id' => Role::ROLE_ADMIN, 'is_active' => true])->get();
+                $usersGroup = User::whereNotIn('id', $usersInChat)->get();
+                $usersPrivate = User::where('is_active', true)->get();
+            }
+
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -56,7 +85,7 @@ class ChatController extends Controller
             return view('cabinet.chat.blocks.message', compact('message'));
         }
 
-        return view('cabinet.chat.view', compact('chatsGroup', 'chatsPrivate', 'messages', 'chat', 'users'));
+        return view('cabinet.chat.view', compact('chatsGroup', 'chatsPrivate', 'messages', 'chat', 'usersGroup', 'usersPrivate'));
     }
 
     public function groupAdd(Request $request)

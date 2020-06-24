@@ -46,7 +46,7 @@
                             @if ($directUser && $directUser->avatar)
                                 <div class="avatar avatar-sm {{ $onlineStatus }}"><img src="{{ asset($directUser->avatar) }}" class="rounded-circle" alt=""></div>
                             @else
-                                <div class="avatar avatar-sm {{ $onlineStatus }}"><span class="avatar-initial rounded-circle">{{ substr($directUser->name, 0, 1) }}</span></div>
+                                <div class="avatar avatar-sm {{ $onlineStatus }}"><span class="avatar-initial rounded-circle">{{ mb_substr($directUser->name, 0, 1) }}</span></div>
                             @endif
                             <div class="media-body mg-l-10">
                                 <h6 class="mg-b-0">{{ $directUser->fullName() }}</h6>
