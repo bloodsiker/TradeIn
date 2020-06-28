@@ -93,7 +93,7 @@ class BuybackRequestController extends Controller
             $query->where('status_id', $request->get('status_id'));
         }
 
-        $buyRequests = $query->orderBy('id', 'DESC')->get();
+        $buyRequests = $query->where('buyback_requests.is_deleted', false)->orderBy('id', 'DESC')->get();
 
         return view('cabinet.buyback_request.list',
             compact('buyRequests', 'statuses', 'shops', 'networks', 'users', 'allowStatuses'));
@@ -138,7 +138,10 @@ class BuybackRequestController extends Controller
                 $buyRequest->is_accrued = true;
             }
 
-            $buyRequest->status_id = $request->get('status_id');
+            if ($request->filled('status_id')) {
+                $buyRequest->status_id = $request->get('status_id');
+            }
+
             $buyRequest->imei = $request->get('imei');
             $buyRequest->packet = $request->get('packet');
 
@@ -176,14 +179,30 @@ class BuybackRequestController extends Controller
                 $buyRequest->is_paid = true;
                 $buyRequest->paid_by = \Auth::id();
                 $buyRequest->paid_at = Carbon::now();
+
+                $buyRequest->save();
+
+                return response(['status' => 1, 'type' => 'success', 'message' => "Бонус по заявке выплачен в размере {$buyRequest->bonus} грн!"]);
             }
-
-            $buyRequest->save();
-
-            return response(['status' => 1, 'type' => 'success', 'message' => "Бонус по заявке выплачен в размере {$buyRequest->bonus} грн!"]);
         }
 
         return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка, бонус не выплачен!']);
+    }
+
+    public function debt(Request $request)
+    {
+        $buyRequest = BuybackRequest::find($request->get('id'));
+
+        if ($buyRequest) {
+            if (!$buyRequest->is_debt) {
+                $buyRequest->is_debt = true;
+                $buyRequest->save();
+
+                return response(['status' => 1, 'type' => 'success', 'message' => "Списана задолженность склада в размере {$buyRequest->cost} грн!"]);
+            }
+        }
+
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка, при списании задолженности склада!']);
     }
 
     public function delete(Request $request)
@@ -191,7 +210,8 @@ class BuybackRequestController extends Controller
         $buyRequest = BuybackRequest::find($request->get('id'));
 
         if ($buyRequest) {
-            $buyRequest->delete();
+            $buyRequest->is_deleted = true;
+            $buyRequest->save();
 
             return response(['status' => 1, 'type' => 'success', 'message' => "Заявка удалена!"]);
         }
@@ -209,11 +229,12 @@ class BuybackRequestController extends Controller
 
     public function pdf(Request $request, $id)
     {
-//        $pdf = PDF::loadView('cabinet.buyback_request.pdf.act');
-//        PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $buyBackRequest = BuybackRequest::find($id);
+        $pdf = PDF::loadView('cabinet.buyback_request.pdf.act', compact('buyBackRequest'));
+        PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
-        return view('cabinet.buyback_request.pdf.act');
-//        return $pdf->download(sprintf('Акт %s.pdf', Carbon::now()->format('d.m.Y H:i')));
+//        return view('cabinet.buyback_request.pdf.act', compact('buyBackRequest'));
+        return $pdf->download(sprintf('Акт #%s %s.pdf', $buyBackRequest->id,  Carbon::now()->format('d.m.Y H:i')));
     }
 
     public function loadStock(Request $request)
@@ -224,14 +245,14 @@ class BuybackRequestController extends Controller
                 ->selectRaw('SUM(buyback_requests.cost) as debt')
                 ->join('users', 'users.id', '=', 'buyback_requests.user_id')
                 ->join('networks', 'networks.id', '=', 'users.network_id')
-                ->where('buyback_requests.status_id', Status::STATUS_NEW)
+                ->where('buyback_requests.is_debt', false)
                 ->groupBy('networks.id')->get();
 
             $debtShops = DB::table('buyback_requests')->select('shops.*')
                 ->selectRaw('SUM(buyback_requests.cost) as debt')
                 ->join('users', 'users.id', '=', 'buyback_requests.user_id')
                 ->leftJoin('shops', 'shops.id', '=', 'users.shop_id')
-                ->where('buyback_requests.status_id', Status::STATUS_NEW)
+                ->where('buyback_requests.is_debt', false)
                 ->where('shops.id', '<>', null)
                 ->groupBy('shops.id')->get();
 

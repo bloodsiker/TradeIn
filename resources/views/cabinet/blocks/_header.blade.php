@@ -46,51 +46,40 @@
         <div class="dropdown dropdown-message">
             <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">
                 <i data-feather="message-square"></i>
-                <span>5</span>
+                <span>{{ $count_message }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-header">New Messages</div>
-                <a href="" class="dropdown-item">
+                <div class="dropdown-header">Новые сообщения</div>
+                @if($new_messages->count())
+                    @foreach($new_messages as $new_message)
+                        <a href="{{ route('cabinet.chat.view', ['uniq_id' => $new_message->chat->uniq_id]) }}" class="dropdown-item">
+                            <div class="media">
+                                @php
+                                    $onlineStatus = $new_message->user->statusOnline() ? 'avatar-online' : 'avatar-offline';
+                                    $user = $new_message->message->user;
+                                @endphp
+
+                                @if ($user->avatar)
+                                    <div class="avatar avatar-sm {{ $onlineStatus }}"><img src="{{ asset($user->avatar) }}" class="rounded-circle" alt=""></div>
+                                @else
+                                    <div class="avatar avatar-sm {{ $onlineStatus }}"><span class="avatar-initial rounded-circle">{{ substr($user->name, 0, 1) }}</span></div>
+                                @endif
+                                <div class="media-body mg-l-15">
+                                    <strong>{{ $user->fullName() }}</strong>
+                                    <p>{{ substr($new_message->message->message, 0, 50) }}</p>
+                                    <span>{{ Date::parse($new_message->created_at)->format('j F Y г. H:i') }}</span>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                @else
                     <div class="media">
-                        <div class="avatar avatar-sm avatar-online"><img src="https://via.placeholder.com/350" class="rounded-circle" alt=""></div>
-                        <div class="media-body mg-l-15">
-                            <strong>Socrates Itumay</strong>
-                            <p>nam libero tempore cum so...</p>
-                            <span>Mar 15 12:32pm</span>
-                        </div><!-- media-body -->
-                    </div><!-- media -->
-                </a>
-                <a href="" class="dropdown-item">
-                    <div class="media">
-                        <div class="avatar avatar-sm avatar-online"><img src="https://via.placeholder.com/500" class="rounded-circle" alt=""></div>
-                        <div class="media-body mg-l-15">
-                            <strong>Joyce Chua</strong>
-                            <p>on the other hand we denounce...</p>
-                            <span>Mar 13 04:16am</span>
-                        </div><!-- media-body -->
-                    </div><!-- media -->
-                </a>
-                <a href="" class="dropdown-item">
-                    <div class="media">
-                        <div class="avatar avatar-sm avatar-online"><img src="https://via.placeholder.com/600" class="rounded-circle" alt=""></div>
-                        <div class="media-body mg-l-15">
-                            <strong>Althea Cabardo</strong>
-                            <p>is there anyone who loves...</p>
-                            <span>Mar 13 02:56am</span>
-                        </div><!-- media-body -->
-                    </div><!-- media -->
-                </a>
-                <a href="" class="dropdown-item">
-                    <div class="media">
-                        <div class="avatar avatar-sm avatar-online"><img src="https://via.placeholder.com/500" class="rounded-circle" alt=""></div>
-                        <div class="media-body mg-l-15">
-                            <strong>Adrian Monino</strong>
-                            <p>duis aute irure dolor in repre...</p>
-                            <span>Mar 12 10:40pm</span>
+                        <div class="media-body m-3 mg-l-15">
+                            <p>Нет новых сообщений</p>
                         </div>
                     </div>
-                </a>
-                <div class="dropdown-footer"><a href="{{ route('cabinet.chat.index') }}">View all Messages</a></div>
+                @endif
+                <div class="dropdown-footer"><a href="{{ route('cabinet.chat.index') }}">Все сообщения</a></div>
             </div>
         </div>
 {{--        <div class="dropdown dropdown-notification">--}}

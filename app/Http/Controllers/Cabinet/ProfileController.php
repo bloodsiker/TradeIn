@@ -99,6 +99,7 @@ class ProfileController extends Controller
             }
 
             $bonuses = $query->where('is_accrued', true)
+                ->where('is_deleted', false)
                 ->orderBy('paid_at', 'DESC')->with('paidBy')->get();
 
             $sumPaid['paid'] = BuybackRequest::whereBetween('created_at', [$from, $to])
@@ -117,6 +118,7 @@ class ProfileController extends Controller
                 ->leftJoin('buyback_requests', 'buyback_requests.user_id', '=', 'users.id')
                 ->where('buyback_requests.is_paid', false)
                 ->where('buyback_requests.is_accrued', true)
+                ->where('buyback_requests.is_deleted', false)
                 ->groupBy('users.id');
 
             $users = $query->get();
@@ -132,6 +134,7 @@ class ProfileController extends Controller
                 ->leftJoin('buyback_requests', 'buyback_requests.user_id', '=', 'users.id')
                 ->where('buyback_requests.is_paid', false)
                 ->where('buyback_requests.is_accrued', true)
+                ->where('buyback_requests.is_deleted', false)
                 ->groupBy('users.id');
 
             if ($request->get('shop_id')) {

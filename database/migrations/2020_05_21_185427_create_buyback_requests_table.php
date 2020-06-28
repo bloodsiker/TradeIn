@@ -25,6 +25,8 @@ class CreateBuybackRequestsTable extends Migration
             $table->float('bonus')->default(0);
             $table->boolean('is_accrued')->default(0);
             $table->boolean('is_paid')->default(0);
+            $table->boolean('is_deleted')->default(0);
+            $table->boolean('is_debt')->default(0);
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
 

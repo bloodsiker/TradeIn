@@ -15,7 +15,11 @@
                 </div>
                 <nav id="allChannels" class="nav flex-column nav-chat mg-b-20">
                     @foreach($chatsGroup as $chatGroup)
-                        <a href="{{ route('cabinet.chat.view', ['uniq_id' => $chatGroup->uniq_id]) }}" class="nav-link @if ($chatGroup->uniq_id == request()->route()->parameter('uniq_id')) active @endif"># {{ $chatGroup->name }}</a>
+                        <a href="{{ route('cabinet.chat.view', ['uniq_id' => $chatGroup->uniq_id]) }}" class="nav-link @if ($chatGroup->uniq_id == request()->route()->parameter('uniq_id')) active @endif"># {{ $chatGroup->name }}
+                            @if($chatGroup->new_messages)
+                                <span class="badge badge-danger">{{ $chatGroup->new_messages }}</span>
+                            @endif
+                        </a>
                     @endforeach
                 </nav>
             </div>
@@ -37,6 +41,7 @@
 
                                     return $item;
                                 });
+
                             @endphp
 
                             @php
@@ -52,7 +57,9 @@
                                 <h6 class="mg-b-0">{{ $directUser->fullName() }}</h6>
                                 <small class="d-block tx-color-04">{{ $directUser->last_online ? \Carbon\Carbon::parse($directUser->last_online)->format('d.m.Y H:i') : null }}</small>
                             </div>
-                            <span class="badge badge-danger">3</span>
+                            @if($chatPrivate->new_messages)
+                                <span class="badge badge-danger">{{ $chatPrivate->new_messages }}</span>
+                            @endif
                         </a>
                     @endforeach
                 </div>
@@ -285,7 +292,7 @@
                 },
                 success: function (response) {
                     $('#message').val('')
-                    $('.message_chat').before(response);
+                    $('.message_chat').last().before(response);
                     scrollToBottom();
                 }
             });
@@ -322,7 +329,7 @@
             });
         }
 
-        setInterval(() => getMessages(), 10000);
+        setInterval(() => getMessages(), 5000);
 
     </script>
 @endpush

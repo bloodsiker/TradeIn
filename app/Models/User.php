@@ -94,17 +94,17 @@ class User extends Authenticatable
      */
     public function isAdmin()
     {
-        return Auth::user()->role_id === Role::ROLE_ADMIN;
+        return $this->role_id === Role::ROLE_ADMIN;
     }
 
     public function isNetwork()
     {
-        return Auth::user()->role_id === Role::ROLE_NETWORK;
+        return $this->role_id === Role::ROLE_NETWORK;
     }
 
     public function isShop()
     {
-        return Auth::user()->role_id === Role::ROLE_SHOP;
+        return $this->role_id === Role::ROLE_SHOP;
     }
 
     /**
@@ -114,7 +114,7 @@ class User extends Authenticatable
      */
     public function updateLastOnline()
     {
-        return self::where('id', Auth::id())->update(['last_online' => Carbon::now()]);
+        return self::where('id', $this->id)->update(['last_online' => Carbon::now()]);
     }
 
     public function statusOnline()

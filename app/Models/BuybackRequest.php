@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BuybackRequest extends Model
 {
     protected $attributes = [
+        'is_deleted' => false,
         'status_id' => Status::STATUS_NEW,
     ];
 

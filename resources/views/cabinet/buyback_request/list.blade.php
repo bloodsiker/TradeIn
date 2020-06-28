@@ -112,7 +112,7 @@
                             </thead>
                             <tbody>
                             @foreach($buyRequests as $buyRequest)
-                                <tr data-id="{{ $buyRequest->id }}" class="@if($buyRequest->is_paid) paid @endif">
+                                <tr data-id="{{ $buyRequest->id }}" class="@if($buyRequest->is_debt) debt @endif">
                                     <td>{{ $buyRequest->id }}</td>
                                     <td>{{ $buyRequest->user->fullName() }}</td>
                                     <td>
@@ -126,14 +126,14 @@
                                     <td class="td-packet">{{ $buyRequest->packet }}</td>
                                     <td class="td-cost">{{ $buyRequest->cost }}</td>
                                     <td class="td-status">{{ $buyRequest->status->name }}</td>
-                                    <td>{{ $buyRequest->bonus }}</td>
+                                    <td class="td-bonus">{{ $buyRequest->bonus }} <span>@if($buyRequest->is_paid)<i class="far fa-check-square bg-success"></i>@endif</span></td>
                                     <td><small>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('d.m.Y H:i') }}</small></td>
                                     <td>
                                         <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                             <i class="far fa-edit"></i>
                                         </a>
-                                        <a href="{{ route('cabinet.buyback_request.pdf', ['id' => $buyRequest->id]) }}" data-toggle="tooltip" title="PDF" class="btn btn-xxs btn-success btn-icon">
-                                           PDF
+                                        <a href="{{ route('cabinet.buyback_request.pdf', ['id' => $buyRequest->id]) }}" data-toggle="tooltip" title="Акт PDF" class="btn btn-xxs btn-warning btn-icon">
+                                            <i class="far fa-file-pdf"></i>
                                         </a>
                                         @if(Auth::user()->isAdmin())
                                             @if (\App\Models\Status::STATUS_TAKE === $buyRequest->status_id && !$buyRequest->is_paid && $buyRequest->is_accrued)
@@ -145,13 +145,21 @@
                                                     $display = 'd-none'
                                                 @endphp
                                             @endif
-                                            <a href="#" data-toggle="tooltip" title="Выплатить" class="btn btn-xxs btn-primary btn-icon btnPaid {{ $display ?? '' }}">
+                                            <a href="#" data-toggle="tooltip" title="Выплатить бонус" class="btn btn-xxs btn-primary btn-icon btnPaid {{ $display ?? '' }}">
                                                 <i class="fas fa-hryvnia"></i>
                                             </a>
 
-                                            <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </a>
+                                            @if(!$buyRequest->is_debt)
+                                                <a href="#" data-toggle="tooltip" title="Списать долг склада" class="btn btnDebt btn-xxs btn-info btn-icon">
+                                                    <i class="fas fa-hand-holding-usd"></i>
+                                                </a>
+                                            @endif
+
+                                            @if($buyRequest->status_id === \App\Models\Status::STATUS_NEW)
+                                                <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -272,6 +280,33 @@
             @if(Auth::user()->isAdmin())
                 deleteObject('.table', '.btnDelete', "{{ route('cabinet.buyback_request.delete') }}");
 
+                $('table').on('click', '.btnDebt', function (e) {
+                    e.preventDefault();
+
+                    let _this = $(this),
+                        id = _this.parent().parent('tr').data('id');
+
+                    $.ajax({
+                        url: "{{ route('cabinet.buyback_request.debt') }}",
+                        type: "POST",
+                        data: { id: id },
+                        cache: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            if (response.status === 1) {
+                                _this.parent().parent('tr').addClass('debt')
+                                _this.addClass('d-none');
+                                _this.css('pointer-events', 'none');
+                                $.notify(response.message, response.type);
+                            } else {
+                                $.notify(response.message, response.type);
+                            }
+                        }
+                    });
+                });
+
                 $('table').on('click', '.btnPaid', function (e) {
                     e.preventDefault();
 
@@ -288,7 +323,7 @@
                         },
                         success: function (response) {
                             if (response.status === 1) {
-                                _this.parent().parent('tr').addClass('paid')
+                                _this.parent().parent('tr').find('td.td-bonus > span').html('<i class="far fa-check-square bg-success"></i>');
                                 _this.addClass('d-none');
                                 _this.css('pointer-events', 'none');
                                 $.notify(response.message, response.type);

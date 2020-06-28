@@ -9721,20 +9721,20 @@ textarea.form-control {
     color: #1b2e4b; }
     .dropdown-message .dropdown-link.new-indicator span,
     .dropdown-notification .dropdown-link.new-indicator span {
-      display: flex;
-      width: 15px;
-      height: 15px;
-      justify-content: center;
-      position: absolute;
-      top: -8px;
-      right: -2px;
-      background-color: #dc3545;
-      color: #fff;
-      font-size: 8px;
-      font-weight: 400;
-      font-family: sans-serif;
-      line-height: 2;
-      border-radius: 100%; }
+        display: flex;
+        width: 17px;
+        height: 17px;
+        justify-content: center;
+        position: absolute;
+        top: -12px;
+        right: -5px;
+        background-color: #dc3545;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 400;
+        font-family: sans-serif;
+        line-height: 2;
+        border-radius: 100%; }
   .dropdown-message .dropdown-link:hover, .dropdown-message .dropdown-link:focus,
   .dropdown-notification .dropdown-link:hover,
   .dropdown-notification .dropdown-link:focus {

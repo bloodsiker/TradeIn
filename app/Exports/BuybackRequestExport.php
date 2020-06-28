@@ -65,7 +65,7 @@ class BuybackRequestExport implements FromView
             $query->where('status_id', $request->get('status_id'));
         }
 
-        $requests = $query->orderBy('id', 'DESC')->get();
+        $requests = $query->where('buyback_requests.is_deleted', false)->orderBy('id', 'DESC')->get();
 
         return view('cabinet.exports.request', compact('requests'));
     }

@@ -18,6 +18,17 @@ class Chat extends Model
 
     public function messages()
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(ChatMessage::class);
+    }
+
+    public function messages_user()
+    {
+        return $this->hasMany(ChatMessageUser::class);
+    }
+
+    public function getNewMessagesAttribute()
+    {
+        return $this->hasMany(ChatMessageUser::class)->whereUserId(\Auth::id())->count();
+
     }
 }

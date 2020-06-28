@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Chat;
 use App\Models\ChatMessage;
+use App\Models\ChatMessageUser;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
@@ -19,8 +20,19 @@ class ChatController extends Controller
 
     public function index()
     {
-        $chatsPrivate = Chat::where('type_chat', Chat::TYPE_PRIVATE)->get();
-        $chatsGroup = Chat::where('type_chat', Chat::TYPE_GROUP)->get();
+        $chatsPrivate = Chat::select('chats.*')
+            ->join('chat_user', 'chat_user.chat_id', '=', 'chats.id')
+            ->leftJoin('chat_user as chat_user_2', 'chat_user.chat_id', '=', 'chat_user_2.chat_id')
+            ->where(['chats.type_chat' => Chat::TYPE_PRIVATE, 'chat_user_2.user_id' => \Auth::id()])
+            ->groupBy('chats.id')
+            ->get();
+
+        $chatsGroup = Chat::select('chats.*')
+            ->join('chat_user', 'chat_user.chat_id', '=', 'chats.id')
+            ->leftJoin('chat_user as chat_user_2', 'chat_user.chat_id', '=', 'chat_user_2.chat_id')
+            ->where(['chats.type_chat' => Chat::TYPE_GROUP, 'chat_user_2.user_id' => \Auth::id()])
+            ->groupBy('chats.id')
+            ->get();
 
         if (\Auth::user()->isAdmin()) {
             $users = User::where('is_active', true)->get();
@@ -39,13 +51,26 @@ class ChatController extends Controller
 
     public function view(Request $request, $uniqId)
     {
-        $chatsPrivate = Chat::where('type_chat', Chat::TYPE_PRIVATE)->get();
-        $chatsGroup = Chat::where('type_chat', Chat::TYPE_GROUP)->get();
+        $chatsPrivate = Chat::select('chats.*')
+            ->join('chat_user', 'chat_user.chat_id', '=', 'chats.id')
+            ->leftJoin('chat_user as chat_user_2', 'chat_user.chat_id', '=', 'chat_user_2.chat_id')
+            ->where(['chats.type_chat' => Chat::TYPE_PRIVATE, 'chat_user_2.user_id' => \Auth::id()])
+            ->groupBy('chats.id')
+            ->get();
+
+        $chatsGroup = Chat::select('chats.*')
+            ->join('chat_user', 'chat_user.chat_id', '=', 'chats.id')
+            ->leftJoin('chat_user as chat_user_2', 'chat_user.chat_id', '=', 'chat_user_2.chat_id')
+            ->where(['chats.type_chat' => Chat::TYPE_GROUP, 'chat_user_2.user_id' => \Auth::id()])
+            ->groupBy('chats.id')
+            ->get();
 
         $usersGroup = [];
         $messages = [];
         $chat = Chat::where('uniq_id', $uniqId)->first();
         if ($chat) {
+            ChatMessageUser::where(['user_id' => \Auth::id(), 'chat_id' => $chat->id])->delete();
+
             $messages = ChatMessage::where('chat_id', $chat->id)->orderBy('created_at')->get();
 
             $usersInChat = array_column($chat->users->toArray(), 'id');
@@ -59,16 +84,12 @@ class ChatController extends Controller
                 $usersPrivate = User::where('is_active', true)->get();
             }
 
-            if (\Auth::user()->isNetwork()) {
-                $users = User::where(['network_id' => \Auth::user()->network_id, 'role_id' => Role::ROLE_ADMIN, 'is_active' => true])->get();
-                $usersGroup = User::whereNotIn('id', $usersInChat)->get();
-                $usersPrivate = User::where('is_active', true)->get();
-            }
-
-            if (\Auth::user()->isShop()) {
-                $users = User::where(['network_id' => \Auth::user()->network_id, 'role_id' => Role::ROLE_ADMIN, 'is_active' => true])->get();
-                $usersGroup = User::whereNotIn('id', $usersInChat)->get();
-                $usersPrivate = User::where('is_active', true)->get();
+            if (\Auth::user()->isNetwork() || \Auth::user()->isShop()) {
+                $usersGroup = User::whereNotIn('id', $usersInChat)
+                    ->where(['network_id' => \Auth::user()->network_id, 'role_id' => Role::ROLE_ADMIN, 'is_active' => true])
+                    ->get();
+                $usersPrivate = User::where(['network_id' => \Auth::user()->network_id, 'role_id' => Role::ROLE_ADMIN, 'is_active' => true])
+                    ->get();
             }
 
         }
@@ -81,6 +102,22 @@ class ChatController extends Controller
 
             $message->save();
             $message->load('user');
+
+            $chat = Chat::find($request->get('id'));
+            $users = array_column($chat->users->toArray(), 'id');
+            $insert = [];
+            $i = 0;
+            foreach ($users as $user) {
+                if (\Auth::id() !== $user) {
+                    $insert[$i]['message_id'] = $message->id;
+                    $insert[$i]['user_id'] = $user;
+                    $insert[$i]['chat_id'] = $chat->id;
+                    $i++;
+                }
+            }
+
+            ChatMessageUser::insert($insert);
+            ChatMessageUser::where(['user_id' => \Auth::id(), 'chat_id' => $chat->id])->delete();
 
             return view('cabinet.chat.blocks.message', compact('message'));
         }

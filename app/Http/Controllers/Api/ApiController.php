@@ -17,12 +17,14 @@ class ApiController extends Controller
     {
         $data = DeviceModel::select('brands.id', 'brands.name')
             ->where('network_id', $request->get('network_id'))
+            ->where('device_models.is_deleted', false)
             ->join('brands', 'brands.id', '=', 'device_models.brand_id')
             ->groupBy('brands.id')->get();
 
         if (!$data->count()) {
             $data = DeviceModel::select('brands.id', 'brands.name')
                 ->where('network_id', null)
+                ->where('device_models.is_deleted', false)
                 ->join('brands', 'brands.id', '=', 'device_models.brand_id')
                 ->groupBy('brands.id')->get();
         }
@@ -39,11 +41,13 @@ class ApiController extends Controller
             $brand = Brand::find($request->get('brand_id'));
             if ($brand) {
                 $data = DeviceModel::where(['brand_id' => $brand->id, 'network_id' => $request->get('network_id')])
+                    ->where('device_models.is_deleted', false)
                     ->select(['id', 'brand_id', 'name', 'price', 'price_1', 'price_2', 'price_3', 'price_4', 'price_5'])
                     ->get();
 
                 if (!$data->count()) {
                     $data = DeviceModel::where(['brand_id' => $brand->id, 'network_id' => null])
+                        ->where('device_models.is_deleted', false)
                         ->select(['id', 'brand_id', 'name', 'price', 'price_1', 'price_2', 'price_3', 'price_4', 'price_5'])
                         ->get();
                 }
@@ -62,7 +66,10 @@ class ApiController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'data' => DeviceModel::with('brand')->where('network_id', $request->get('network_id'))->get()
+            'data' => DeviceModel::with('brand')
+                ->where('network_id', $request->get('network_id'))
+                ->where('device_models.is_deleted', false)
+                ->get()
         ]);
     }
 }
