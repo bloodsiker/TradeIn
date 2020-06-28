@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use LisDev\Delivery\NovaPoshtaApi2;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 /**
  * Class BuybackRequestController
@@ -204,6 +205,15 @@ class BuybackRequestController extends Controller
             new BuybackRequestExport($request),
             sprintf('requests %s.xlsx', Carbon::now()->format('Y-m-d H:i'))
         );
+    }
+
+    public function pdf(Request $request, $id)
+    {
+//        $pdf = PDF::loadView('cabinet.buyback_request.pdf.act');
+//        PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        return view('cabinet.buyback_request.pdf.act');
+//        return $pdf->download(sprintf('Акт %s.pdf', Carbon::now()->format('d.m.Y H:i')));
     }
 
     public function loadStock(Request $request)

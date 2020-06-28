@@ -132,6 +132,9 @@
                                         <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                             <i class="far fa-edit"></i>
                                         </a>
+                                        <a href="{{ route('cabinet.buyback_request.pdf', ['id' => $buyRequest->id]) }}" data-toggle="tooltip" title="PDF" class="btn btn-xxs btn-success btn-icon">
+                                           PDF
+                                        </a>
                                         @if(Auth::user()->isAdmin())
                                             @if (\App\Models\Status::STATUS_TAKE === $buyRequest->status_id && !$buyRequest->is_paid && $buyRequest->is_accrued)
                                                 @php
