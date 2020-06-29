@@ -70,7 +70,11 @@ Route::group(['middleware' => ['web']], function () {
         Route::post('/buyback-request/load-stock', 'Cabinet\BuybackRequestController@loadStock')->name('cabinet.buyback_request.load_stock');
         Route::get('/buyback-request/export', 'Cabinet\BuybackRequestController@export')->name('cabinet.buyback_request.export');
         Route::get('/buyback-request/pdf/{id}', 'Cabinet\BuybackRequestController@pdf')->name('cabinet.buyback_request.pdf');
-        Route::match(['post', 'get'], '/buyback-request/test', 'Cabinet\BuybackRequestController@test')->name('cabinet.buyback_request.test');
+
+        Route::match(['post', 'get'], '/nova-poshta', 'Cabinet\NovaPoshtaController@list')->name('cabinet.nova_poshta.list');
+        Route::match(['post', 'get'], '/nova-poshta/counterparty', 'Cabinet\NovaPoshtaController@counterparty')->name('cabinet.nova_poshta.counterparty');
+        Route::match(['post', 'get'], '/nova-poshta/add-ttn', 'Cabinet\NovaPoshtaController@addTtn')->name('cabinet.nova_poshta.add_ttn');
+        Route::match(['post', 'get'], '/nova-poshta/add-ttn', 'Cabinet\NovaPoshtaController@addTtn')->name('cabinet.nova_poshta.add_ttn');
 
         Route::match(['post', 'get'], '/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
         Route::get('/bonus', 'Cabinet\ProfileController@bonus')->name('cabinet.profile.bonus');

@@ -13,7 +13,7 @@
                     @if(Auth::user()->isNetwork() || Auth::user()->isAdmin())
                         <a href="" class="btn btn-sm btn-dark" id="load-stock" data-toggle="modal">Долг склада</a>
                     @endif
-                    <a href="{{ route('cabinet.buyback_request.test') }}" class="btn btn-sm btn-dark">Создать ТТН</a>
+                    <a href="{{ route('cabinet.nova_poshta.list') }}" class="btn btn-sm btn-dark">Список ТТН</a>
                     <a href="{{ route('cabinet.buyback_request.export', [request()->getQueryString()]) }}" class="btn btn-sm btn-dark" id="show-filter">Экспорт в Excel</a>
                 </div>
             </div>

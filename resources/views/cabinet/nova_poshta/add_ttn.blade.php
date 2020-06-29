@@ -10,7 +10,7 @@
                     <h4 class="mg-b-0">Создать ТТН</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
-                    <a href="{{ route('cabinet.buyback_request.list') }}" class="btn btn-sm btn-secondary">
+                    <a href="{{ route('cabinet.nova_poshta.list') }}" class="btn btn-sm btn-secondary">
                         <i class="fa fa-undo"></i>
                         Назад
                     </a>
@@ -25,34 +25,15 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
 
-                <form action="{{ route('cabinet.buyback_request.test') }}" id="nova-poshta" method="POST" enctype="multipart/form-data" data-parsley-validate novalidate>
+                <form action="{{ route('cabinet.nova_poshta.add_ttn') }}" id="nova-poshta" method="POST" enctype="multipart/form-data" data-parsley-validate novalidate>
                     @csrf
                     <fieldset class="form-fieldset">
 
-                        <div class="divider-text mb-4">Основные данные</div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="city">Город <span class="text-danger">*</span></label>
-                                <select class="custom-select" id="city" name="city">
-                                    <option selected></option>
-                                    @foreach($cities['data'] as $city)
-                                        <option value="{{ $city['Ref'] }}">{{ $city['DescriptionRu'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group col-md-6">
-                                <label for="warehouse">Отделение <span class="text-danger">*</span></label>
-                                <select class="custom-select" id="warehouse" name="warehouse" required>
-                                    <option disabled></option>
-                                </select>
-                            </div>
-                        </div>
+                        <div class="divider-text mb-4">Посылка</div>
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="PayerType">Кто платит <span class="text-danger">*</span></label>
+                                <label for="PayerType">Плательщик <span class="text-danger">*</span></label>
                                 <select class="custom-select" id="PayerType" name="PayerType" required>
                                     <option value=""></option>
                                     @foreach($typeOfPayers['data'] as $typeOfPayer)
@@ -72,7 +53,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="CargoType">Тип груза <span class="text-danger">*</span></label>
+                                <label for="CargoType">Тип услуги <span class="text-danger">*</span></label>
                                 <select class="custom-select" id="CargoType" name="CargoType" required>
                                     <option value=""></option>
                                     @foreach($cargoTypes['data'] as $cargoType)
@@ -146,6 +127,25 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
+                                <label for="city">Город <span class="text-danger">*</span></label>
+                                <select class="custom-select" id="city" name="CityRecipient">
+                                    <option selected></option>
+                                    @foreach($cities['data'] as $city)
+                                        <option value="{{ $city['Ref'] }}" data-ref="{{ $city['Ref'] }}">{{ $city['DescriptionRu'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="warehouse">Отделение <span class="text-danger">*</span></label>
+                                <select class="custom-select" id="warehouse" name="RecipientAddress" required>
+                                    <option disabled></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
                                 <label for="FirstName">Имя <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('FirstName') is-invalid @enderror" name="FirstName" value="{{ old('FirstName') }}" id="FirstName" placeholder="Имя" required>
                                 @error('FirstName')
@@ -176,30 +176,30 @@
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="RecipientCityName">Город получателя <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('RecipientCityName') is-invalid @enderror" name="RecipientCityName" value="{{ old('RecipientCityName') }}" id="RecipientCityName" autocomplete="off" required>
-                                @error('RecipientCityName')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="RecipientArea">Область</label>
-                                <input type="text" class="form-control @error('RecipientArea') is-invalid @enderror" name="RecipientArea" value="{{ old('RecipientArea') }}" id="RecipientArea" autocomplete="off">
-                                @error('RecipientArea')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
+{{--                        <div class="form-row">--}}
+{{--                            <div class="form-group col-md-4">--}}
+{{--                                <label for="RecipientCityName">Город получателя <span class="text-danger">*</span></label>--}}
+{{--                                <input type="text" class="form-control @error('RecipientCityName') is-invalid @enderror" name="RecipientCityName" value="{{ old('RecipientCityName') }}" id="RecipientCityName" autocomplete="off" required>--}}
+{{--                                @error('RecipientCityName')--}}
+{{--                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                            <div class="form-group col-md-4">--}}
+{{--                                <label for="RecipientArea">Область</label>--}}
+{{--                                <input type="text" class="form-control @error('RecipientArea') is-invalid @enderror" name="RecipientArea" value="{{ old('RecipientArea') }}" id="RecipientArea" autocomplete="off">--}}
+{{--                                @error('RecipientArea')--}}
+{{--                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
 
-                            <div class="form-group col-md-4">
-                                <label for="RecipientAddressName">Номер отделения <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('RecipientAddressName') is-invalid @enderror" name="RecipientAddressName" value="{{ old('RecipientAddressName') }}" id="RecipientAddressName" autocomplete="off" required>
-                                @error('RecipientAddressName')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                        </div>
+{{--                            <div class="form-group col-md-4">--}}
+{{--                                <label for="RecipientAddressName">Номер отделения <span class="text-danger">*</span></label>--}}
+{{--                                <input type="text" class="form-control @error('RecipientAddressName') is-invalid @enderror" name="RecipientAddressName" value="{{ old('RecipientAddressName') }}" id="RecipientAddressName" autocomplete="off" required>--}}
+{{--                                @error('RecipientAddressName')--}}
+{{--                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
 
 
                         <div class="form-row d-flex justify-content-end mg-t-20">
@@ -227,8 +227,9 @@
 
             $('#city').on('select2:select', function (e) {
                 let _form = $('form#nova-poshta'),
-                    url = '{{ route('cabinet.buyback_request.test') }}',
-                    city = e.params.data.id,
+                    url = '{{ route('cabinet.nova_poshta.add_ttn') }}',
+                    // city = e.params.data.id,
+                    city = $(e.params.data.element).data('ref'),
                     filter = {city: city, action: 'getWarehouse'};
 
                 $.ajax({
