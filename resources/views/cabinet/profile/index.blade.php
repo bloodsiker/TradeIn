@@ -114,9 +114,9 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="custom-file">
-                                        <input type="file" name="avatar" class="custom-file-input" id="avatar"
+                                        <input type="file" name="avatar" class="custom-file-input" id="avatar" onchange="processSelectedFiles(this)"
                                                aria-describedby="avatar">
-                                        <label class="custom-file-label" for="avatar">Выберете файт</label>
+                                        <label class="custom-file-label" id="file-name" for="avatar">Выберете файт</label>
                                     </div>
                                 </div>
                             </div>
@@ -217,6 +217,11 @@
         $(".phone-mask").inputmask("mask", {
             "mask": "+38 (999) 999-99-99"
         });
+
+        function processSelectedFiles(fileInput) {
+            var files = fileInput.files[0];
+            document.getElementById('file-name').innerText = files.name;
+        }
     </script>
 @endpush
 

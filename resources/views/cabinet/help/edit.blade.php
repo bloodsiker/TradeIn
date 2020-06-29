@@ -64,9 +64,9 @@
                         <div class="form-group mg-t-20">
                             <div class="input-group">
                                 <div class="custom-file">
-                                    <input type="file" name="image" class="custom-file-input" id="image"
+                                    <input type="file" name="image" class="custom-file-input" id="image" onchange="processSelectedFiles(this)"
                                            aria-describedby="image">
-                                    <label class="custom-file-label" for="image">Выберете файт</label>
+                                    <label class="custom-file-label" id="file-name" for="image">Выберете файт</label>
                                 </div>
                             </div>
                         </div>
@@ -90,6 +90,11 @@
             filebrowserUploadUrl: "{{route('cabinet.help.upload', ['_token' => csrf_token() ])}}",
             filebrowserUploadMethod: 'form'
         });
+
+        function processSelectedFiles(fileInput) {
+            var files = fileInput.files[0];
+            document.getElementById('file-name').innerText = files.name;
+        }
     </script>
 
 @endpush

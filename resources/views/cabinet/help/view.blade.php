@@ -27,26 +27,19 @@
                 <div class="card">
                     <div class="card-body pd-0">
                         <div class="d-sm-flex pd-20">
-                            @if($help->image)
-                                <img src="{{ $help->image }}" class="img-fit-cover wd-300 wd-md-300 wd-lg-300" alt="">
-                            @endif
-                            <div class="media-body mg-t-20 mg-sm-t-0 mg-sm-l-20">
+                            <div class="tx-13 mg-b-10">
+                                @if($help->image)
+                                    <img src="{{ $help->image }}" style="float: left" class="wd-300 wd-md-300 wd-lg-300 mg-sm-r-15 mg-b-15" alt="">
+                                @endif
+
                                 <h6>{{ $help->title }}</h6>
-                                <p class="tx-color-03 tx-13 mg-b-10">{!! $help->description !!} </p>
+
+                                {!! $help->description !!}
                             </div>
                         </div>
                     </div>
                 </div>
-
-{{--                <div class="media">--}}
-{{--                    <img src="{{ $help->image }}" class="wd-200 rounded mg-r-20" alt="">--}}
-{{--                    <div class="media-body">--}}
-{{--                        <h5 class="mg-b-15 tx-inverse">{{ $help->title }}</h5>--}}
-{{--                        {!! $help->description !!}--}}
-{{--                    </div>--}}
-{{--                </div>--}}
             </div>
-
         </div>
     </div>
 @endsection
