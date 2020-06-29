@@ -230,11 +230,11 @@ class BuybackRequestController extends Controller
     public function pdf(Request $request, $id)
     {
         $buyBackRequest = BuybackRequest::find($id);
-//        $pdf = PDF::loadView('cabinet.buyback_request.pdf.act', compact('buyBackRequest'));
-//        PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf = PDF::loadView('cabinet.buyback_request.pdf.act', compact('buyBackRequest'));
+        PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
-        return view('cabinet.buyback_request.pdf.act', compact('buyBackRequest'));
-//        return $pdf->download(sprintf('Акт #%s %s.pdf', $buyBackRequest->id,  Carbon::now()->format('d.m.Y H:i')));
+//        return view('cabinet.buyback_request.pdf.act', compact('buyBackRequest'));
+        return $pdf->download(sprintf('Акт #%s %s.pdf', $buyBackRequest->id,  Carbon::now()->format('d.m.Y H:i')));
     }
 
     public function loadStock(Request $request)
