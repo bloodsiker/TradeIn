@@ -241,25 +241,33 @@ class BuybackRequestController extends Controller
     {
         if ($request->isXmlHttpRequest()) {
 
-            $debtNetworks = DB::table('buyback_requests')->select('networks.*')
+            $queryNetwork = DB::table('buyback_requests')->select('networks.*')
                 ->selectRaw('SUM(buyback_requests.cost) as debt')
                 ->join('users', 'users.id', '=', 'buyback_requests.user_id')
                 ->join('networks', 'networks.id', '=', 'users.network_id')
                 ->where('buyback_requests.is_debt', false)
-                ->groupBy('networks.id')->get();
+                ->groupBy('networks.id');
 
-            $debtShops = DB::table('buyback_requests')->select('shops.*')
+            $queryShops = DB::table('buyback_requests')->select('shops.*')
                 ->selectRaw('SUM(buyback_requests.cost) as debt')
                 ->join('users', 'users.id', '=', 'buyback_requests.user_id')
                 ->leftJoin('shops', 'shops.id', '=', 'users.shop_id')
                 ->where('buyback_requests.is_debt', false)
                 ->where('shops.id', '<>', null)
-                ->groupBy('shops.id')->get();
+                ->groupBy('shops.id');
+
+            if (\Auth::user()->isNetwork()) {
+                $queryNetwork->where('users.network_id', \Auth::user()->network_id);
+                $queryShops->where('users.network_id', \Auth::user()->network_id);
+            }
+
+            $debtNetworks = $queryNetwork->get();
+            $debtShops = $queryShops->get();
 
             return view('cabinet.buyback_request.blocks.stock', compact('debtNetworks', 'debtShops'));
         }
 
-        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка, бонус не выплачен!']);
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка, не верный запрос!']);
     }
 
     public function test(Request $request)

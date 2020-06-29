@@ -1,16 +1,19 @@
 @extends('cabinet.layouts.main')
 
-@section('title', 'Заявки на выкуп')
+@section('title', 'Создать номер накладной Новой почты')
 
 @section('subHeader')
     <div class="sub-content content-fixed bd-b">
         <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
             <div class="d-sm-flex align-items-center justify-content-between">
                 <div>
-                    <h4 class="mg-b-0">Заявки на выкуп</h4>
+                    <h4 class="mg-b-0">Создать ТТН</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
-
+                    <a href="{{ route('cabinet.buyback_request.list') }}" class="btn btn-sm btn-secondary">
+                        <i class="fa fa-undo"></i>
+                        Назад
+                    </a>
                 </div>
             </div>
         </div>

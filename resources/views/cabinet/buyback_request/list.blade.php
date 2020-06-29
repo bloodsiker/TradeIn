@@ -10,7 +10,9 @@
                     <h4 class="mg-b-0">Заявки на выкуп</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
-                    <a href="" class="btn btn-sm btn-dark" id="load-stock" data-toggle="modal">Долг склада</a>
+                    @if(Auth::user()->isNetwork() || Auth::user()->isAdmin())
+                        <a href="" class="btn btn-sm btn-dark" id="load-stock" data-toggle="modal">Долг склада</a>
+                    @endif
                     <a href="{{ route('cabinet.buyback_request.test') }}" class="btn btn-sm btn-dark">Создать ТТН</a>
                     <a href="{{ route('cabinet.buyback_request.export', [request()->getQueryString()]) }}" class="btn btn-sm btn-dark" id="show-filter">Экспорт в Excel</a>
                 </div>
@@ -129,12 +131,16 @@
                                     <td class="td-bonus">{{ $buyRequest->bonus }} <span>@if($buyRequest->is_paid)<i class="far fa-check-square bg-success"></i>@endif</span></td>
                                     <td><small>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('d.m.Y H:i') }}</small></td>
                                     <td>
-                                        <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                            <i class="far fa-edit"></i>
-                                        </a>
-                                        <a href="{{ route('cabinet.buyback_request.pdf', ['id' => $buyRequest->id]) }}" data-toggle="tooltip" title="Акт PDF" class="btn btn-xxs btn-warning btn-icon">
-                                            <i class="far fa-file-pdf"></i>
-                                        </a>
+                                        @if(Auth::user()->isAdmin() || (Auth::user()->isShop() && Auth::id() === $buyRequest->user_id))
+                                            <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+
+                                            <a href="{{ route('cabinet.buyback_request.pdf', ['id' => $buyRequest->id]) }}" data-toggle="tooltip" title="Акт PDF" class="btn btn-xxs btn-warning btn-icon">
+                                                <i class="far fa-file-pdf"></i>
+                                            </a>
+                                        @endif
+
                                         @if(Auth::user()->isAdmin())
                                             @if (\App\Models\Status::STATUS_TAKE === $buyRequest->status_id && !$buyRequest->is_paid && $buyRequest->is_accrued)
                                                 @php
@@ -234,9 +240,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-stock" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+    @if(Auth::user()->isNetwork() || Auth::user()->isAdmin())
+        <div class="modal fade" id="modal-stock" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
 
-    </div>
+        </div>
+    @endif
 @endpush
 
 @push('scripts')
@@ -403,23 +411,25 @@
                 });
             })
 
-            $('#load-stock').on('click', function (e) {
-                e.preventDefault();
+            @if(Auth::user()->isNetwork() || Auth::user()->isAdmin())
+                $('#load-stock').on('click', function (e) {
+                    e.preventDefault();
 
-                $.ajax({
-                    url: '{{ route('cabinet.buyback_request.load_stock') }}',
-                    type: "POST",
-                    data: {},
-                    cache: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-                        $('#modal-stock').html(response)
-                        $('#modal-stock').modal('show');
-                    }
-                });
-            })
+                    $.ajax({
+                        url: '{{ route('cabinet.buyback_request.load_stock') }}',
+                        type: "POST",
+                        data: {},
+                        cache: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            $('#modal-stock').html(response)
+                            $('#modal-stock').modal('show');
+                        }
+                    });
+                })
+            @endif
 
         });
     </script>
