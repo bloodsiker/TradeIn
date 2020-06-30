@@ -260,6 +260,11 @@ class BuybackRequestController extends Controller
                 $queryShops->where('users.network_id', \Auth::user()->network_id);
             }
 
+            if (\Auth::user()->isShop()) {
+                $queryNetwork->where('users.shop_id', \Auth::user()->shop_id);
+                $queryShops->where('users.shop_id', \Auth::user()->shop_id);
+            }
+
             $debtNetworks = $queryNetwork->get();
             $debtShops = $queryShops->get();
 
