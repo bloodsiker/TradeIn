@@ -39,6 +39,39 @@ class NovaPoshtaController extends Controller
         return view('cabinet.nova_poshta.counterparty', compact('listTtn'));
     }
 
+    public function addCounterparty(Request $request)
+    {
+        $listTtn = [];
+
+        if ($request->isMethod('post')) {
+//            dd($request->get('phone'));
+            $np = new NovaPoshtaApi('68cb6099fc69880122b1c572531a7d15');
+
+            $counterparty = $np->model('Counterparty')->save([
+                'FirstName' => $request->get('FirstName'),
+                'MiddleName' => $request->get('MiddleName'),
+                'LastName' => $request->get('LastName'),
+                'Phone' => $request->get('phone'),
+                'Email' => $request->get('email', ''),
+                'CounterpartyType' => 'PrivatePerson',
+                'CounterpartyProperty' => 'Recipient',
+            ]);
+
+            if ($counterparty['success']) {
+                $per = [
+                    'ref' => $counterparty['data'][0]['Ref'],
+                    'FirstName' => $counterparty['data'][0]['FirstName'],
+                    'MiddleName' => $counterparty['data'][0]['MiddleName'],
+                    'LastName' => $counterparty['data'][0]['LastName'],
+                ];
+            }
+
+            dd($counterparty);
+        }
+
+        return view('cabinet.nova_poshta.add_counterparty', compact('listTtn'));
+    }
+
     public function addTtn(Request $request)
     {
         $np = new NovaPoshtaApi('68cb6099fc69880122b1c572531a7d15');
