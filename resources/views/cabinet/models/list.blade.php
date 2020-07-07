@@ -277,7 +277,7 @@
                 <div class="modal-content tx-14">
                     <form action="{{ route('cabinet.model.import') }}" method="POST" enctype="multipart/form-data" data-parsley-validate novalidate>
                         <div class="modal-header">
-                            <h6 class="modal-title" id="titleModal">Иморт базы данных смартфонов</h6>
+                            <h6 class="modal-title" id="titleModal">Импорт базы данных смартфонов</h6>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

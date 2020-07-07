@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
+use App\Imports\ShopImport;
 use App\Models\Network;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class ShopController
@@ -82,5 +84,17 @@ class ShopController extends Controller
         $users = User::where('shop_id', $shop->id)->orderBy('id', 'desc')->get();
 
         return view('cabinet.shops.users', compact('shop', 'users'));
+    }
+
+    public function import(Request $request)
+    {
+        if ($request->hasFile('file')) {
+
+            Excel::import(new ShopImport($request), $request->file('file'));
+
+            return redirect()->back()->with('success', "Импорт прошел успешно, данные дабовленны!");
+        }
+
+        return redirect()->back()->with('danger', 'Ошибка при импорте!');
     }
 }

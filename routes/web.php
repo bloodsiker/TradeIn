@@ -42,6 +42,7 @@ Route::group(['middleware' => ['web']], function () {
             Route::post('/shop/add', 'Cabinet\ShopController@add')->name('cabinet.shop.add');
             Route::post('/shop/edit', 'Cabinet\ShopController@edit')->name('cabinet.shop.edit');
             Route::post('/shop/delete', 'Cabinet\ShopController@delete')->name('cabinet.shop.delete');
+            Route::post('/shop/import', 'Cabinet\ShopController@import')->name('cabinet.shop.import');
             Route::get('/shop/{id}/users', 'Cabinet\ShopController@users')->name('cabinet.shop.users');
 
             Route::get('/brands', 'Cabinet\BrandController@list')->name('cabinet.brand.list');
