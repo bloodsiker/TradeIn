@@ -116,7 +116,7 @@
                                 <select class="custom-select" id="shop" name="shop_id">
                                     <option value=""></option>
                                     @foreach($shops as $shop)
-                                        <option value="{{ $shop->id }}" @if($shop->id === $user->shop_id) selected @endif>{{ $shop->name }}</option>
+                                        <option value="{{ $shop->id }}" @if($shop->id === $user->shop_id) selected @endif>{{ $shop->name }} / {{ $shop->city }}, {{ $shop->address }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -165,9 +165,11 @@
 
                         for (var i = 0; i < response.data.length; i++) {
                             var id = response.data[i].id,
+                                city = response.data[i].city,
+                                address = response.data[i].address,
                                 name = response.data[i].name;
 
-                            shop += "<option value='"+id+"'>"+name+"</option>";
+                            shop += "<option value='"+id+"'>"+name+ ' / ' +city+', '+address+"</option>";
                         }
                         _form.find('select#shop').html(shop);
                     }
