@@ -36,11 +36,11 @@
                             </div>
                         @endif
 
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <select class="custom-select shop-filter" name="shop_id">
                                 <option value=""></option>
                                 @foreach($shops as $shop)
-                                    <option value="{{ $shop->id }}" @if(request('shop_id') == $shop->id) selected @endif>{{ $shop->name }}</option>
+                                    <option value="{{ $shop->id }}" @if(request('shop_id') == $shop->id) selected @endif>{{ $shop->fullName() }}</option>
                                 @endforeach
                             </select>
                         </div>
