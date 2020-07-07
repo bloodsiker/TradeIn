@@ -20,6 +20,31 @@
 
 @section('content')
     <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
+        <div class="row mg-b-15">
+            <div class="col-lg-12 col-xl-12">
+                <form action="{{ route('cabinet.shop.list') }}" method="GET" novalidate>
+                    <div class="form-row">
+
+                        <div class="form-group col-md-3">
+                            <select class="custom-select network-filter" name="network_id">
+                                <option value=""></option>
+                                @foreach($networks as $network)
+                                    <option value="{{ $network->id }}" @if(request('network_id') == $network->id) selected @endif>{{ $network->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-dark">Применить</button>
+                                <a href="{{ route('cabinet.shop.list') }}" class="btn btn-danger">Сбросить</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 @if (session('success'))
@@ -170,9 +195,9 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="custom-file">
-                                    <input type="file" name="file" class="custom-file-input" id="file"
+                                    <input type="file" name="file" class="custom-file-input" id="file" onchange="processSelectedFiles(this)"
                                            aria-describedby="file" required>
-                                    <label class="custom-file-label" for="avatar">Выберете файт</label>
+                                    <label class="custom-file-label" id="file-name" for="avatar">Выберете файт</label>
                                 </div>
                             </div>
                         </div>
@@ -191,6 +216,12 @@
     <script>
         $(function(){
             'use strict'
+
+            $('.network-filter').select2({
+                placeholder: 'Торговая сеть',
+                searchInputPlaceholder: 'Поиск торговой сети',
+                allowClear: true,
+            });
 
             deleteObject('.table', '.btnDelete', "{{ route('cabinet.shop.delete') }}");
 
@@ -254,5 +285,10 @@
                 });
             })
         });
+
+        function processSelectedFiles(fileInput) {
+            var files = fileInput.files[0];
+            document.getElementById('file-name').innerText = files.name;
+        }
     </script>
 @endpush

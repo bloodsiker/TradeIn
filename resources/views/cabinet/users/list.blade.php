@@ -136,9 +136,9 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="custom-file">
-                                    <input type="file" name="file" class="custom-file-input" id="file"
+                                    <input type="file" name="file" class="custom-file-input" id="file" onchange="processSelectedFiles(this)"
                                            aria-describedby="file" required>
-                                    <label class="custom-file-label" for="avatar">Выберете файт</label>
+                                    <label class="custom-file-label" id="file-name" for="avatar">Выберете файт</label>
                                 </div>
                             </div>
                         </div>
@@ -182,5 +182,10 @@
 
             deleteObject('.table', '.btnDelete', "{{ route('cabinet.user.delete') }}");
         });
+
+        function processSelectedFiles(fileInput) {
+            var files = fileInput.files[0];
+            document.getElementById('file-name').innerText = files.name;
+        }
     </script>
 @endpush

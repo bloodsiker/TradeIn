@@ -31,17 +31,18 @@ class UserSheetImport implements ToCollection
     {
         set_time_limit(0);
 
-        $this->createShops($rows);
+        $this->createUsers($rows);
 
     }
 
     /**
      * @param Collection $rows
      */
-    private function createShops(Collection $rows)
+    private function createUsers(Collection $rows)
     {
         $networkArray = [];
         $roleArray = [
+            1 => 'Администратор сайта',
             2 => 'Руководитель торговой сети',
             3 => 'Сотрудник магазина',
         ];
@@ -58,24 +59,26 @@ class UserSheetImport implements ToCollection
                     $networkArray[$row[0]] = $networkSearch;
                 }
 
-                $shop = Shop::where(['network_id' => $networkSearch->id, 'name' => $row[2]])->first();
+                if ($networkSearch) {
+                    $shop = Shop::where(['network_id' => $networkSearch->id, 'name' => $row[2]])->first();
 
-                $insert[] = [
-                    'role_id' => array_search($row[0], $roleArray),
-                    'network_id' => $networkSearch ? $networkSearch->id : null,
-                    'shop_id' => $shop ? $shop->id : null,
-                    'name' => $row[3],
-                    'surname' => $row[4],
-                    'email' => $row[5],
-                    'password' => Hash::make($row[6]),
-                    'phone' => $row[7],
-                ];
+                    $insert[] = [
+                        'role_id' => array_search($row[0], $roleArray),
+                        'network_id' => $networkSearch ? $networkSearch->id : null,
+                        'shop_id' => $shop ? $shop->id : null,
+                        'name' => $row[3],
+                        'surname' => $row[4],
+                        'email' => $row[5],
+                        'password' => Hash::make($row[6]),
+                        'phone' => $row[7],
+                    ];
+                }
             }
         }
 
         try {
             User::insert($insert);
-            return back()->with('success', "Импорт прошел успешно, данные дабовлены!")->withInput();
+            return back()->with('success', "Импорт прошел успешно, данные добавлены!")->withInput();
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->with('danger', $e->getMessage())->withInput();
         }

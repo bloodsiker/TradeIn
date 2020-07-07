@@ -16,9 +16,16 @@ use Maatwebsite\Excel\Facades\Excel;
 class ShopController extends Controller
 {
 
-    public function list()
+    public function list(Request $request)
     {
-        $shops = Shop::all()->sortByDesc('id');
+        $query = Shop::select('shops.*');
+
+        if ($request->get('network_id')) {
+            $query->where('network_id', $request->get('network_id'));
+        }
+
+        $shops = $query->orderBy('id', 'DESC')->get();
+
         $networks = Network::all()->sortByDesc('id');
 
         return view('cabinet.shops.list', compact('shops', 'networks'));

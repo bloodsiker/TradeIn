@@ -131,7 +131,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('lib/jquery.inputmask/jquery.inputmask.js') }}"></script>
+{{--    <script src="{{ asset('lib/jquery.inputmask/jquery.inputmask.js') }}"></script>--}}
     <script>
         $('#birthday').datepicker({
             todayHighlight: true,
@@ -142,9 +142,9 @@
             format: "dd.mm.yyyy",
         });
 
-        $(".phone-mask").inputmask("mask", {
-            "mask": "+38 (999) 999-99-99"
-        });
+        // $(".phone-mask").inputmask("mask", {
+        //     "mask": "+38 (999) 999-99-99"
+        // });
 
         $('form#infoUser').on('change', '#network', function (e) {
 

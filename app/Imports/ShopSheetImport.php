@@ -52,18 +52,20 @@ class ShopSheetImport implements ToCollection
                     $networkArray[$row[0]] = $networkSearch;
                 }
 
-                $insert[] = [
-                    'network_id' => $networkSearch->id,
-                    'name' => $row[1],
-                    'city' => $row[2],
-                    'address' => $row[3],
-                ];
+                if ($networkSearch) {
+                    $insert[] = [
+                        'network_id' => $networkSearch->id,
+                        'name' => $row[1],
+                        'city' => $row[2],
+                        'address' => $row[3],
+                    ];
+                }
             }
         }
 
         try {
             Shop::insert($insert);
-            return back()->with('success', "Импорт прошел успешно, данные дабовлены!")->withInput();
+            return back()->with('success', "Импорт прошел успешно, данные добавлены!")->withInput();
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->with('danger', $e->getMessage())->withInput();
         }
