@@ -30,6 +30,7 @@ Route::group(['middleware' => ['web']], function () {
 
             Route::match(['post', 'get'], '/user/add', 'Cabinet\UserController@add')->name('cabinet.user.add');
             Route::match(['post', 'get'], '/user/{id}/edit', 'Cabinet\UserController@edit')->name('cabinet.user.edit');
+            Route::post('/user/import', 'Cabinet\UserController@import')->name('cabinet.user.import');
             Route::post('/user/delete', 'Cabinet\UserController@delete')->name('cabinet.user.delete');
 
             Route::get('/networks', 'Cabinet\NetworkController@list')->name('cabinet.network.list');

@@ -91,8 +91,7 @@ class ShopController extends Controller
         if ($request->hasFile('file')) {
 
             Excel::import(new ShopImport($request), $request->file('file'));
-
-            return redirect()->back()->with('success', "Импорт прошел успешно, данные дабовленны!");
+            return redirect()->back();
         }
 
         return redirect()->back()->with('danger', 'Ошибка при импорте!');

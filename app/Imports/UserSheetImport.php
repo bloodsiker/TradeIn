@@ -4,11 +4,13 @@ namespace App\Imports;
 
 use App\Models\Network;
 use App\Models\Shop;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-class ShopSheetImport implements ToCollection
+class UserSheetImport implements ToCollection
 {
     private $request;
 
@@ -39,30 +41,40 @@ class ShopSheetImport implements ToCollection
     private function createShops(Collection $rows)
     {
         $networkArray = [];
+        $roleArray = [
+            2 => 'Руководитель торговой сети',
+            3 => 'Сотрудник магазина',
+        ];
         $insert = [];
 
         foreach ($rows as $key => $row) {
-            if ($row[1]) {
+            if ($row[0]) {
 
-                $network = array_key_exists($row[0], $networkArray);
+                $network = array_key_exists($row[1], $networkArray);
                 if ($network) {
-                    $networkSearch = $networkArray[$row[0]];
+                    $networkSearch = $networkArray[$row[1]];
                 } else {
-                    $networkSearch = Network::where('name', [$row[0]])->first();
+                    $networkSearch = Network::where('name', [$row[1]])->first();
                     $networkArray[$row[0]] = $networkSearch;
                 }
 
+                $shop = Shop::where(['network_id' => $networkSearch->id, 'name' => $row[2]])->first();
+
                 $insert[] = [
-                    'network_id' => $networkSearch->id,
-                    'name' => $row[1],
-                    'city' => $row[2],
-                    'address' => $row[3],
+                    'role_id' => array_search($row[0], $roleArray),
+                    'network_id' => $networkSearch ? $networkSearch->id : null,
+                    'shop_id' => $shop ? $shop->id : null,
+                    'name' => $row[3],
+                    'surname' => $row[4],
+                    'email' => $row[5],
+                    'password' => Hash::make($row[6]),
+                    'phone' => $row[7],
                 ];
             }
         }
 
         try {
-            Shop::insert($insert);
+            User::insert($insert);
             return back()->with('success', "Импорт прошел успешно, данные дабовлены!")->withInput();
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->with('danger', $e->getMessage())->withInput();

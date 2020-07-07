@@ -113,7 +113,7 @@ class ModelController extends Controller
 
             if ($request->has('action') && $action === 0) {
 
-                return redirect()->back()->with('success', "Импорт прошел успешно, данные обновленны!");
+                return redirect()->back()->with('success', "Импорт прошел успешно, данные обновлены!");
             } elseif ($request->has('action') && $action === 1) {
 
                 return redirect()->back()->with('success', "Импорт прошел успешно, новые данные внесены в базу");

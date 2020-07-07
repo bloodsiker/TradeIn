@@ -11,7 +11,8 @@
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
                     @if(Auth::user()->isAdmin())
-                        <a href="{{ route('cabinet.user.add') }}" class="btn btn-sm btn-dark btn-block">Создать</a>
+                        <a href="#modal-import" class="btn btn-sm btn-dark" data-toggle="modal">Импорт</a>
+                        <a href="{{ route('cabinet.user.add') }}" class="btn btn-sm btn-dark">Создать</a>
                     @endif
                 </div>
             </div>
@@ -119,6 +120,38 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-import" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <form action="{{ route('cabinet.user.import') }}" method="POST" enctype="multipart/form-data" data-parsley-validate novalidate>
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="titleModal">Иморт пользователей</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" name="file" class="custom-file-input" id="file"
+                                           aria-describedby="file" required>
+                                    <label class="custom-file-label" for="avatar">Выберете файт</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-file-excel"></i> Импортировать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 
