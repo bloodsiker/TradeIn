@@ -24,14 +24,14 @@ class ChatController extends Controller
             ->join('chat_user', 'chat_user.chat_id', '=', 'chats.id')
             ->leftJoin('chat_user as chat_user_2', 'chat_user.chat_id', '=', 'chat_user_2.chat_id')
             ->where(['chats.type_chat' => Chat::TYPE_PRIVATE, 'chat_user_2.user_id' => \Auth::id()])
-            ->groupBy('chats.id')
+            ->groupBy('chats.id', 'chats.type_chat')
             ->get();
 
         $chatsGroup = Chat::select('chats.*')
             ->join('chat_user', 'chat_user.chat_id', '=', 'chats.id')
             ->leftJoin('chat_user as chat_user_2', 'chat_user.chat_id', '=', 'chat_user_2.chat_id')
             ->where(['chats.type_chat' => Chat::TYPE_GROUP, 'chat_user_2.user_id' => \Auth::id()])
-            ->groupBy('chats.id')
+            ->groupBy('chats.id', 'chats.type_chat')
             ->get();
 
         if (\Auth::user()->isAdmin()) {
