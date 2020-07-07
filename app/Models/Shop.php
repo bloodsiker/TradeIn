@@ -12,6 +12,11 @@ class Shop extends Model
         'name', 'network_id',
     ];
 
+    public function fullName()
+    {
+        return $this->name .' / ' . $this->city .', ' .$this->address;
+    }
+
     public function network()
     {
         return $this->hasOne(Network::class, 'id', 'network_id');

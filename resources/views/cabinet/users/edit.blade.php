@@ -116,7 +116,7 @@
                                 <select class="custom-select" id="shop" name="shop_id">
                                     <option value=""></option>
                                     @foreach($shops as $shop)
-                                        <option value="{{ $shop->id }}" @if($shop->id === $user->shop_id) selected @endif>{{ $shop->name }} / {{ $shop->city }}, {{ $shop->address }}</option>
+                                        <option value="{{ $shop->id }}" @if($shop->id === $user->shop_id) selected @endif>{{ $shop->fullName() }}</option>
                                     @endforeach
                                 </select>
                             </div>
