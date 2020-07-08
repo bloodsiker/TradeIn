@@ -307,7 +307,7 @@
                                     <div class="custom-file">
                                         <input type="file" name="file" class="custom-file-input" id="file"
                                                aria-describedby="file" required>
-                                        <label class="custom-file-label" for="avatar">Выберете файт</label>
+                                        <label class="custom-file-label" for="avatar">Выберите файл</label>
                                     </div>
                                 </div>
                             </div>
