@@ -134,6 +134,9 @@
                     <div class="modal-body">
                         @csrf
                         <div class="form-group">
+                            <div class="input-group mb-1">
+                                <a href="{{ asset('upload/users.xlsx') }}" class="link-color-gray" target="_blank">Шаблон для импорта</a>
+                            </div>
                             <div class="input-group">
                                 <div class="custom-file">
                                     <input type="file" name="file" class="custom-file-input" id="file" onchange="processSelectedFiles(this)"
@@ -141,6 +144,7 @@
                                     <label class="custom-file-label" id="file-name" for="avatar">Выберете файт</label>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">

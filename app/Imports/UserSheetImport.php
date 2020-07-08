@@ -48,6 +48,8 @@ class UserSheetImport implements ToCollection
         ];
         $insert = [];
 
+        $rows->shift();
+
         foreach ($rows as $key => $row) {
             if ($row[0]) {
 
@@ -56,23 +58,45 @@ class UserSheetImport implements ToCollection
                     $networkSearch = $networkArray[$row[1]];
                 } else {
                     $networkSearch = Network::where('name', [$row[1]])->first();
+
+                    if (!$networkSearch) {
+                        $networkSearch = new Network();
+                        $networkSearch->name = $row[1];
+                        $networkSearch->save();
+                    }
+
                     $networkArray[$row[0]] = $networkSearch;
                 }
 
-                if ($networkSearch) {
-                    $shop = Shop::where(['network_id' => $networkSearch->id, 'name' => $row[2]])->first();
+                $shop = null;
+                if ($row[2]) {
+                    $shop = Shop::where([
+                        'network_id' => $networkSearch->id,
+                        'name' => $row[2],
+                        'city' => $row[3],
+                        'address' => $row[4]
+                    ])->first();
 
-                    $insert[] = [
-                        'role_id' => array_search($row[0], $roleArray),
-                        'network_id' => $networkSearch ? $networkSearch->id : null,
-                        'shop_id' => $shop ? $shop->id : null,
-                        'name' => $row[3],
-                        'surname' => $row[4],
-                        'email' => $row[5],
-                        'password' => Hash::make($row[6]),
-                        'phone' => $row[7],
-                    ];
+                    if (!$shop) {
+                        $shop = new Shop();
+                        $shop->network_id = $networkSearch->id;
+                        $shop->name = $row[2];
+                        $shop->city = $row[3];
+                        $shop->address = $row[4];
+                        $shop->save();
+                    }
                 }
+
+                $insert[] = [
+                    'role_id' => array_search($row[0], $roleArray),
+                    'network_id' => $networkSearch ? $networkSearch->id : null,
+                    'shop_id' => $shop ? $shop->id : null,
+                    'name' => $row[5],
+                    'surname' => $row[6],
+                    'email' => $row[7],
+                    'password' => Hash::make($row[8]),
+                    'phone' => $row[9],
+                ];
             }
         }
 

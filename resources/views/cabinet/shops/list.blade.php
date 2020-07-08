@@ -193,6 +193,9 @@
                     <div class="modal-body">
                         @csrf
                         <div class="form-group">
+                            <div class="input-group mb-1">
+                                <a href="{{ asset('upload/shops.xlsx') }}" class="link-color-gray" target="_blank">Шаблон для импорта</a>
+                            </div>
                             <div class="input-group">
                                 <div class="custom-file">
                                     <input type="file" name="file" class="custom-file-input" id="file" onchange="processSelectedFiles(this)"

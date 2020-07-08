@@ -41,6 +41,8 @@ class ShopSheetImport implements ToCollection
         $networkArray = [];
         $insert = [];
 
+        $rows->shift();
+
         foreach ($rows as $key => $row) {
             if ($row[1]) {
 
@@ -49,6 +51,12 @@ class ShopSheetImport implements ToCollection
                     $networkSearch = $networkArray[$row[0]];
                 } else {
                     $networkSearch = Network::where('name', [$row[0]])->first();
+
+                    if (!$networkSearch) {
+                        $networkSearch = new Network();
+                        $networkSearch->name = $row[0];
+                        $networkSearch->save();
+                    }
                     $networkArray[$row[0]] = $networkSearch;
                 }
 
