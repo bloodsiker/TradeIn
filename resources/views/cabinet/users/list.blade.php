@@ -96,7 +96,7 @@
                             <tr data-id="{{ $user->id }}">
                                 <th scope="row">{{ $user->id }}</th>
                                 <td>{{ $user->fullName() }}</td>
-                                <td>{{ $user->getNetwork() }}</td>
+                                <td><span class="badge badge-primary">{{ $user->getNetwork() }}</span></td>
                                 <td>{{ $user->getShop() }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->phone }}</td>
