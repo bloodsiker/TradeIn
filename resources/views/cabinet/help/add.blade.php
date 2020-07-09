@@ -61,12 +61,12 @@
                             @enderror
                         </div>
 
-                        <div class="form-group">
-                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="description" rows="5">{{ old('description') }}</textarea>
-                            @error('description')
-                                <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
-                            @enderror
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="description" rows="5">{{ old('description') }}</textarea>--}}
+{{--                            @error('description')--}}
+{{--                                <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>--}}
+{{--                            @enderror--}}
+{{--                        </div>--}}
 
                         <div class="form-group mg-t-20">
                             <div class="input-group">
@@ -89,13 +89,13 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('lib/ckeditor/ckeditor.js') }}"></script>
+{{--    <script src="{{ asset('lib/ckeditor/ckeditor.js') }}"></script>--}}
 
     <script>
-        CKEDITOR.replace( 'description', {
-            filebrowserUploadUrl: "{{route('cabinet.help.upload', ['_token' => csrf_token() ])}}",
-            filebrowserUploadMethod: 'form'
-        });
+        {{--CKEDITOR.replace( 'description', {--}}
+        {{--    filebrowserUploadUrl: "{{route('cabinet.help.upload', ['_token' => csrf_token() ])}}",--}}
+        {{--    filebrowserUploadMethod: 'form'--}}
+        {{--});--}}
 
         function processSelectedFiles(fileInput) {
             var files = fileInput.files[0];

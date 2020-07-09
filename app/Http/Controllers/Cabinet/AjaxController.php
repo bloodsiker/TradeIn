@@ -33,7 +33,7 @@ class AjaxController extends Controller
                 return response(['status' => 1, 'data' => $data]);
 
             case 'get_model':
-                $data = DeviceModel::find($request->get('id'));
+                $data = DeviceModel::with('technic')->find($request->get('id'));
 
                 return response(['status' => 1, 'data' => $data]);
             case 'get_request_bonus':

@@ -117,6 +117,8 @@
                                     <td>{{ $buyRequest->user->fullName() }}</td>
                                     <td>
                                         @if( $buyRequest->model)
+                                            <small><b>Тип техники:</b> {{ $buyRequest->model->technic->name }}</small>
+                                            <br>
                                             <small><b>Производитель:</b> {{ $buyRequest->model->brand->name }}</small>
                                             <br>
                                             <small><b>Модель:</b> {{ $buyRequest->model->name }}</small>

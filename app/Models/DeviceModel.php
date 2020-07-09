@@ -20,4 +20,9 @@ class DeviceModel extends Model
     {
         return $this->hasOne(Brand::class, 'id', 'brand_id');
     }
+
+    public function technic()
+    {
+        return $this->hasOne(Technic::class, 'id', 'technic_id');
+    }
 }

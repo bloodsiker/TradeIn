@@ -38,13 +38,12 @@ class HelpController extends Controller
         if ($request->isMethod('post')) {
             $request->validate([
                 'title'       => ['required', 'min:3', 'max:255'],
-                'description' => ['required']
             ]);
 
             $help = new Help();
             $help->title = $request->get('title');
             $help->short_description = $request->get('short_description');
-            $help->description = $request->get('description');
+//            $help->description = $request->get('description');
             $help->is_active = $request->get('is_active');
 
             if ($request->hasFile('image')) {
@@ -74,12 +73,11 @@ class HelpController extends Controller
 
             $request->validate([
                 'title'       => ['required', 'min:3', 'max:255'],
-                'description' => ['required']
             ]);
 
             $help->title = $request->get('title');
             $help->short_description = $request->get('short_description');
-            $help->description = $request->get('description');
+//            $help->description = $request->get('description');
             $help->is_active = $request->get('is_active');
 
             if ($request->hasFile('image')) {

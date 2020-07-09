@@ -46,6 +46,11 @@ Route::group(['middleware' => ['web']], function () {
             Route::post('/shop/import', 'Cabinet\ShopController@import')->name('cabinet.shop.import');
             Route::get('/shop/{id}/users', 'Cabinet\ShopController@users')->name('cabinet.shop.users');
 
+            Route::get('/technic', 'Cabinet\TechnicController@list')->name('cabinet.technic.list');
+            Route::post('/technic/add', 'Cabinet\TechnicController@add')->name('cabinet.technic.add');
+            Route::post('/technic/edit', 'Cabinet\TechnicController@edit')->name('cabinet.technic.edit');
+            Route::post('/technic/delete', 'Cabinet\TechnicController@delete')->name('cabinet.technic.delete');
+
             Route::get('/brands', 'Cabinet\BrandController@list')->name('cabinet.brand.list');
             Route::post('/brand/add', 'Cabinet\BrandController@add')->name('cabinet.brand.add');
             Route::post('/brand/edit', 'Cabinet\BrandController@edit')->name('cabinet.brand.edit');

@@ -7,6 +7,7 @@ use App\Imports\DeviceModelImport;
 use App\Models\Brand;
 use App\Models\DeviceModel;
 use App\Models\Network;
+use App\Models\Technic;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -19,6 +20,8 @@ class ModelController extends Controller
     {
         $brands = Brand::orderBy('name')->get();
         $networks = Network::all();
+
+        $technics = Technic::all();
 
         $network = $brand = null;
         $query = DeviceModel::select('device_models.*')
@@ -42,7 +45,7 @@ class ModelController extends Controller
 
         $models = $query->get();
 
-        return view('cabinet.models.list', compact('models', 'brands', 'networks', 'network', 'brand'));
+        return view('cabinet.models.list', compact('models', 'brands', 'networks', 'network', 'brand', 'technics'));
     }
 
     public function add(Request $request)
@@ -51,6 +54,7 @@ class ModelController extends Controller
 
             $model = new DeviceModel();
             $model->name = $request->get('name');
+            $model->technic_id = $request->get('technic_id');
             $model->network_id = $request->get('network_id');
             $model->brand_id = $request->get('brand_id');
             $model->price = $request->get('price') ?: 0;
@@ -73,6 +77,7 @@ class ModelController extends Controller
 
             $model = DeviceModel::find($request->get('id'));
             $model->name = $request->get('name');
+            $model->technic_id = $request->get('technic_id');
             $model->brand_id = $request->get('brand_id');
             $model->price = $request->get('price') ?: 0;
             $model->price_1 = $request->get('price_1') ?: 0;
@@ -82,7 +87,7 @@ class ModelController extends Controller
             $model->price_5 = $request->get('price_5') ?: 0;
 
             $model->save();
-            $model->load('brand');
+            $model->load('brand', 'technic');
 
             return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $model]);
         }
