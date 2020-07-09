@@ -117,7 +117,7 @@
                                     <td>{{ $buyRequest->user->fullName() }}</td>
                                     <td>
                                         @if( $buyRequest->model)
-                                            <small><b>Тип техники:</b> {{ $buyRequest->model->technic ? $buyRequest->model->technic->name : null }}</small>
+                                            <small><b>Тип:</b> {{ $buyRequest->model->technic ? $buyRequest->model->technic->name : null }}</small>
                                             <br>
                                             <small><b>Производитель:</b> {{ $buyRequest->model->brand->name }}</small>
                                             <br>
