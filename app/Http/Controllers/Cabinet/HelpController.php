@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
 use App\Models\Help;
-use App\Models\Network;
-use App\Models\User;
+use App\Models\HelpFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 /**
  * Class HelpController
@@ -37,27 +36,30 @@ class HelpController extends Controller
     {
         if ($request->isMethod('post')) {
             $request->validate([
-                'title'       => ['required', 'min:3', 'max:255'],
+                'title' => ['required', 'min:3', 'max:255'],
             ]);
 
             $help = new Help();
             $help->title = $request->get('title');
             $help->short_description = $request->get('short_description');
-//            $help->description = $request->get('description');
             $help->is_active = $request->get('is_active');
+            $help->save();
 
             if ($request->hasFile('image')) {
-                $path = '/image/help/';
+                $path = '/files/help/';
                 $image = $request->file('image');
                 $name = sha1(time().random_bytes(5)) . '.' . trim($image->getClientOriginalExtension());
                 $fullPatch = $path . $name;
 
                 $image->storeAs($path, $name, 'publicImage');
 
-                $help->image = $fullPatch;
-            }
+                $file = new HelpFile();
+                $file->type_file = $request->get('type_file');
+                $file->file = $fullPatch;
+                $file->help()->associate($help);
 
-            $help->save();
+                $file->save();
+            }
 
             return redirect()->route('cabinet.help.list')->with('success', 'Cтатья добавлена!');
         }
@@ -72,28 +74,31 @@ class HelpController extends Controller
         if ($request->isMethod('post')) {
 
             $request->validate([
-                'title'       => ['required', 'min:3', 'max:255'],
+                'title' => ['required', 'min:3', 'max:255'],
             ]);
 
             $help->title = $request->get('title');
             $help->short_description = $request->get('short_description');
-//            $help->description = $request->get('description');
             $help->is_active = $request->get('is_active');
+            $help->save();
 
             if ($request->hasFile('image')) {
-                $path = '/image/help/';
+                $path = '/files/help/';
                 $image = $request->file('image');
                 $name = sha1(time().random_bytes(5)) . '.' . trim($image->getClientOriginalExtension());
                 $fullPatch = $path . $name;
 
                 $image->storeAs($path, $name, 'publicImage');
 
-                $help->image = $fullPatch;
+                $file = new HelpFile();
+                $file->type_file = $request->get('type_file');;
+                $file->file = $fullPatch;
+                $file->help()->associate($help);
+
+                $file->save();
             }
 
-            $help->save();
-
-            return redirect()->route('cabinet.help.list')->with('success', 'Информация обновлена');
+            return redirect()->route('cabinet.help.edit', ['id' => $help->id])->with('success', 'Информация обновлена');
         }
 
         return view('cabinet.help.edit', compact('help'));
@@ -134,5 +139,19 @@ class HelpController extends Controller
         }
 
         return true;
+    }
+
+    public function deleteFile(Request $request)
+    {
+        $helpFile = HelpFile::findOrFail($request->get('id'));
+
+        if ($helpFile) {
+            File::delete(public_path($helpFile->file));
+            $helpFile->delete();
+
+            return response(['status' => 1, 'type' => 'success', 'message' => "Файл удален!"]);
+        }
+
+        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при удалении!']);
     }
 }

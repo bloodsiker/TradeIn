@@ -2,12 +2,6 @@
 
 @section('title', 'Добавить инструкию')
 
-@push('styles')
-{{--    <link href="{{ asset('lib/quill/quill.core.css') }}" rel="stylesheet">--}}
-{{--    <link href="{{ asset('lib/quill/quill.snow.css') }}" rel="stylesheet">--}}
-{{--    <link href="{{ asset('lib/quill/quill.bubble.css') }}" rel="stylesheet">--}}
-@endpush
-
 @section('subHeader')
     <div class="sub-content content-fixed bd-b">
         <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
@@ -61,18 +55,22 @@
                             @enderror
                         </div>
 
-{{--                        <div class="form-group">--}}
-{{--                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="description" rows="5">{{ old('description') }}</textarea>--}}
-{{--                            @error('description')--}}
-{{--                                <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>--}}
-{{--                            @enderror--}}
-{{--                        </div>--}}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <select class="custom-select" id="type_file" name="type_file">
+                                    @foreach(\App\Models\HelpFile::listType() as $key => $value)
+                                        <option value="{{ $key }}" @if (old('type_file') === 1) {{ 'selected' }} @endif>{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                        <div class="form-group mg-t-20">
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" name="image" class="custom-file-input" id="image" onchange="processSelectedFiles(this)" aria-describedby="image">
-                                    <label class="custom-file-label" id="file-name" for="image">Выберете файт</label>
+                            <div class="form-group mg-t-20 col-md-8">
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" name="image" class="custom-file-input" id="image" onchange="processSelectedFiles(this)"
+                                               aria-describedby="image">
+                                        <label class="custom-file-label" id="file-name" for="image">Выберете файт</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

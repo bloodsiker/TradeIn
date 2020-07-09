@@ -92,6 +92,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::get('/help', 'Cabinet\HelpController@list')->name('cabinet.help.list');
         Route::match(['post', 'get'], '/help/add', 'Cabinet\HelpController@add')->name('cabinet.help.add')->middleware('admin');
         Route::match(['post', 'get'], '/help/edit/{id}', 'Cabinet\HelpController@edit')->name('cabinet.help.edit')->middleware('admin');
+        Route::post('/help/file/delete/', 'Cabinet\HelpController@deleteFile')->name('cabinet.help.delete_file')->middleware('admin');
         Route::get('/help/delete/{id}', 'Cabinet\HelpController@delete')->name('cabinet.help.delete')->middleware('admin');
         Route::post('/help/upload', 'Cabinet\HelpController@upload')->name('cabinet.help.upload')->middleware('admin');
         Route::get('/help/{id}', 'Cabinet\HelpController@view')->name('cabinet.help.view');
