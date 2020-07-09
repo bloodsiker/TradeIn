@@ -56,7 +56,7 @@
     <div>
         <p>(надалі – Клієнт), з іншого боку, склали даний акт про таке:</p>
         <p class="mt-10">1. Клієнт передає, а Довіритель приймає стару електронну техніку (СЕТ) що належить Клієнту за наступними характеристиками:</p>
-        <p class="pl-10">1.1. Найменування <span class="underline">{{ $buyBackRequest->model->technic->name }}</span></p>
+        <p class="pl-10">1.1. Найменування <span class="underline">{{ $buyBackRequest->model->technic ? $buyBackRequest->model->technic->name : null }}</span></p>
         <p class="pl-10">1.2. Марка: <span class="underline">{{ $buyBackRequest->model->brand->name }}</span></p>
         <p class="pl-10">1.3. Модель: <span class="underline">{{ $buyBackRequest->model->name }}</span></p>
         <p class="pl-10">1.4. с/н / IMEI: <span class="underline">{{ $buyBackRequest->imei }}</span></p>
