@@ -100,7 +100,7 @@
                                 <td>{{ $user->getShop() }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->phone }}</td>
-                                <td>{{ $user->role->name }}</td>
+                                <td><small>{{ $user->role->name }}</small></td>
                                 <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
                                 @if(Auth::user()->isAdmin())
                                     <td>

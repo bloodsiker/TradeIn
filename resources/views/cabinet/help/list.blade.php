@@ -31,11 +31,6 @@
                     <div class="card">
                         <div class="card-body pd-0">
                             <div class="d-sm-flex pd-20">
-                                @if($help->image)
-                                    <a href="{{ route('cabinet.help.view', ['id' => $help->id]) }}" class="wd-200 wd-md-150 wd-lg-200">
-                                        <img src="{{ $help->image }}" class="img-fit-cover" alt="">
-                                    </a>
-                                @endif
                                 <div class="media-body mg-t-20 mg-sm-t-0 mg-sm-l-20">
                                     <h6><a href="{{ route('cabinet.help.view', ['id' => $help->id]) }}" class="link-01">{{ $help->title }}</a></h6>
                                     <p class="tx-color-03 tx-13 mg-b-10">{{ $help->short_description }}</p>

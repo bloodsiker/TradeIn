@@ -7,7 +7,7 @@
         <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
             <div class="d-sm-flex align-items-center justify-content-between">
                 <div>
-                    <h4 class="mg-b-0">Инструкции</h4>
+                    <h4 class="mg-b-0">{{ $help->title }}</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
                     <a href="{{ route('cabinet.help.list') }}" class="btn btn-sm btn-dark btn-block">
@@ -29,12 +29,8 @@
                         <div class="d-sm-flex pd-20">
                             <div class="tx-13 mg-b-10">
                                 @if($help->image)
-                                    <img src="{{ $help->image }}" style="float: left" class="wd-300 wd-md-300 wd-lg-300 mg-sm-r-15 mg-b-15" alt="">
+                                    <img src="{{ $help->image }}" class="wd-100p mg-sm-r-15 mg-b-15" alt="">
                                 @endif
-
-                                <h6>{{ $help->title }}</h6>
-
-                                {!! $help->description !!}
                             </div>
                         </div>
                     </div>
