@@ -68,7 +68,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group mg-t-20 col-md-8">
+                            <div class="form-group col-md-8">
                                 <div class="input-group">
                                     <div class="custom-file">
                                         <input type="file" name="image" class="custom-file-input" id="image" onchange="processSelectedFiles(this)"
@@ -79,35 +79,38 @@
                             </div>
                         </div>
 
-                        <div class="form-row d-flex justify-content-end mg-t-20">
-                            <button type="submit" class="btn btn-sm btn-dark"><i class="far fa-save"></i> Сохранить</button>
+                        <div class="form-row d-flex justify-content-end">
+                            <a href="{{ route('cabinet.help.view', ['id' => $help->id]) }}" class="btn btn-sm btn-secondary"><i class="far fa-eye"></i> Посмотреть</a>
+                            <button type="submit" class="btn btn-sm btn-dark mg-l-10"><i class="far fa-save"></i> Сохранить</button>
                         </div>
                     </fieldset>
                 </form>
 
-                <table class="table table-sm table-white table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">Файл</th>
-                            <th scope="col">Тип</th>
-                            <th scope="col" width="80px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($help->files as $file)
-                        <tr data-id="{{ $file->id }}">
-                            <td>{{ $file->file }}</td>
-                            <td>{{ $file->typeName() }}</td>
-                            <td>
-                                <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </td>
+                @if($help->files->count())
+                    <table class="table table-sm table-white table-hover table-bordered mg-t-20">
+                        <thead>
+                            <tr>
+                                <th scope="col">Файл</th>
+                                <th scope="col">Тип</th>
+                                <th scope="col" width="80px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($help->files as $file)
+                            <tr data-id="{{ $file->id }}">
+                                <td>{{ $file->file }}</td>
+                                <td>{{ $file->typeName() }}</td>
+                                <td>
+                                    <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
 
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @endif
 
             </div>
         </div>

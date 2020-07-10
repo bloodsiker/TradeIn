@@ -64,7 +64,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group mg-t-20 col-md-8">
+                            <div class="form-group col-md-8">
                                 <div class="input-group">
                                     <div class="custom-file">
                                         <input type="file" name="image" class="custom-file-input" id="image" onchange="processSelectedFiles(this)"
@@ -75,7 +75,7 @@
                             </div>
                         </div>
 
-                        <div class="form-row d-flex justify-content-end mg-t-20">
+                        <div class="form-row d-flex justify-content-end">
                             <button type="submit" class="btn btn-sm btn-dark"><i class="far fa-save"></i> Создать</button>
                         </div>
                     </fieldset>
