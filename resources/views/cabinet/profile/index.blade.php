@@ -260,9 +260,9 @@
             format: "dd.mm.yyyy",
         });
 
-        $(".phone-mask").inputmask("mask", {
-            "mask": "+38 (999) 999-99-99"
-        });
+        // $(".phone-mask").inputmask("mask", {
+        //     "mask": "+38 (999) 999-99-99"
+        // });
 
         function processSelectedFiles(fileInput) {
             var files = fileInput.files[0];
