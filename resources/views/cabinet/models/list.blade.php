@@ -27,7 +27,7 @@
                 <form action="{{ route('cabinet.model.list') }}" method="GET" novalidate>
                     <div class="form-row">
                         @if(Auth::user()->isAdmin())
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-2">
                                 <select class="custom-select network-filter" name="network_id">
                                     <option value=""></option>
                                     @foreach($networks as $networkSelect)
@@ -37,8 +37,17 @@
                             </div>
                         @endif
 
+                        <div class="form-group col-md-2">
+                            <select class="custom-select technic-filter" name="technic_id">
+                                <option value=""></option>
+                                @foreach($technics as $technic)
+                                    <option value="{{ $technic->id }}" @if(request('technic_id') == $technic->id) selected @endif>{{ $technic->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         @if(Auth::user()->isAdmin() || Auth::user()->isNetwork())
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-2">
                                 <select class="custom-select brand-filter" name="brand_id">
                                     <option value=""></option>
                                     @foreach($brands as $brand)
@@ -359,6 +368,12 @@
             $('.brand-filter').select2({
                 placeholder: 'Производитель',
                 searchInputPlaceholder: 'Поиск бренда',
+                allowClear: true,
+            });
+
+            $('.technic-filter').select2({
+                placeholder: 'Тип',
+                minimumResultsForSearch: -1,
                 allowClear: true,
             });
 

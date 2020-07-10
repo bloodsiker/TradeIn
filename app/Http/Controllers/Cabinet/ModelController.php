@@ -39,6 +39,10 @@ class ModelController extends Controller
             $query->where('brand_id', $request->get('brand_id'));
         }
 
+        if ($request->get('technic_id')) {
+            $query->where('technic_id', $request->get('technic_id'));
+        }
+
         if ($request->get('model')) {
             $query->where('name', 'LIKE', "%{$request->get('model')}%");
         }
