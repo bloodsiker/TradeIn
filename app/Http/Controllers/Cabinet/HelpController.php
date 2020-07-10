@@ -45,6 +45,18 @@ class HelpController extends Controller
             $help->is_active = $request->get('is_active');
             $help->save();
 
+            if ($request->get('youtube_url')) {
+                $parseUrl = parse_url($request->get('youtube_url'));
+                $youtubeUrl = sprintf('https://www.youtube.com/embed/%s', substr($parseUrl['query'], 2));
+
+                $file = new HelpFile();
+                $file->type_file = $request->get('type_file');
+                $file->file = $youtubeUrl;
+                $file->help()->associate($help);
+
+                $file->save();
+            }
+
             if ($request->hasFile('image')) {
                 $path = '/files/help/';
                 $image = $request->file('image');
@@ -81,6 +93,18 @@ class HelpController extends Controller
             $help->short_description = $request->get('short_description');
             $help->is_active = $request->get('is_active');
             $help->save();
+
+            if ($request->get('youtube_url')) {
+                $parseUrl = parse_url($request->get('youtube_url'));
+                $youtubeUrl = sprintf('https://www.youtube.com/embed/%s', substr($parseUrl['query'], 2));
+
+                $file = new HelpFile();
+                $file->type_file = $request->get('type_file');
+                $file->file = $youtubeUrl;
+                $file->help()->associate($help);
+
+                $file->save();
+            }
 
             if ($request->hasFile('image')) {
                 $path = '/files/help/';

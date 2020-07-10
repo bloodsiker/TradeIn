@@ -41,12 +41,16 @@
                                     </div>
                                 @elseif($file->type_file === \App\Models\HelpFile::TYPE_PDF)
                                     <div class="mg-sm-r-15 mg-b-15">
-{{--                                            <iframe src="{{ $file->file }}" width="100%" height="400"></iframe>--}}
+{{--                                        <iframe src="{{ $file->file }}" width="100%" height="400"></iframe>--}}
                                         <object><embed src="{{ $file->file }}" width="100%" height="800"/></object>
                                     </div>
                                 @elseif($file->type_file === \App\Models\HelpFile::TYPE_VIDEO)
                                     <div class="d-flex justify-content-center mg-sm-r-15 mg-b-15">
                                         <video src="{{ $file->file }}" width="800" height="600" controls></video>
+                                    </div>
+                                @elseif($file->type_file === \App\Models\HelpFile::TYPE_YOUTUBE_VIDEO)
+                                    <div class="d-flex justify-content-center mg-sm-r-15 mg-b-15">
+                                        <iframe width="100%" height="600" src="{{ $file->file }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                     </div>
                                 @endif
                             @endforeach

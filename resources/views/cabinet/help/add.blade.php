@@ -65,7 +65,8 @@
                             </div>
 
                             <div class="form-group col-md-8">
-                                <div class="input-group">
+                                <input type="text" class="form-control d-none" name="youtube_url" value="" placeholder="Youtube url" id="youtube_url">
+                                <div class="input-group" id="upload_file">
                                     <div class="custom-file">
                                         <input type="file" name="image" class="custom-file-input" id="image" onchange="processSelectedFiles(this)"
                                                aria-describedby="image">
@@ -95,8 +96,21 @@
         {{--    filebrowserUploadMethod: 'form'--}}
         {{--});--}}
 
+        $("#type_file").change(function() {
+            const typeFile = $(this).val();
+            console.log(typeFile);
+
+            if (typeFile == '{{ \App\Models\HelpFile::TYPE_YOUTUBE_VIDEO }}') {
+                $('#youtube_url').removeClass('d-none');
+                $('#upload_file').addClass('d-none');
+            } else {
+                $('#youtube_url').addClass('d-none').val('');
+                $('#upload_file').removeClass('d-none');
+            }
+        });
+
         function processSelectedFiles(fileInput) {
-            var files = fileInput.files[0];
+            const files = fileInput.files[0];
             document.getElementById('file-name').innerText = files.name;
         }
     </script>
