@@ -17,22 +17,9 @@ class SiteController extends Controller
         return view('site.index');
     }
 
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function getAbout()
+    public function calculator()
     {
-        $data_seo = json_decode(DB::table('seo_meta')->where('title', 'about')->get());
-        return view('site.about', compact('data_seo'));
-    }
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function getSupport()
-    {
-        $data_seo = json_decode(DB::table('seo_meta')->where('title', 'support')->get());
-        return view('site.support', compact('data_seo'));
+        return view('site.calculator');
     }
 
     /**

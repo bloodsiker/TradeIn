@@ -18,14 +18,24 @@
     <link href="{{ asset('assets/css/dashforge.auth.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/calculator.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+
+    @stack('styles')
 </head>
-<body>
+<body class="page-profile">
 
-<div class="content">
+@include('site.blocks._header')
 
+<div class="content @stack('class')">
 
+    @yield('content')
 
 </div>
+
+@include('site.blocks._footer')
+
+@stack('modals')
+
+@include('site.blocks.scripts')
 
 </body>
 </html>

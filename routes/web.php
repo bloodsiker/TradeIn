@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['web']], function () {
 
     Route::get('/', 'SiteController@index')->name('main');
+    Route::get('/calculator', 'SiteController@calculator')->name('calculator');
 
     Route::match(['post', 'get'], '/login', 'LoginController@login')->name('login');
     Route::post('/auth', 'LoginController@auth')->name('auth');
