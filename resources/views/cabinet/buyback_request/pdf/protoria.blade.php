@@ -95,7 +95,8 @@
                 <td width="50%" style="vertical-align: text-top">
                     <p>Клієнт</p>
                     <br>
-                    <p>{{ $buyBackRequest->user->fullName() }}</p>
+                    <p>_____________________________________________________________</p>
+{{--                    <p>{{ $buyBackRequest->user->fullName() }}</p>--}}
                 </td>
             </tr>
         </table>
