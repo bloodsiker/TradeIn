@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\Shop;
 use App\Models\SocialAccount;
 use App\Models\User;
+use App\Models\UserActForm;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,6 @@ use Illuminate\Support\Facades\Session;
  */
 class ProfileController extends Controller
 {
-
     public function profile(Request $request)
     {
         $user = \Auth::user();
@@ -149,6 +149,35 @@ class ProfileController extends Controller
         }
 
         return view('cabinet.profile.bonus', compact('now', 'lastMonth', 'bonuses', 'sumPaid', 'users', 'networks', 'shops'));
+    }
+
+    public function actForm(Request $request)
+    {
+        $user = \Auth::user();
+        $actForm = $user->actForm;
+
+        if ($request->isMethod('post')) {
+
+            if ($actForm) {
+                $actForm->value = $request->get('value');
+                $actForm->value_1 = $request->get('value_1');
+                $actForm->value_2 = $request->get('value_2');
+                $actForm->value_3 = $request->get('value_3');
+            } else {
+                $actForm = new UserActForm();
+                $actForm->value = $request->get('value');
+                $actForm->value_1 = $request->get('value_1');
+                $actForm->value_2 = $request->get('value_2');
+                $actForm->value_3 = $request->get('value_3');
+                $actForm->user()->associate($user);
+            }
+
+            $actForm->save();
+
+            return redirect()->route('cabinet.profile')->with('success', 'Анкета обновлена!');
+        }
+
+        return view('cabinet.profile.index', compact('user', 'account'));
     }
 
     /**
