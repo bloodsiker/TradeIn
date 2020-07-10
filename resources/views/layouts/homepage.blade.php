@@ -14,28 +14,11 @@
     <link href="{{ asset('lib/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/ionicons/css/ionicons.min.css') }}" rel="stylesheet">
 
-    <link href="{{ asset('assets/css/dashforge.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/dashforge.auth.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/calculator.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/homepage.css') }}" rel="stylesheet">
 
-    @stack('styles')
 </head>
-<body class="page-profile">
+<body>
 
-@include('site.blocks._header')
-
-<div class="content @stack('class')">
-
-    @yield('content')
-
-</div>
-
-@include('site.blocks._footer')
-
-@stack('modals')
-
-@include('site.blocks.scripts')
 
 </body>
 </html>
