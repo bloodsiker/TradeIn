@@ -54,12 +54,12 @@ class DeviceModelSheetImport implements ToCollection
                     $typeArray[$row[0]] = $typeSearch;
                 }
 
-                $brand = array_key_exists($row[0], $brandArray);
+                $brand = array_key_exists($row[1], $brandArray);
                 if ($brand) {
-                    $brandSearch = $brandArray[$row[0]];
+                    $brandSearch = $brandArray[$row[1]];
                 } else {
                     $brandSearch = Brand::firstOrCreate(['name' => $row[1]]);
-                    $brandArray[$row[0]] = $brandSearch;
+                    $brandArray[$row[1]] = $brandSearch;
                 }
 
                 $model = DeviceModel::where([
@@ -81,13 +81,13 @@ class DeviceModelSheetImport implements ToCollection
                         'technic_id' => $typeSearch->id,
                         'brand_id' => $brandSearch->id,
                         'network_id' => $this->request->get('network_id'),
-                        'name' => $row[1],
-                        'price' => (int) ($row[2] ?? 0),
-                        'price_1' => (int) ($row[3] ?? 0),
-                        'price_2' => (int) ($row[4] ?? 0),
-                        'price_3' => (int) ($row[5] ?? 0),
-                        'price_4' => (int) ($row[6] ?? 0) ,
-                        'price_5' => (int) ($row[7] ?? 0),
+                        'name' => $row[2],
+                        'price' => (int) ($row[3] ?? 0),
+                        'price_1' => (int) ($row[4] ?? 0),
+                        'price_2' => (int) ($row[5] ?? 0),
+                        'price_3' => (int) ($row[6] ?? 0),
+                        'price_4' => (int) ($row[7] ?? 0) ,
+                        'price_5' => (int) ($row[8] ?? 0),
                     ];
                 }
             }
@@ -123,20 +123,20 @@ class DeviceModelSheetImport implements ToCollection
                     $brandSearch = $brandArray[$row[1]];
                 } else {
                     $brandSearch = Brand::firstOrCreate(['name' => $row[1]]);
-                    $brandArray[$row[0]] = $brandSearch;
+                    $brandArray[$row[1]] = $brandSearch;
                 }
 
                 $insert[] = [
                     'technic_id' => $typeSearch->id,
                     'brand_id' => $brandSearch->id,
                     'network_id' => $this->request->get('network_id'),
-                    'name' => $row[1],
-                    'price' => (int) ($row[2] ?? 0),
-                    'price_1' => (int) ($row[3] ?? 0),
-                    'price_2' => (int) ($row[4] ?? 0),
-                    'price_3' => (int) ($row[5] ?? 0),
-                    'price_4' => (int) ($row[6] ?? 0) ,
-                    'price_5' => (int) ($row[7] ?? 0),
+                    'name' => $row[2],
+                    'price' => (int) ($row[3] ?? 0),
+                    'price_1' => (int) ($row[4] ?? 0),
+                    'price_2' => (int) ($row[5] ?? 0),
+                    'price_3' => (int) ($row[6] ?? 0),
+                    'price_4' => (int) ($row[7] ?? 0) ,
+                    'price_5' => (int) ($row[8] ?? 0),
                 ];
             }
         }
