@@ -2,7 +2,6 @@
 namespace App\Mail;
 
 use App\Models\BuybackRequest;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -12,9 +11,9 @@ class RequestChangeStatusShipped extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * The user instance.
+     * The user buybackRequest.
      *
-     * @var User
+     * @var BuybackRequest
      */
     protected $buybackRequest;
 
