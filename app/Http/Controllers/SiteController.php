@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
+use App\Mail\SupportShipped;
 use Illuminate\Http\Request;
 use Mail;
 
@@ -27,13 +27,8 @@ class SiteController extends Controller
      */
     public function postSupport(Request $request)
     {
-        $name = $request->name;
-        $phone = $request->phone;
-        $comment = $request->comment;
+        Mail::to(config('mail.from.address'))->send(new SupportShipped($request));
 
-        Mail::send('site.emails.support', compact('name', 'phone', 'comment'), function ($message){
-            $message->from('info@boot.com.ua', 'BOOT');
-            $message->to(config('mail.support_email'))->subject('Новый запрос со страницы Служба поддержки');
-        });
+        return response(['status' => 200]);
     }
 }
