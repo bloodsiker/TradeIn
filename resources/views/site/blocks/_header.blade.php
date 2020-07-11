@@ -10,7 +10,7 @@
         </div>
         <ul class="nav navbar-menu">
             <li class="nav-label pd-l-20 pd-lg-l-25 d-lg-none">Навигация</li>
-            <li class="nav-item"><a href="{{ route('main') }}" class="nav-link"><i data-feather="box"></i> Калькулятор</a></li>
+            <li class="nav-item"><a href="{{ route('calculator') }}" class="nav-link"><i data-feather="box"></i> Калькулятор</a></li>
             @if (Auth::check())
                 <li class="nav-item"><a href="{{ route('cabinet.main') }}" class="nav-link"><i data-feather="log-in"></i> В кабинет</a></li>
             @else
