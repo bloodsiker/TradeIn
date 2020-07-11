@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
+use App\Imports\UserImport;
 use App\Models\Network;
 use App\Models\Role;
 use App\Models\Shop;
@@ -10,6 +11,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class UserController
@@ -149,5 +151,15 @@ class UserController extends Controller
         }
 
         return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка при удалении!']);
+    }
+
+    public function import(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            Excel::import(new UserImport($request), $request->file('file'));
+            return redirect()->back();
+        }
+
+        return back()->with('danger', 'Ошибка при импорте!');
     }
 }

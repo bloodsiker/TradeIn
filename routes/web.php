@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['web']], function () {
 
     Route::get('/', 'SiteController@index')->name('main');
+    Route::post('/send-support', 'SiteController@postSupport')->name('support');
+    Route::get('/calculator', 'SiteController@calculator')->name('calculator');
 
     Route::match(['post', 'get'], '/login', 'LoginController@login')->name('login');
     Route::post('/auth', 'LoginController@auth')->name('auth');
@@ -30,6 +32,7 @@ Route::group(['middleware' => ['web']], function () {
 
             Route::match(['post', 'get'], '/user/add', 'Cabinet\UserController@add')->name('cabinet.user.add');
             Route::match(['post', 'get'], '/user/{id}/edit', 'Cabinet\UserController@edit')->name('cabinet.user.edit');
+            Route::post('/user/import', 'Cabinet\UserController@import')->name('cabinet.user.import');
             Route::post('/user/delete', 'Cabinet\UserController@delete')->name('cabinet.user.delete');
 
             Route::get('/networks', 'Cabinet\NetworkController@list')->name('cabinet.network.list');
@@ -42,7 +45,13 @@ Route::group(['middleware' => ['web']], function () {
             Route::post('/shop/add', 'Cabinet\ShopController@add')->name('cabinet.shop.add');
             Route::post('/shop/edit', 'Cabinet\ShopController@edit')->name('cabinet.shop.edit');
             Route::post('/shop/delete', 'Cabinet\ShopController@delete')->name('cabinet.shop.delete');
+            Route::post('/shop/import', 'Cabinet\ShopController@import')->name('cabinet.shop.import');
             Route::get('/shop/{id}/users', 'Cabinet\ShopController@users')->name('cabinet.shop.users');
+
+            Route::get('/technic', 'Cabinet\TechnicController@list')->name('cabinet.technic.list');
+            Route::post('/technic/add', 'Cabinet\TechnicController@add')->name('cabinet.technic.add');
+            Route::post('/technic/edit', 'Cabinet\TechnicController@edit')->name('cabinet.technic.edit');
+            Route::post('/technic/delete', 'Cabinet\TechnicController@delete')->name('cabinet.technic.delete');
 
             Route::get('/brands', 'Cabinet\BrandController@list')->name('cabinet.brand.list');
             Route::post('/brand/add', 'Cabinet\BrandController@add')->name('cabinet.brand.add');
@@ -77,6 +86,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::match(['post', 'get'], '/nova-poshta/add-ttn', 'Cabinet\NovaPoshtaController@addTtn')->name('cabinet.nova_poshta.add_ttn');
 
         Route::match(['post', 'get'], '/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
+        Route::post('/act-form', 'Cabinet\ProfileController@actForm')->name('cabinet.profile.act_form');
         Route::get('/bonus', 'Cabinet\ProfileController@bonus')->name('cabinet.profile.bonus');
         Route::get('/logout', 'Cabinet\ProfileController@logout')->name('cabinet.profile.logout');
         Route::get('/social/link', 'Cabinet\ProfileController@linkSocialAccount')->name('cabinet.profile.social_link');
@@ -85,6 +95,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::get('/help', 'Cabinet\HelpController@list')->name('cabinet.help.list');
         Route::match(['post', 'get'], '/help/add', 'Cabinet\HelpController@add')->name('cabinet.help.add')->middleware('admin');
         Route::match(['post', 'get'], '/help/edit/{id}', 'Cabinet\HelpController@edit')->name('cabinet.help.edit')->middleware('admin');
+        Route::post('/help/file/delete/', 'Cabinet\HelpController@deleteFile')->name('cabinet.help.delete_file')->middleware('admin');
         Route::get('/help/delete/{id}', 'Cabinet\HelpController@delete')->name('cabinet.help.delete')->middleware('admin');
         Route::post('/help/upload', 'Cabinet\HelpController@upload')->name('cabinet.help.upload')->middleware('admin');
         Route::get('/help/{id}', 'Cabinet\HelpController@view')->name('cabinet.help.view');

@@ -10,7 +10,8 @@
                     <h4 class="mg-b-0">Магазины</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
-                    <a href="#modal-data" class="btn btn-sm btn-dark btn-block" data-toggle="modal">Создать</a>
+                    <a href="#modal-import" class="btn btn-sm btn-dark" data-toggle="modal">Импорт</a>
+                    <a href="#modal-data" class="btn btn-sm btn-dark" data-toggle="modal">Создать</a>
                 </div>
             </div>
         </div>
@@ -19,6 +20,31 @@
 
 @section('content')
     <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
+        <div class="row mg-b-15">
+            <div class="col-lg-12 col-xl-12">
+                <form action="{{ route('cabinet.shop.list') }}" method="GET" novalidate>
+                    <div class="form-row">
+
+                        <div class="form-group col-md-3">
+                            <select class="custom-select network-filter" name="network_id">
+                                <option value=""></option>
+                                @foreach($networks as $network)
+                                    <option value="{{ $network->id }}" @if(request('network_id') == $network->id) selected @endif>{{ $network->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-dark">Применить</button>
+                                <a href="{{ route('cabinet.shop.list') }}" class="btn btn-danger">Сбросить</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-12 col-xl-12">
                 @if (session('success'))
@@ -153,12 +179,52 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-import" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <form action="{{ route('cabinet.shop.import') }}" method="POST" enctype="multipart/form-data" data-parsley-validate novalidate>
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="titleModal">Иморт магазинов</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        <div class="form-group">
+                            <div class="input-group mb-1">
+                                <a href="{{ asset('upload/shops.xlsx') }}" class="link-color-gray" target="_blank">Шаблон для импорта</a>
+                            </div>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" name="file" class="custom-file-input" id="file" onchange="processSelectedFiles(this)"
+                                           aria-describedby="file" required>
+                                    <label class="custom-file-label" id="file-name" for="avatar">Выберите файл</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-file-excel"></i> Импортировать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endpush
 
 @push('scripts')
     <script>
         $(function(){
             'use strict'
+
+            $('.network-filter').select2({
+                placeholder: 'Торговая сеть',
+                searchInputPlaceholder: 'Поиск торговой сети',
+                allowClear: true,
+            });
 
             deleteObject('.table', '.btnDelete', "{{ route('cabinet.shop.delete') }}");
 
@@ -222,5 +288,10 @@
                 });
             })
         });
+
+        function processSelectedFiles(fileInput) {
+            var files = fileInput.files[0];
+            document.getElementById('file-name').innerText = files.name;
+        }
     </script>
 @endpush

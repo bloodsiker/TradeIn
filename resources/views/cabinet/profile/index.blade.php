@@ -116,9 +116,55 @@
                                     <div class="custom-file">
                                         <input type="file" name="avatar" class="custom-file-input" id="avatar" onchange="processSelectedFiles(this)"
                                                aria-describedby="avatar">
-                                        <label class="custom-file-label" id="file-name" for="avatar">Выберете файт</label>
+                                        <label class="custom-file-label" id="file-name" for="avatar">Выберите файл</label>
                                     </div>
                                 </div>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-save"></i> Сохранить</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mg-b-20 mg-lg-b-25">
+                    <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                        <h6 class="tx-uppercase tx-semibold mg-b-0">Анкета клиента для заполнения акта приёма-передачи</h6>
+                        <nav class="nav nav-with-icon tx-13">
+                        </nav>
+                    </div>
+                    <div class="card-body pd-25">
+                        <form action="{{ route('cabinet.profile.act_form') }}" id="actForm" method="POST" novalidate>
+                            @csrf
+
+                            <div class="form-group">
+                                <label for="name">Значение</label>
+                                <input type="text" class="form-control @error('value') is-invalid @enderror" name="value" value="{{ Auth::user()->actForm ? Auth::user()->actForm->value : null }}" id="value" placeholder="Значение" required>
+                                @error('value')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="value_1">Значение 1</label>
+                                <input type="text" class="form-control @error('value_1') is-invalid @enderror" name="value_1" value="{{ Auth::user()->actForm ? Auth::user()->actForm->value_1 : null }}" id="value_1" placeholder="Значение 1" required>
+                                @error('value_1')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="value_2">Значение 2</label>
+                                <input type="text" class="form-control @error('value_2') is-invalid @enderror" name="value_2" value="{{ Auth::user()->actForm ? Auth::user()->actForm->value_2 : null }}" id="value_2" placeholder="Значение 2" required>
+                                @error('value_2')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="value_3">Значение 3</label>
+                                <input type="text" class="form-control @error('value_3') is-invalid @enderror" name="value_3" value="{{ Auth::user()->actForm ? Auth::user()->actForm->value_3 : null }}" id="value_3" placeholder="Значение 3" required>
+                                @error('value_3')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
                             </div>
                             <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-save"></i> Сохранить</button>
                         </form>
@@ -214,9 +260,9 @@
             format: "dd.mm.yyyy",
         });
 
-        $(".phone-mask").inputmask("mask", {
-            "mask": "+38 (999) 999-99-99"
-        });
+        // $(".phone-mask").inputmask("mask", {
+        //     "mask": "+38 (999) 999-99-99"
+        // });
 
         function processSelectedFiles(fileInput) {
             var files = fileInput.files[0];

@@ -24,7 +24,7 @@ class NetworkController extends Controller
     {
         if ($request->isMethod('post')) {
             $request->validate([
-                'name' => ['required', 'min:3', 'max:255']
+                'name' => ['required', 'min:2', 'max:255']
             ]);
 
             $network = new Network();

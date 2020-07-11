@@ -229,10 +229,16 @@ class BuybackRequestController extends Controller
     public function pdf(Request $request, $id)
     {
         $buyBackRequest = BuybackRequest::find($id);
-        $pdf = PDF::loadView('cabinet.buyback_request.pdf.act', compact('buyBackRequest'));
+        $network = $buyBackRequest->user->network;
+         if ($network->name === 'Protoria') {
+             $template = 'cabinet.buyback_request.pdf.protoria';
+         } else {
+             $template = 'cabinet.buyback_request.pdf.protoria';
+         }
+        $pdf = PDF::loadView($template, compact('buyBackRequest'));
         PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
-//        return view('cabinet.buyback_request.pdf.act', compact('buyBackRequest'));
+//        return view($template, compact('buyBackRequest'));
         return $pdf->download(sprintf('Акт #%s %s.pdf', $buyBackRequest->id,  Carbon::now()->format('d.m.Y H:i')));
     }
 
@@ -258,6 +264,11 @@ class BuybackRequestController extends Controller
             if (\Auth::user()->isNetwork()) {
                 $queryNetwork->where('users.network_id', \Auth::user()->network_id);
                 $queryShops->where('users.network_id', \Auth::user()->network_id);
+            }
+
+            if (\Auth::user()->isShop()) {
+                $queryNetwork->where('users.shop_id', \Auth::user()->shop_id);
+                $queryShops->where('users.shop_id', \Auth::user()->shop_id);
             }
 
             $debtNetworks = $queryNetwork->get();

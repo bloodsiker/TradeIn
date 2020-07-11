@@ -27,7 +27,7 @@
                 <form action="{{ route('cabinet.model.list') }}" method="GET" novalidate>
                     <div class="form-row">
                         @if(Auth::user()->isAdmin())
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-2">
                                 <select class="custom-select network-filter" name="network_id">
                                     <option value=""></option>
                                     @foreach($networks as $networkSelect)
@@ -37,8 +37,17 @@
                             </div>
                         @endif
 
+                        <div class="form-group col-md-2">
+                            <select class="custom-select technic-filter" name="technic_id">
+                                <option value=""></option>
+                                @foreach($technics as $technic)
+                                    <option value="{{ $technic->id }}" @if(request('technic_id') == $technic->id) selected @endif>{{ $technic->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         @if(Auth::user()->isAdmin() || Auth::user()->isNetwork())
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-2">
                                 <select class="custom-select brand-filter" name="brand_id">
                                     <option value=""></option>
                                     @foreach($brands as $brand)
@@ -77,6 +86,7 @@
                             <thead>
                             <tr>
                                 <th scope="col">Название</th>
+                                <th scope="col">Тип</th>
                                 <th scope="col">Бренд</th>
                                 <th scope="col">Цена</th>
                                 <th scope="col">Цена 1</th>
@@ -91,6 +101,7 @@
                             @foreach($models as $model)
                                 <tr data-id="{{ $model->id }}">
                                     <td class="td-name">{{ $model->name }}</td>
+                                    <td class="td-technic">{{ $model->technic ? $model->technic->name : null }}</td>
                                     <td class="td-brand"><span class="badge badge-success">{{ $model->brand->name }}</span></td>
                                     <td class="td-price">{{ $model->price }}</td>
                                     <td class="td-price1">{{ $model->price_1 }}</td>
@@ -146,6 +157,15 @@
                             <input type="hidden" name="network_id" value="{{ $network ? $network->id : null }}">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <label for="technic_id">Тип техники</label>
+                                    <select class="custom-select" id="technic_id" name="technic_id">
+                                        @foreach($technics as $technic)
+                                            <option value="{{ $technic->id }}">{{ $technic->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-6">
                                     <label for="brand">Бренд<span class="text-danger">*</span></label>
                                     <select class="custom-select" id="brand" name="brand_id">
                                         @foreach($brands as $brand)
@@ -153,10 +173,11 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="name">Модель<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="name" id="name" placeholder="Модель" autocomplete="off" required>
-                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Модель<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Модель" autocomplete="off" required>
                             </div>
 
                             <div class="form-row">
@@ -217,17 +238,27 @@
                             <input type="hidden" name="network_id" value="">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="brand">Бренд<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="brand" name="brand_id">
+                                    <label for="edit-technic">Тип техники</label>
+                                    <select class="custom-select" id="edit-technic" name="technic_id">
+                                        @foreach($technics as $technic)
+                                            <option value="{{ $technic->id }}">{{ $technic->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="edit-brand">Бренд<span class="text-danger">*</span></label>
+                                    <select class="custom-select" id="edit-brand" name="brand_id">
                                         @foreach($brands as $brand)
                                             <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="name">Модель<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="name" id="name" placeholder="Модель" autocomplete="off" required>
-                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Модель<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Модель" autocomplete="off" required>
                             </div>
 
                             <div class="form-row">
@@ -277,7 +308,7 @@
                 <div class="modal-content tx-14">
                     <form action="{{ route('cabinet.model.import') }}" method="POST" enctype="multipart/form-data" data-parsley-validate novalidate>
                         <div class="modal-header">
-                            <h6 class="modal-title" id="titleModal">Иморт базы данных смартфонов</h6>
+                            <h6 class="modal-title" id="titleModal">Импорт базы данных смартфонов</h6>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -307,7 +338,7 @@
                                     <div class="custom-file">
                                         <input type="file" name="file" class="custom-file-input" id="file"
                                                aria-describedby="file" required>
-                                        <label class="custom-file-label" for="avatar">Выберете файт</label>
+                                        <label class="custom-file-label" for="avatar">Выберите файл</label>
                                     </div>
                                 </div>
                             </div>
@@ -340,6 +371,12 @@
                 allowClear: true,
             });
 
+            $('.technic-filter').select2({
+                placeholder: 'Тип',
+                minimumResultsForSearch: -1,
+                allowClear: true,
+            });
+
             deleteObject('.table', '.btnDelete', "{{ route('cabinet.model.delete') }}");
 
             $('.editModal').click(function (e) {
@@ -364,7 +401,8 @@
                             modalNetwork.find('input[name=id]').val(response.data.id);
                             modalNetwork.find('input[name=network_id]').val(response.data.network_id);
                             modalNetwork.find('select option').attr('selected', false);
-                            modalNetwork.find('select option[value='+response.data.brand_id+']').attr('selected', 'selected');
+                            modalNetwork.find('select#edit-technic option[value='+response.data.technic_id+']').attr('selected', 'selected');
+                            modalNetwork.find('select#edit-brand option[value='+response.data.brand_id+']').attr('selected', 'selected');
                             modalNetwork.find('input[name=price]').val(response.data.price);
                             modalNetwork.find('input[name=price_1]').val(response.data.price_1);
                             modalNetwork.find('input[name=price_2]').val(response.data.price_2);
@@ -396,6 +434,7 @@
                         if (response.status === 1) {
                             const tr = $('.table').find('tr[data-id='+id+']');
                             tr.find('td.td-name').text(response.data.name);
+                            tr.find('td.td-technic').text(response.data.technic.name);
                             tr.find('td.td-brand > .badge').text(response.data.brand.name);
                             tr.find('td.td-price').text(response.data.price);
                             tr.find('td.td-price1').text(response.data.price_1);

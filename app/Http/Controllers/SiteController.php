@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
+use App\Mail\SupportShipped;
 use Illuminate\Http\Request;
 use Mail;
 
@@ -17,22 +17,9 @@ class SiteController extends Controller
         return view('site.index');
     }
 
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function getAbout()
+    public function calculator()
     {
-        $data_seo = json_decode(DB::table('seo_meta')->where('title', 'about')->get());
-        return view('site.about', compact('data_seo'));
-    }
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function getSupport()
-    {
-        $data_seo = json_decode(DB::table('seo_meta')->where('title', 'support')->get());
-        return view('site.support', compact('data_seo'));
+        return view('site.calculator');
     }
 
     /**
@@ -40,13 +27,8 @@ class SiteController extends Controller
      */
     public function postSupport(Request $request)
     {
-        $name = $request->name;
-        $phone = $request->phone;
-        $comment = $request->comment;
+        Mail::to(config('mail.from.address'))->send(new SupportShipped($request));
 
-        Mail::send('site.emails.support', compact('name', 'phone', 'comment'), function ($message){
-            $message->from('info@boot.com.ua', 'BOOT');
-            $message->to(config('mail.support_email'))->subject('Новый запрос со страницы Служба поддержки');
-        });
+        return response(['status' => 200]);
     }
 }

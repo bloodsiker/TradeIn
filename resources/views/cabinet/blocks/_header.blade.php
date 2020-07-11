@@ -26,6 +26,7 @@
                     <ul class="navbar-menu-sub">
                         <li class="nav-sub-item"><a href="{{ route('cabinet.network.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Торговые сети</a></li>
                         <li class="nav-sub-item"><a href="{{ route('cabinet.shop.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Магазины</a></li>
+                        <li class="nav-sub-item"><a href="{{ route('cabinet.technic.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Тип техники</a></li>
                         <li class="nav-sub-item"><a href="{{ route('cabinet.brand.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Производители</a></li>
                         <li class="nav-sub-item"><a href="{{route('cabinet.model.list')}}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Базы данных смартфонов</a></li>
                         <li class="nav-sub-item"><a href="{{route('cabinet.buyback_bonus.list')}}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Таблица бонусов</a></li>
@@ -39,49 +40,50 @@
                 <li class="nav-item {{ request()->is('cabinet/user*') ? 'active' : null }}"><a href="{{ route('cabinet.user.list') }}" class="nav-link"><i data-feather="box"></i> Пользователи</a></li>
             @endif
 
-            <li class="nav-item {{ request()->is('cabinet/chat*') ? 'active' : null }}"><a href="{{ route('cabinet.chat.index') }}" class="nav-link"><i data-feather="message-square"></i> Чат</a></li>
+{{--            <li class="nav-item {{ request()->is('cabinet/chat*') ? 'active' : null }}"><a href="{{ route('cabinet.chat.index') }}" class="nav-link"><i data-feather="message-square"></i> Чат</a></li>--}}
         </ul>
     </div>
     <div class="navbar-right">
-        <div class="dropdown dropdown-message">
-            <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">
-                <i data-feather="message-square"></i>
-                <span>{{ $count_message }}</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-header">Новые сообщения</div>
-                @if($new_messages->count())
-                    @foreach($new_messages as $new_message)
-                        <a href="{{ route('cabinet.chat.view', ['uniq_id' => $new_message->chat->uniq_id]) }}" class="dropdown-item">
-                            <div class="media">
-                                @php
-                                    $onlineStatus = $new_message->user->statusOnline() ? 'avatar-online' : 'avatar-offline';
-                                    $user = $new_message->message->user;
-                                @endphp
+{{--        <div class="dropdown dropdown-message">--}}
+{{--            <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">--}}
+{{--                <i data-feather="message-square"></i>--}}
+{{--                <span>{{ $count_message }}</span>--}}
+{{--            </a>--}}
+{{--            <div class="dropdown-menu dropdown-menu-right">--}}
+{{--                <div class="dropdown-header">Новые сообщения</div>--}}
+{{--                @if($new_messages->count())--}}
+{{--                    @foreach($new_messages as $new_message)--}}
+{{--                        <a href="{{ route('cabinet.chat.view', ['uniq_id' => $new_message->chat->uniq_id]) }}" class="dropdown-item">--}}
+{{--                            <div class="media">--}}
+{{--                                @php--}}
+{{--                                    $onlineStatus = $new_message->user->statusOnline() ? 'avatar-online' : 'avatar-offline';--}}
+{{--                                    $user = $new_message->message->user;--}}
+{{--                                @endphp--}}
 
-                                @if ($user->avatar)
-                                    <div class="avatar avatar-sm {{ $onlineStatus }}"><img src="{{ asset($user->avatar) }}" class="rounded-circle" alt=""></div>
-                                @else
-                                    <div class="avatar avatar-sm {{ $onlineStatus }}"><span class="avatar-initial rounded-circle">{{ substr($user->name, 0, 1) }}</span></div>
-                                @endif
-                                <div class="media-body mg-l-15">
-                                    <strong>{{ $user->fullName() }}</strong>
-                                    <p>{{ substr($new_message->message->message, 0, 50) }}</p>
-                                    <span>{{ Date::parse($new_message->created_at)->format('j F Y г. H:i') }}</span>
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-                @else
-                    <div class="media">
-                        <div class="media-body m-3 mg-l-15">
-                            <p>Нет новых сообщений</p>
-                        </div>
-                    </div>
-                @endif
-                <div class="dropdown-footer"><a href="{{ route('cabinet.chat.index') }}">Все сообщения</a></div>
-            </div>
-        </div>
+{{--                                @if ($user->avatar)--}}
+{{--                                    <div class="avatar avatar-sm {{ $onlineStatus }}"><img src="{{ asset($user->avatar) }}" class="rounded-circle" alt=""></div>--}}
+{{--                                @else--}}
+{{--                                    <div class="avatar avatar-sm {{ $onlineStatus }}"><span class="avatar-initial rounded-circle">{{ substr($user->name, 0, 1) }}</span></div>--}}
+{{--                                @endif--}}
+{{--                                <div class="media-body mg-l-15">--}}
+{{--                                    <strong>{{ $user->fullName() }}</strong>--}}
+{{--                                    <p>{{ substr($new_message->message->message, 0, 50) }}</p>--}}
+{{--                                    <span>{{ Date::parse($new_message->created_at)->format('j F Y г. H:i') }}</span>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </a>--}}
+{{--                    @endforeach--}}
+{{--                @else--}}
+{{--                    <div class="media">--}}
+{{--                        <div class="media-body m-3 mg-l-15">--}}
+{{--                            <p>Нет новых сообщений</p>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                @endif--}}
+{{--                <div class="dropdown-footer"><a href="{{ route('cabinet.chat.index') }}">Все сообщения</a></div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+
 {{--        <div class="dropdown dropdown-notification">--}}
 {{--            <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">--}}
 {{--                <i data-feather="bell"></i>--}}

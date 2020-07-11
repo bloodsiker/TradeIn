@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
+use App\Imports\ShopImport;
 use App\Models\Network;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class ShopController
@@ -14,9 +16,16 @@ use Illuminate\Http\Request;
 class ShopController extends Controller
 {
 
-    public function list()
+    public function list(Request $request)
     {
-        $shops = Shop::all()->sortByDesc('id');
+        $query = Shop::select('shops.*');
+
+        if ($request->get('network_id')) {
+            $query->where('network_id', $request->get('network_id'));
+        }
+
+        $shops = $query->orderBy('id', 'DESC')->get();
+
         $networks = Network::all()->sortByDesc('id');
 
         return view('cabinet.shops.list', compact('shops', 'networks'));
@@ -82,5 +91,16 @@ class ShopController extends Controller
         $users = User::where('shop_id', $shop->id)->orderBy('id', 'desc')->get();
 
         return view('cabinet.shops.users', compact('shop', 'users'));
+    }
+
+    public function import(Request $request)
+    {
+        if ($request->hasFile('file')) {
+
+            Excel::import(new ShopImport($request), $request->file('file'));
+            return redirect()->back();
+        }
+
+        return redirect()->back()->with('danger', 'Ошибка при импорте!');
     }
 }

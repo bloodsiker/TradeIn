@@ -16,11 +16,19 @@ class CreateHelpsTable extends Migration
         Schema::create('helps', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('image')->nullable();
             $table->text('short_description')->nullable();
-            $table->text('description');
             $table->boolean('is_active');
             $table->timestamps();
+        });
+
+        Schema::create('help_files', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('help_id')->unsigned();
+            $table->tinyInteger('type_file');
+            $table->string('file');
+            $table->timestamps();
+
+            $table->foreign('help_id')->references('id')->on('helps')->onDelete('cascade');
         });
     }
 
@@ -31,6 +39,7 @@ class CreateHelpsTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('help_files');
         Schema::dropIfExists('helps');
     }
 }

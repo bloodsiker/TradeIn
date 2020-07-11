@@ -10,10 +10,8 @@
                     <h4 class="mg-b-0">Заявки на выкуп</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
-                    @if(Auth::user()->isNetwork() || Auth::user()->isAdmin())
-                        <a href="" class="btn btn-sm btn-dark" id="load-stock" data-toggle="modal">Долг склада</a>
-                    @endif
-                    <a href="{{ route('cabinet.nova_poshta.list') }}" class="btn btn-sm btn-dark">Список ТТН</a>
+                    <a href="" class="btn btn-sm btn-dark" id="load-stock" data-toggle="modal">Долг склада</a>
+{{--                    <a href="{{ route('cabinet.nova_poshta.list') }}" class="btn btn-sm btn-dark">Список ТТН</a>--}}
                     <a href="{{ route('cabinet.buyback_request.export', [request()->getQueryString()]) }}" class="btn btn-sm btn-dark" id="show-filter">Экспорт в Excel</a>
                 </div>
             </div>
@@ -119,6 +117,8 @@
                                     <td>{{ $buyRequest->user->fullName() }}</td>
                                     <td>
                                         @if( $buyRequest->model)
+                                            <small><b>Тип:</b> {{ $buyRequest->model->technic ? $buyRequest->model->technic->name : null }}</small>
+                                            <br>
                                             <small><b>Производитель:</b> {{ $buyRequest->model->brand->name }}</small>
                                             <br>
                                             <small><b>Модель:</b> {{ $buyRequest->model->name }}</small>
@@ -132,13 +132,15 @@
                                     <td><small>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('d.m.Y H:i') }}</small></td>
                                     <td>
                                         @if(Auth::user()->isAdmin() || (Auth::user()->isShop() && Auth::id() === $buyRequest->user_id))
-                                            <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                                <i class="far fa-edit"></i>
-                                            </a>
+                                            @if($buyRequest->user->network)
+                                                <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                                    <i class="far fa-edit"></i>
+                                                </a>
 
-                                            <a href="{{ route('cabinet.buyback_request.pdf', ['id' => $buyRequest->id]) }}" data-toggle="tooltip" title="Акт PDF" class="btn btn-xxs btn-warning btn-icon">
-                                                <i class="far fa-file-pdf"></i>
-                                            </a>
+                                                <a href="{{ route('cabinet.buyback_request.pdf', ['id' => $buyRequest->id]) }}" data-toggle="tooltip" title="Акт PDF" class="btn btn-xxs btn-warning btn-icon">
+                                                    <i class="far fa-file-pdf"></i>
+                                                </a>
+                                            @endif
                                         @endif
 
                                         @if(Auth::user()->isAdmin())
@@ -240,11 +242,9 @@
         </div>
     </div>
 
-    @if(Auth::user()->isNetwork() || Auth::user()->isAdmin())
-        <div class="modal fade" id="modal-stock" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+    <div class="modal fade" id="modal-stock" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
 
-        </div>
-    @endif
+    </div>
 @endpush
 
 @push('scripts')
@@ -411,25 +411,23 @@
                 });
             })
 
-            @if(Auth::user()->isNetwork() || Auth::user()->isAdmin())
-                $('#load-stock').on('click', function (e) {
-                    e.preventDefault();
+            $('#load-stock').on('click', function (e) {
+                e.preventDefault();
 
-                    $.ajax({
-                        url: '{{ route('cabinet.buyback_request.load_stock') }}',
-                        type: "POST",
-                        data: {},
-                        cache: false,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (response) {
-                            $('#modal-stock').html(response)
-                            $('#modal-stock').modal('show');
-                        }
-                    });
-                })
-            @endif
+                $.ajax({
+                    url: '{{ route('cabinet.buyback_request.load_stock') }}',
+                    type: "POST",
+                    data: {},
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        $('#modal-stock').html(response)
+                        $('#modal-stock').modal('show');
+                    }
+                });
+            })
 
         });
     </script>

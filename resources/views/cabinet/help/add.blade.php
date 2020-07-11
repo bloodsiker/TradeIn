@@ -2,12 +2,6 @@
 
 @section('title', 'Добавить инструкию')
 
-@push('styles')
-{{--    <link href="{{ asset('lib/quill/quill.core.css') }}" rel="stylesheet">--}}
-{{--    <link href="{{ asset('lib/quill/quill.snow.css') }}" rel="stylesheet">--}}
-{{--    <link href="{{ asset('lib/quill/quill.bubble.css') }}" rel="stylesheet">--}}
-@endpush
-
 @section('subHeader')
     <div class="sub-content content-fixed bd-b">
         <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
@@ -61,23 +55,28 @@
                             @enderror
                         </div>
 
-                        <div class="form-group">
-                            <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="description" rows="5">{{ old('description') }}</textarea>
-                            @error('description')
-                                <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
-                            @enderror
-                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <select class="custom-select" id="type_file" name="type_file">
+                                    @foreach(\App\Models\HelpFile::listType() as $key => $value)
+                                        <option value="{{ $key }}" @if (old('type_file') === 1) {{ 'selected' }} @endif>{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                        <div class="form-group mg-t-20">
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" name="image" class="custom-file-input" id="image" onchange="processSelectedFiles(this)" aria-describedby="image">
-                                    <label class="custom-file-label" id="file-name" for="image">Выберете файт</label>
+                            <div class="form-group col-md-8">
+                                <input type="text" class="form-control d-none" name="youtube_url" value="" placeholder="Youtube url" id="youtube_url">
+                                <div class="input-group" id="upload_file">
+                                    <div class="custom-file">
+                                        <input type="file" name="image" class="custom-file-input" id="image" onchange="processSelectedFiles(this)"
+                                               aria-describedby="image">
+                                        <label class="custom-file-label" id="file-name" for="image">Выберете файт</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-row d-flex justify-content-end mg-t-20">
+                        <div class="form-row d-flex justify-content-end">
                             <button type="submit" class="btn btn-sm btn-dark"><i class="far fa-save"></i> Создать</button>
                         </div>
                     </fieldset>
@@ -89,16 +88,29 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('lib/ckeditor/ckeditor.js') }}"></script>
+{{--    <script src="{{ asset('lib/ckeditor/ckeditor.js') }}"></script>--}}
 
     <script>
-        CKEDITOR.replace( 'description', {
-            filebrowserUploadUrl: "{{route('cabinet.help.upload', ['_token' => csrf_token() ])}}",
-            filebrowserUploadMethod: 'form'
+        {{--CKEDITOR.replace( 'description', {--}}
+        {{--    filebrowserUploadUrl: "{{route('cabinet.help.upload', ['_token' => csrf_token() ])}}",--}}
+        {{--    filebrowserUploadMethod: 'form'--}}
+        {{--});--}}
+
+        $("#type_file").change(function() {
+            const typeFile = $(this).val();
+            console.log(typeFile);
+
+            if (typeFile == '{{ \App\Models\HelpFile::TYPE_YOUTUBE_VIDEO }}') {
+                $('#youtube_url').removeClass('d-none');
+                $('#upload_file').addClass('d-none');
+            } else {
+                $('#youtube_url').addClass('d-none').val('');
+                $('#upload_file').removeClass('d-none');
+            }
         });
 
         function processSelectedFiles(fileInput) {
-            var files = fileInput.files[0];
+            const files = fileInput.files[0];
             document.getElementById('file-name').innerText = files.name;
         }
     </script>

@@ -47,7 +47,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="patronymic">Отчество</label>
-                                <input type="text" class="form-control @error('patronymic') is-invalid @enderror" name="patronymic" value="{{ $user->surname }}" id="patronymic" placeholder="Отчество">
+                                <input type="text" class="form-control @error('patronymic') is-invalid @enderror" name="patronymic" value="{{ $user->patronymic }}" id="patronymic" placeholder="Отчество">
                                 @error('patronymic')
                                     <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
@@ -116,7 +116,7 @@
                                 <select class="custom-select" id="shop" name="shop_id">
                                     <option value=""></option>
                                     @foreach($shops as $shop)
-                                        <option value="{{ $shop->id }}" @if($shop->id === $user->shop_id) selected @endif>{{ $shop->name }}</option>
+                                        <option value="{{ $shop->id }}" @if($shop->id === $user->shop_id) selected @endif>{{ $shop->fullName() }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -131,7 +131,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('lib/jquery.inputmask/jquery.inputmask.js') }}"></script>
+{{--    <script src="{{ asset('lib/jquery.inputmask/jquery.inputmask.js') }}"></script>--}}
     <script>
         $('#birthday').datepicker({
             todayHighlight: true,
@@ -142,9 +142,9 @@
             format: "dd.mm.yyyy",
         });
 
-        $(".phone-mask").inputmask("mask", {
-            "mask": "+38 (999) 999-99-99"
-        });
+        // $(".phone-mask").inputmask("mask", {
+        //     "mask": "+38 (999) 999-99-99"
+        // });
 
         $('form#infoUser').on('change', '#network', function (e) {
 
@@ -165,9 +165,11 @@
 
                         for (var i = 0; i < response.data.length; i++) {
                             var id = response.data[i].id,
+                                city = response.data[i].city,
+                                address = response.data[i].address,
                                 name = response.data[i].name;
 
-                            shop += "<option value='"+id+"'>"+name+"</option>";
+                            shop += "<option value='"+id+"'>"+name+ ' / ' +city+', '+address+"</option>";
                         }
                         _form.find('select#shop').html(shop);
                     }

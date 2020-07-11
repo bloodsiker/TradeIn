@@ -1,148 +1,374 @@
-@extends('layouts.app')
+@extends('layouts.homepage')
 
 @section('title', 'Калькулятор оценки стоимости устройства')
 
-@section('subHeader')
-    <div class="sub-content content-fixed bd-b">
-        <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
-            <div class="d-sm-flex align-items-center justify-content-between">
-                <div>
-                    <h4 class="mg-b-0">Калькулятор оценки стоимости устройства</h4>
-                </div>
-                <div class="mg-t-20 mg-sm-t-0">
-
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
-
 @section('content')
 
-    @include('cabinet.blocks.calculator')
-
-@endsection
-
-@push('modals')
-    <div class="modal fade" id="modal-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content tx-14" id="modal-request">
-                <form action="{{ route('cabinet.buyback_request.add') }}" method="POST" id="form" novalidate>
-                    <div class="modal-header">
-                        <h6 class="modal-title" id="titleModal">Оставить заявку</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-block">
-                            @csrf
-                            <input type="hidden" name="model_id" id="model_id">
-                            <div class="form-group">
-                                <label for="imei">IMEI</label>
-                                <input type="text" class="form-control" name="imei" value="" id="imei" placeholder="IMEI">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="packet">№ Сейф-пакета</label>
-                                <input type="text" class="form-control" name="packet" value="" id="packet" placeholder="№ Сейф-пакета">
-                            </div>
-                            <div class="form-group">
-                                <label for="brand">Бренд</label>
-                                <input type="text" class="form-control" name="brand" value="" id="brand" placeholder="" readonly>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="model">Модель</label>
-                                <input type="text" class="form-control" name="model" value="" id="model" placeholder="" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="cost">Стоимость (Грн)</label>
-                                <input type="text" class="form-control" name="cost" value="" id="cost" placeholder="" readonly>
-                            </div>
-                            @guest
-                                <div class="need-auth col-md-12 text-right" id="swap-to-login"><a href="">Что бы продолжить, Вам нужно авторизоваться</a></div>
-                            @endguest
-                        </div>
-                        <div class="success-block text-center hide">
-                            <h2></h2>
+    <!-- page header start  -->
+    <div class="header fixed_bg">
+        <div class="container">
+            <div class="navigation">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <div class="logo mb-center mb-space">
+                            <a href="{{ route('main') }}">
+                                <img src="{{ asset('assets/homepage/images/Logo_GS.png') }}" alt="Logo">
+                            </a>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
-                        <button type="submit" class="btn btn-sm btn-dark float-right" @guest disabled @endguest id="feed_send">Отправить</button>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-center justify-content-center">
+
                     </div>
-                </form>
+                    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-self-center mb-center">
+                        <ul class="socials">
+                            <li class="social__item">
+                                <a class="social__link" href="#"><i aria-hidden="true"
+                                                                              class="fa fa-facebook"></i></a>
+                            </li>
+                            <li class="social__item">
+                                <a class="social__link" href="#"><i aria-hidden="true"
+                                                                              class="fa fa-linkedin"></i></a>
+                            </li>
+                            <li class="social__item">
+                                <a class="social__link" href="#"><i aria-hidden="true"
+                                                                              class="fa fa-twitter"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-
-            <div class="modal-content tx-14 hide" id="modal-auth">
-                <form action="{{ route('auth') }}" id="authForm" method="POST" novalidate>
-                    <div class="modal-header">
-                        <h6 class="modal-title" id="titleModal">Авторизация</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-danger error-message hide" role="alert"></div>
-                        <div class="form-block">
-                            @csrf
-                            <div class="form-group">
-                                <label for="auth-email">Email</label>
-                                <input type="email" class="form-control" name="email" value="" id="auth-email" placeholder="Email">
-                            </div>
-                            <div class="form-group">
-                                <label for="name">Пароль</label>
-                                <input type="password" class="form-control" name="password" value="" id="password" placeholder="Пароль">
-                            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="welcome">
+                        <h2 class="header_title white">
+                            Trade-In
+                        </h2>
+                        <p class="tagline">
+                            Обміняй старий смартфон вигідно та надійно
+                        </p>
+                        <p class="subdescription">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        </p>
+                        <div class="actions">
+                            <a href="{{ route('calculator') }}" class="button button_white button_medium">Оцінити онлайн</a>
+                            <a href="#contacts" class="button button_brdr button_medium">Зворотній зв’язок</a>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
-                        <button type="submit" class="btn btn-sm btn-dark float-right" id="send_login">Войти</button>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="" style="margin-top: 130px; padding-left: 50px">
+                        <img src="{{ asset('assets/homepage/images/phone.png') }}" alt="">
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-@endpush
+
+    <div class="steps ptb-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <span class="welcome tc">
+                    Як це працює?
+                  </span>
+                    <h2 class="title tc">
+                        Всього 4 простих кроки і ви залишитеся задоволеними
+                    </h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 tc">
+                    <div class="steps_item">1</div>
+                    <h5 class="text_name tc">
+                        Оцінка пристрою
+                    </h5>
+                    <p class="description tc">
+
+                    </p>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 tc">
+                    <div class="steps_item">2</div>
+                    <h5 class="text_name tc">
+                        Діагностика пристрою
+                    </h5>
+                    <p class="description tc">
+
+                    </p>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 tc">
+                    <div class="steps_item">3</div>
+                    <h5 class="text_name tc">
+                        Заповнення акта прийому-передачі
+                    </h5>
+                    <p class="description tc">
+
+                    </p>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 tc">
+                    <div class="steps_item">4</div>
+                    <h5 class="text_name tc">
+                        Реєстрація, зберігання, відправка
+                    </h5>
+                    <p class="description tc">
+
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="callback bg_grey ptb-36">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                    <h3 class="title_2">
+                        Залиште свій номер телефону
+                    </h3>
+                    <h4 class="title_3">
+                        і ми вам передзвонимо.
+                    </h4>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <a href="#contacts" class="button button_brdr button_large">Зворотній зв’язок</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="steps step-block">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <h2 class="title tc">Діагностика пристрою</h2>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+                    <div class="step-block-number d-flex">
+                        <div class="step-number align-self-center">1</div>
+                        <div class="step-text align-self-center">Включити і вимкнути пристрій з приєднаним зарядним пристроєм. <b>Тест: АКБ, ЗУ</b></div>
+                    </div>
+                    <div class="step-block-number d-flex align-items-stretch">
+                        <div class="step-number align-self-center">2</div>
+                        <div class="step-text align-self-center">Авторизуватися в Store. <b>Тест: оригінальність пристрою</b></div>
+                    </div>
+                    <div class="step-block-number d-flex align-items-stretch">
+                        <div class="step-number align-self-center">3</div>
+                        <div class="step-text align-self-center">Зробити скріншот на білому і чорному тлі. <b>Тест: дисплей</b></div>
+                    </div>
+                    <div class="step-block-number d-flex align-items-stretch">
+                        <div class="step-number align-self-center">4</div>
+                        <div class="step-text align-self-center">Перевірити кнопки навігації, здійснити переміщення ярликів по екрану. <b>Тест: сенсорний висновок</b></div>
+                    </div>
+                    <div class="step-block-number d-flex align-items-stretch">
+                        <div class="step-number align-self-center">5</div>
+                        <div class="step-text align-self-center">Здійснити тестовий дзвінок з регулюванням гучності. <b>Тест: мережа, динамік, мікрофон</b></div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="step-block-number d-flex">
+                        <div class="step-number align-self-center">6</div>
+                        <div class="step-text align-self-center">Зняти відео і відтворити його зі звуком, відключити ЗУ і змінюючи положення. <b>Тест: камера, CPU, RAM</b></div>
+                    </div>
+                    <div class="step-block-number d-flex">
+                        <div class="step-number align-self-center">7</div>
+                        <div class="step-text align-self-center">Зробити селф-фото. <b>Тест: фронтальна камера</b></div>
+                    </div>
+                    <div class="step-block-number d-flex">
+                        <div class="step-number align-self-center">8</div>
+                        <div class="step-text align-self-center">Перевірити біометричні датчики. <b>Тест: відбиток пальця, сканер, розпізнавання особи</b></div>
+                    </div>
+                    <div class="step-block-number d-flex">
+                        <div class="step-number align-self-center">9</div>
+                        <div class="step-text align-self-center">Підключити WiFi і вийти з акаунтів (Mi, Google, Icloud). <b>Тест: WiFi, блокування</b></div>
+                    </div>
+                    <div class="step-block-number d-flex">
+                        <div class="step-number align-self-center">10</div>
+                        <div class="step-text align-self-center">Скинути настройки до заводських з очищенням інформації клієнта. <b>Тест: Видалення пользователькіх даних</b></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- testimonials area start -->
+    <div class="testimonials ptb-100" id="testimonials">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <h2 class="title tc">
+                        Оцінка пристрою
+                    </h2>
+                </div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <span class="text_name">1. Визначити потребу</span>
+                    <div class="testimonial_block mb-space">
+                        <p class="description">Дізнатися у клієнта про його перевагах і побажання при виборі нового пристрою</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <span class="text_name">2. Розповісти про програму</span>
+                    <div class="testimonial_block mb-space">
+                        <p class="description">Повідомити про трейд-ін послузі. Виділити переваги програми і підкреслити вигоду для клієнта</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <span class="text_name">3. Оглянути пристрій</span>
+                    <div class="testimonial_block mb-space">
+                        <p class="description">Провести зовнішній огляд, зафіксувати механічні пошкодження і наявність всіх елементів корпусу</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-md-center align-items-start mt-md-5">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <span class="text_name">4. Оцінити пристрій</span>
+                    <div class="testimonial_block mb-space">
+                        <p class="description">Провести оцінку вартості в <a href="{{ route('calculator') }}">онлайн калькуляторі</a> Показати клієнту результати оцінки</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <span class="text_name">5. Повідомити про очікування</span>
+                    <div class="testimonial_block mb-space">
+                        <p class="description">Озвучити клієнту порядок і тривалість оформлення документів (5-8 хв)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="contacts ptb-100" id="contacts">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <h2 class="title tc">
+                        Зворотній зв’язок
+                    </h2>
+                    <p class="contacts_description tc">Якщо у вас є які-небудь питання, будь ласка, заповніть форму нижче.</p>
+                </div>
+            </div>
+            <div class="row justify-content-center feedback-form">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6">
+                    <div class="form">
+                        <form action="{{ route('support') }}" method="POST" id="feedback_form" class="form form--contacts">
+                            @csrf
+                            <input type="text" class="form_field" name="name" placeholder="Ім’я" required>
+                            <input type="text" class="form_field" name="email" placeholder="Email" required>
+                            <input type="text" class="form_field" name="phone" placeholder="Номер телефону" required>
+                            <textarea class="form_textarea" name="message" placeholder="Сообщение"></textarea>
+                            <button class="button button_orange button_medium" id="send_mail" type="submit">Відправити</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center feedback-success d-none">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6">
+                    <div class="form-success text-center">
+                        <h4>Спасибо за обращение. Наши специалисты свяжутся с Вами в ближайшее время</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer bg_blue">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <div class="footer_logo">
+                        <a href="{{ route('main') }}">
+                            <img src="{{ asset('assets/homepage/images/Logo_GS_orange.png') }}" alt="Logo">
+                        </a>
+                    </div>
+                    <p class="description">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+                    <ul class="socials">
+                        <li class="social__item">
+                            <a class="social__link" href="#"><i aria-hidden="true" class="fa fa-facebook"></i></a>
+                        </li>
+                        <li class="social__item">
+                            <a class="social__link" href="#"><i aria-hidden="true" class="fa fa-linkedin"></i></a>
+                        </li>
+                        <li class="social__item">
+                            <a class="social__link" href="#"><i aria-hidden="true" class="fa fa-twitter"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                    <h2>Довідка</h2>
+                    <ul class="links">
+                        <li class="item">
+                            <a class="link" href="{{ asset('share/about.pdf') }}" target="_blank">Пам’ятка продавця</a>
+                        </li>
+                        <li class="item">
+                            <a class="link" href="{{ asset('share/instruction.pdf') }}" target="_blank">Інструкція</a>
+                        </li>
+                        <li class="item">
+                            <a class="link" href="https://youtu.be/tEywdiT48ZE">Відео</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <h2>Служба підтримки</h2>
+                    <p class="details">
+                        <span><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+                        09.00 - 20.00 пн-нд
+                    </p>
+                    <p class="details">
+                        <span><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+                        <a href="mailto:support@generalse.com" class="phone_link">support@generalse.com</a>
+                    </p>
+                    <p class="details">
+                        <span><i class="fa fa-phone" aria-hidden="true"></i></span>
+                        <a href="callto:+380930000000" class="phone_link">+38(093)000-00-00</a>
+                    </p>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <img src="{{ asset('assets/homepage/images/iso_icon.png') }}" class="img-icon-footer" alt="Iso icon">
+                    <img src="{{ asset('assets/homepage/images/RRR_icon.png') }}" class="img-icon-footer" alt="RRR icon">
+                </div>
+            </div>
+        </div>
+        <!-- footer area end -->
+    </div>
+    <!-- privacy area start -->
+    <div class="privacy bg_orange">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <p class="description">ТОВ «ДЖЕНЕРАЛ СЕРВІСЕЗ» 2016-{{ \Carbon\Carbon::now()->format('Y') }}. ВСІ ПРАВА ЗАХИЩЕНІ</p>
+                </div>
+            </div>
+        </div>
+        <!-- privacy area end -->
+    </div>
+    <a class="to-top" id="buttonToTop" style="display: none;"></a>
+    <!-- main wrapper end -->
+
+@endsection
 
 @push('scripts')
-    <script src="{{ asset('assets/js/calculator.js') }}"></script>
     <script>
         $(function(){
             'use strict'
 
-            $(document).on('click', '#btn-offer', function (e) {
+            $('#feedback_form').on('click', '#send_mail', function (e) {
                 e.preventDefault();
 
-                $('#modal-data').modal('toggle');
-            })
-
-            $('#modal-data').on('click', '#swap-to-login', function (e) {
-                e.preventDefault();
-                $('#modal-request').hide();
-                $('#modal-auth').show();
-            })
-
-
-            $('#authForm').on('click', '#send_login', function (e) {
-                e.preventDefault();
-
-                let _form = $('#authForm');
+                let _form = $('#feedback_form');
 
                 $.ajax({
                     type: _form.attr('method'),
                     url: _form.attr('action'),
                     data: _form.serializeArray(),
                 }).done(function(response) {
-                    if (response.status == 1) {
-                        $('#modal-auth').hide();
-                        $('#swap-to-login').hide();
-                        $('#feed_send').removeAttr('disabled');
-                        $('#modal-request').show();
-                    } else if (response.status == 0) {
-                        $('.error-message').removeClass('hide').text(response.message)
+                    if (response.status == 200) {
+                        $('.feedback-form').addClass('d-none');
+                        $('.feedback-success').removeClass('d-none');
                     }
                 });
             });

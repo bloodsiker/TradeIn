@@ -11,7 +11,8 @@
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
                     @if(Auth::user()->isAdmin())
-                        <a href="{{ route('cabinet.user.add') }}" class="btn btn-sm btn-dark btn-block">Создать</a>
+                        <a href="#modal-import" class="btn btn-sm btn-dark" data-toggle="modal">Импорт</a>
+                        <a href="{{ route('cabinet.user.add') }}" class="btn btn-sm btn-dark">Создать</a>
                     @endif
                 </div>
             </div>
@@ -36,11 +37,11 @@
                             </div>
                         @endif
 
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <select class="custom-select shop-filter" name="shop_id">
                                 <option value=""></option>
                                 @foreach($shops as $shop)
-                                    <option value="{{ $shop->id }}" @if(request('shop_id') == $shop->id) selected @endif>{{ $shop->name }}</option>
+                                    <option value="{{ $shop->id }}" @if(request('shop_id') == $shop->id) selected @endif>{{ $shop->fullName() }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -95,11 +96,11 @@
                             <tr data-id="{{ $user->id }}">
                                 <th scope="row">{{ $user->id }}</th>
                                 <td>{{ $user->fullName() }}</td>
-                                <td>{{ $user->getNetwork() }}</td>
+                                <td><span class="badge badge-primary">{{ $user->getNetwork() }}</span></td>
                                 <td>{{ $user->getShop() }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->phone }}</td>
-                                <td>{{ $user->role->name }}</td>
+                                <td><small>{{ $user->role->name }}</small></td>
                                 <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
                                 @if(Auth::user()->isAdmin())
                                     <td>
@@ -119,6 +120,42 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-import" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <form action="{{ route('cabinet.user.import') }}" method="POST" enctype="multipart/form-data" data-parsley-validate novalidate>
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="titleModal">Иморт пользователей</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        <div class="form-group">
+                            <div class="input-group mb-1">
+                                <a href="{{ asset('upload/users.xlsx') }}" class="link-color-gray" target="_blank">Шаблон для импорта</a>
+                            </div>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" name="file" class="custom-file-input" id="file" onchange="processSelectedFiles(this)"
+                                           aria-describedby="file" required>
+                                    <label class="custom-file-label" id="file-name" for="avatar">Выберите файл</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-file-excel"></i> Импортировать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 
@@ -149,5 +186,10 @@
 
             deleteObject('.table', '.btnDelete', "{{ route('cabinet.user.delete') }}");
         });
+
+        function processSelectedFiles(fileInput) {
+            var files = fileInput.files[0];
+            document.getElementById('file-name').innerText = files.name;
+        }
     </script>
 @endpush
