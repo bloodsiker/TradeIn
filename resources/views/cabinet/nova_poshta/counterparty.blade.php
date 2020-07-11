@@ -28,7 +28,7 @@
                     <div class="alert alert-danger">{{ session('danger') }}</div>
                 @endif
 
-                @if(count($listTtn))
+                @if(count($listCounterparty))
                     <div class="table-responsive">
                         <table class="table table-sm table-white table-hover table-bordered">
                             <thead>
@@ -38,10 +38,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($listTtn as $ttn)
+                            @foreach($listCounterparty as $counterparty)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ $counterparty->id }}</td>
+                                    <td>{{ $counterparty->fullName() }}</td>
                                 </tr>
                             @endforeach
                             </tbody>

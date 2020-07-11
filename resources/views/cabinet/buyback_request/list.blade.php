@@ -11,7 +11,7 @@
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
                     <a href="" class="btn btn-sm btn-dark" id="load-stock" data-toggle="modal">Долг склада</a>
-{{--                    <a href="{{ route('cabinet.nova_poshta.list') }}" class="btn btn-sm btn-dark">Список ТТН</a>--}}
+                    <a href="{{ route('cabinet.nova_poshta.list') }}" class="btn btn-sm btn-dark">Список ТТН</a>
                     <a href="{{ route('cabinet.buyback_request.export', [request()->getQueryString()]) }}" class="btn btn-sm btn-dark" id="show-filter">Экспорт в Excel</a>
                 </div>
             </div>

@@ -8,6 +8,8 @@ use App\Mail\RequestChangeStatusShipped;
 use App\Models\BuybackBonus;
 use App\Models\BuybackRequest;
 use App\Models\Network;
+use App\Models\NovaPoshtaCounterparty;
+use App\Models\NovaPoshtaCounterpartyPerson;
 use App\Models\Role;
 use App\Models\Shop;
 use App\Models\Status;
@@ -34,9 +36,9 @@ class NovaPoshtaController extends Controller
 
     public function counterparty(Request $request)
     {
-        $listTtn = [];
+        $listCounterparty = NovaPoshtaCounterparty::where('user_id', \Auth::id())->get();
 
-        return view('cabinet.nova_poshta.counterparty', compact('listTtn'));
+        return view('cabinet.nova_poshta.counterparty', compact('listCounterparty'));
     }
 
     public function addCounterparty(Request $request)
@@ -58,15 +60,29 @@ class NovaPoshtaController extends Controller
             ]);
 
             if ($counterparty['success']) {
-                $per = [
-                    'ref' => $counterparty['data'][0]['Ref'],
-                    'FirstName' => $counterparty['data'][0]['FirstName'],
-                    'MiddleName' => $counterparty['data'][0]['MiddleName'],
-                    'LastName' => $counterparty['data'][0]['LastName'],
-                ];
-            }
+                $counterpartyObject = new NovaPoshtaCounterparty();
+                $counterpartyObject->user_id = \Auth::id();
+                $counterpartyObject->ref = $counterparty['data'][0]['Ref'];
+                $counterpartyObject->first_name = $counterparty['data'][0]['FirstName'];
+                $counterpartyObject->middle_name = $counterparty['data'][0]['MiddleName'];
+                $counterpartyObject->last_name = $counterparty['data'][0]['LastName'];
+                $counterpartyObject->save();
 
-            dd($counterparty);
+                if ($counterparty['data'][0]['ContactPerson']['success']) {
+                    $person = $counterparty['data'][0]['ContactPerson']['data'][0];
+
+                    $counterpartyPerson = new NovaPoshtaCounterpartyPerson();
+                    $counterpartyPerson->counterparty_id = $counterpartyObject->id;
+                    $counterpartyPerson->ref = $person['Ref'];
+                    $counterpartyPerson->first_name = $person['FirstName'];
+                    $counterpartyPerson->middle_name = $person['MiddleName'];
+                    $counterpartyPerson->last_name = $person['LastName'];
+
+                    $counterpartyPerson->save();
+                }
+
+                return redirect()->route('cabinet.nova_poshta.counterparty')->with('success', 'Контрагент добавлен!');
+            }
         }
 
         return view('cabinet.nova_poshta.add_counterparty', compact('listTtn'));
