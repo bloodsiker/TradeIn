@@ -100,27 +100,37 @@
                         <div class="divider-text mt-4 mb-4">Отправитель</div>
 
                         <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="name">Имя <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" id="name" placeholder="Имя" required>
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
+                            <div class="form-group col-md-6">
+                                <label for="ContactSender">Отправитель <span class="text-danger">*</span></label>
+                                <select class="custom-select" id="ContactSender" name="ContactSender" required>
+                                    <option selected></option>
+                                    @foreach($counterparties as $person)
+                                        <option value="{{ $person->ref }}">{{ $person->fullName() }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="surname">Фамилия <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ old('surname') }}" id="surname" placeholder="Фамилия" required>
-                                @error('surname')
-                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="patronymic">Отчество</label>
-                                <input type="text" class="form-control @error('patronymic') is-invalid @enderror" name="patronymic" value="{{ old('patronymic') }}" id="patronymic" placeholder="Отчество">
-                                @error('patronymic')
-                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
+
+{{--                            <div class="form-group col-md-4">--}}
+{{--                                <label for="name">Имя <span class="text-danger">*</span></label>--}}
+{{--                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" id="name" placeholder="Имя" required>--}}
+{{--                                @error('name')--}}
+{{--                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                            <div class="form-group col-md-4">--}}
+{{--                                <label for="surname">Фамилия <span class="text-danger">*</span></label>--}}
+{{--                                <input type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ old('surname') }}" id="surname" placeholder="Фамилия" required>--}}
+{{--                                @error('surname')--}}
+{{--                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                            <div class="form-group col-md-4">--}}
+{{--                                <label for="patronymic">Отчество</label>--}}
+{{--                                <input type="text" class="form-control @error('patronymic') is-invalid @enderror" name="patronymic" value="{{ old('patronymic') }}" id="patronymic" placeholder="Отчество">--}}
+{{--                                @error('patronymic')--}}
+{{--                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
                         </div>
 
                         <div class="divider-text mt-4 mb-4">Получатель</div>

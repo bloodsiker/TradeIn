@@ -10,7 +10,8 @@
                     <h4 class="mg-b-0">Список конгтрагентов</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
-                    <a href="{{ route('cabinet.nova_poshta.add_counterparty') }}" class="btn btn-sm btn-dark" id="load-stock">Добавить контрагента</a>
+                    <a href="{{ route('cabinet.nova_poshta.list') }}" class="btn btn-sm btn-dark">Список ТТН</a>
+                    <a href="{{ route('cabinet.nova_poshta.add_counterparty') }}" class="btn btn-sm btn-dark">Добавить контрагента</a>
                 </div>
             </div>
         </div>
@@ -35,6 +36,7 @@
                             <tr>
                                 <th scope="col" width="40px">ID</th>
                                 <th scope="col">Пользователь</th>
+                                <th scope="col">Ref</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -42,6 +44,7 @@
                                 <tr>
                                     <td>{{ $counterparty->id }}</td>
                                     <td>{{ $counterparty->fullName() }}</td>
+                                    <td>{{ $counterparty->ref }}</td>
                                 </tr>
                             @endforeach
                             </tbody>

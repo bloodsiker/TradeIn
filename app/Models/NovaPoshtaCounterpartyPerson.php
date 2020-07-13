@@ -12,4 +12,9 @@ class NovaPoshtaCounterpartyPerson extends Model
     {
         return $this->belongsTo(NovaPoshtaCounterparty::class, 'id', 'counterparty_id');
     }
+
+    public function fullName()
+    {
+        return $this->first_name .' ' . $this->middle_name .' ' .$this->last_name;
+    }
 }

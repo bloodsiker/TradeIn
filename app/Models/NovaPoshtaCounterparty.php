@@ -13,7 +13,7 @@ class NovaPoshtaCounterparty extends Model
 
     public function person()
     {
-        return $this->hasMany(NovaPoshtaCounterpartyPerson::class);
+        return $this->hasMany(NovaPoshtaCounterpartyPerson::class, 'counterparty_id', 'id');
     }
 
     public function fullName()

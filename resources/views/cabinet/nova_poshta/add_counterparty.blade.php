@@ -25,6 +25,10 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12">
 
+                @if (session('danger'))
+                    <div class="alert alert-danger">{{ session('danger') }}</div>
+                @endif
+
                 <form action="{{ route('cabinet.nova_poshta.add_counterparty') }}" id="nova-poshta" method="POST" data-parsley-validate novalidate>
                     @csrf
                     <fieldset class="form-fieldset">
