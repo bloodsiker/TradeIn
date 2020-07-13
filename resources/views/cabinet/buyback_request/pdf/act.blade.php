@@ -86,16 +86,23 @@
                     <p>Довіритель</p>
                     <p>ТОВ «Дженерал Сервісез», від імені якого діє Повірений</p>
                     <br>
-                    <p>ТОВ «ПРОТОРІЯ» в особі керівника магазину розташованого за адресою:</p>
-                    <p class="mt-5">__________________________________________________________</p>
+                    <p>{{ $buyBackRequest->user->network->tov }} в особі керівника магазину розташованого за адресою:</p>
+                    <p class="mt-5">{{ $buyBackRequest->user->shop->address }}</p>
                     <p class="mt-10">______________________ /________________________/</p>
                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Підпис &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ПІБ</p>
                 </td>
                 <td width="50%" style="vertical-align: text-top">
                     <p>Клієнт</p>
+                    <p>{{ $buyBackRequest->user->actForm->fio }}, {{ $buyBackRequest->user->actForm->address }},
+                        {{ $buyBackRequest->user->actForm->type_document }}: {{ $buyBackRequest->user->actForm->serial_number }}.
+                        {{ $buyBackRequest->user->actForm->issued_by }}
+                    </p>
                     <br>
-                    <p>_____________________________________________________________</p>
-{{--                    <p>{{ $buyBackRequest->user->fullName() }}</p>--}}
+                    <br>
+                    <br>
+                    <p></p>
+                    <p class="mt-10">______________________ /________________________/</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Підпис &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ПІБ</p>
                 </td>
             </tr>
         </table>
