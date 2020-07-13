@@ -16,10 +16,11 @@ class CreateUserActFormsTable extends Migration
         Schema::create('user_act_forms', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned();
-            $table->string('value')->nullable();
-            $table->string('value_1')->nullable();
-            $table->string('value_2')->nullable();
-            $table->string('value_3')->nullable();
+            $table->string('fio')->nullable();
+            $table->string('address')->nullable();
+            $table->string('type_document')->nullable();
+            $table->string('serial_number')->nullable();
+            $table->text('issued_by')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -159,16 +159,18 @@ class ProfileController extends Controller
         if ($request->isMethod('post')) {
 
             if ($actForm) {
-                $actForm->value = $request->get('value');
-                $actForm->value_1 = $request->get('value_1');
-                $actForm->value_2 = $request->get('value_2');
-                $actForm->value_3 = $request->get('value_3');
+                $actForm->fio = $request->get('fio');
+                $actForm->address = $request->get('address');
+                $actForm->type_document = $request->get('type_document');
+                $actForm->serial_number = $request->get('serial_number');
+                $actForm->issued_by = $request->get('issued_by');
             } else {
                 $actForm = new UserActForm();
-                $actForm->value = $request->get('value');
-                $actForm->value_1 = $request->get('value_1');
-                $actForm->value_2 = $request->get('value_2');
-                $actForm->value_3 = $request->get('value_3');
+                $actForm->fio = $request->get('fio');
+                $actForm->address = $request->get('address');
+                $actForm->type_document = $request->get('type_document');
+                $actForm->serial_number = $request->get('serial_number');
+                $actForm->issued_by = $request->get('issued_by');
                 $actForm->user()->associate($user);
             }
 

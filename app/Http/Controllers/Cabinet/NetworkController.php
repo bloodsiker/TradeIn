@@ -44,6 +44,10 @@ class NetworkController extends Controller
 
             $network = Network::find($request->get('id'));
             $network->name = $request->get('name');
+            $network->paragraph_1 = $request->get('paragraph_1');
+            $network->paragraph_2 = $request->get('paragraph_2');
+            $network->tov = $request->get('tov');
+            $network->shop = $request->get('shop');
 
             $network->save();
 
