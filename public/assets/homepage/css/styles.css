@@ -114,6 +114,9 @@ img {
 .bg_orange {
   background: #ff6012;
 }
+.text_orange{
+    color: #ff6012;
+}
 .container {
   max-width: 100%;
 }
@@ -161,12 +164,13 @@ img {
   color: #fff;
   background: #ff6012;
   border-color: #ff6012;
+  border-radius: 0;
 }
 .button_orange:hover,
 .button_orange:focus {
-  color: #ffffff;
-  background-color: #18213d;
-  border-color: #18213d;
+    color: #fe6013;
+    background-color: #fff;
+    border-color: #fe6013;
 }
 .button_brdr {
   color: #fff;
@@ -462,7 +466,7 @@ img {
 }
 /* 3.HEADER */
 .header {
-  background-image: url(../images/bg.jpg);
+  background-image: url(../images/bg.png);
   background-position: center center;
   color: #fff;
 }
@@ -471,7 +475,6 @@ img {
 }
 .header .welcome {
   padding-top: 100px;
-  text-align: center;
 }
 .header .welcome .actions a:not(:first-child) {
   margin-left: 30px;
@@ -480,9 +483,11 @@ img {
   margin-bottom: 32px;
   text-transform: capitalize;
   text-shadow: 2px 2px 6px black;
+  color: #000;
 }
 .header .tagline {
   margin-bottom: 66px;
+  color: #000;
 }
 .header .tagline:before {
   position: absolute;
@@ -1158,11 +1163,14 @@ img {
   padding: 75px 0 52px;
 }
 .footer_logo {
-  margin-bottom: 23px;
+  margin-bottom: 12px;
+  color: #fe6013;
+  font-weight: 700;
+  font-size: 36px;
 }
 .footer .description {
   color: #fff;
-  margin-bottom: 50px;
+  margin-bottom: 15px;
 }
 .footer .links {
   list-style: none;
@@ -1256,7 +1264,7 @@ img {
     margin: 0 15px;
 }
 .img-icon-footer:first-child {
-    width: 80px;
+    width: 65px;
 }
 .img-icon-footer:last-child {
     width: 115px;
@@ -1314,3 +1322,7 @@ img {
   color: #fff;
 }
 /* 23.MIXINS */
+
+.block_description {
+    margin-top: 70px;
+}
