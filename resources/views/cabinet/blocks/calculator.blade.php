@@ -20,7 +20,7 @@
             </div>
             <div class="power">
                 <div class="disabled-off disabled"></div>
-                <p class="power_question">Ваш телефон включается?</p>
+                <p class="power_question">Ваше устройство включается?</p>
                 <div class="power_option">
                     <button class="power_option1">Да</button>
                     <button class="power_option2">Нет</button>
