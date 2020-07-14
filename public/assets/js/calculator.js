@@ -1,5 +1,9 @@
 const FEEDBACK_BUTTON = document.getElementsByClassName("feedback")[0];
 const FEED_SEND = document.getElementById("feed_send");
+const TYPE_LIST = document.getElementsByClassName("type-list")[0];
+const TYPE_SEARCH = document.getElementsByClassName("type-search")[0];
+const UL_TYPE_LIST = document.getElementsByClassName("type-list")[0];
+const TYPE_SEARCH_TEXT  = document.getElementsByClassName("type-search-text")[0];
 const BRAND_LIST = document.getElementsByClassName("brand-list")[0];
 const COST_BUTTON = document.getElementsByClassName("cost")[0];
 const BRAND_ITEMS = document.getElementsByClassName("brand-items")[0];
@@ -42,16 +46,22 @@ const GET_MODEL_ID = document.getElementById("model_id");
 const GET_COST = document.getElementById("cost");
 const FORM = document.getElementById("form");
 const TEXT_NO_RESULT = "К сожалению состояние устройства не соответствует условиям программе Trade-in";
+const API_URL_TYPES = document.getElementById("typeList").getAttribute('data-url');
 const API_URL_BRANDS = document.getElementById("brandList").getAttribute('data-url');
 const API_URL_MODELS = document.getElementById("modelList").getAttribute('data-url');
 
+TYPE_SEARCH.onclick = function () {
+    BRAND_LIST.classList.remove("disabled")
+    TYPE_SEARCH.value = "";
+    UL_TYPE_LIST.classList.toggle("disabled");
+}
 
 BRAND_SEARCH.onclick = function () {
     MODEL_LIST.classList.remove("disabled")
     BRAND_SEARCH.value = "";
     UL_BRAND_LIST.classList.toggle("disabled");
-
 }
+
 MODEL_SEARCH.onclick  = function() {
     MODEL_SEARCH.value = "";
     MODEL_LIST.classList.toggle("disabled");
@@ -59,27 +69,52 @@ MODEL_SEARCH.onclick  = function() {
 
 //Список
 allPhoneArr = [];
+allBrabdArr = [];
  //Загрузка базы
 $(function () {
-    $.getJSON(API_URL_BRANDS, function (data) {
-        brandList(data.data);
+    $.getJSON(API_URL_TYPES, function (data) {
+        typeList(data.data);
     });
 
-    function brandList (brandList) {
-        brandList.forEach(function(el){
+    function typeList (typeList) {
+        typeList.forEach(function(el){
             var createLi = document.createElement("li");
-            createLi.className = "brand-items";
+            createLi.className = "type-items";
             createLi.id = el.id;
             createLi.innerText = (el.name);
-            BRAND_LIST.append(createLi);
+            TYPE_LIST.append(createLi);
             createLi.onclick = function() {
                 newResults.shift();
-                BRAND_SEARCH.value = el.name;
-                newResults.push(BRAND_SEARCH.value);
+                TYPE_SEARCH.value = el.name;
+                newResults.push(TYPE_SEARCH.value);
             }
         });
     }
 })
+
+TYPE_SEARCH.oninput = function () {
+    UL_TYPE_LIST.classList.add("disabled");
+    let val = this.value.trim();
+    var typeItemsLi = document.querySelectorAll('.type-list li');
+    if (val.length > 0) {
+        typeItemsLi.forEach(function (elem) {
+            if (elem.innerText.search(RegExp(val,"gi")) == -1) {
+                elem.classList.add('hide');
+                elem.innerHTML = elem.innerText;
+            } else {
+                elem.classList.remove('hide');
+                let str = elem.innerText;
+                elem.innerHTML = insertMark(str, elem.innerText.search(RegExp(val,"gi")), val.length);
+            }
+        });
+    }
+    else {
+        typeItemsLi.forEach(function (elem) {
+            elem.classList.remove('hide');
+            elem.innerHTML = elem.innerText;
+        });
+    }
+}
 
 //Поиск по брендам
 BRAND_SEARCH.oninput = function () {
@@ -109,6 +144,54 @@ BRAND_SEARCH.oninput = function () {
 function insertMark(string, pos, len) {
     return string.slice(0, pos) + '<mark>' + string.slice(pos, pos + len) + '</mark>' + string.slice(pos + len);
 }
+
+//Кнопка выбора бренда
+UL_TYPE_LIST.onclick = function (e) {
+    TYPE_LIST.innerHTML = '';
+    MODEL_LIST.innerHTML = '';
+    MODEL_SEARCH.value = '';
+
+    if (newResults.length > 1) {
+        newResults.shift();
+    }
+
+    if (newResults != TYPE_SEARCH.value) {
+        TYPE_SEARCH_TEXT.innerText = "Выберите модель из списка!"
+    } else {
+        UL_TYPE_LIST.classList.remove("disabled");
+        TYPE_SEARCH_TEXT.innerText = "";
+
+        var typeId = e.target.getAttribute('id');
+
+        $.getJSON(API_URL_BRANDS.replace('type_id=', 'type_id='+typeId), function (data) {
+            BRAND_LIST.classList.add("disabled");
+            brandList(data.data);
+            BRAND_SEARCH.focus();
+        });
+    }
+
+    function brandList (brandList) {
+        brandList.forEach(function(el){
+            var createLi = document.createElement("li");
+            createLi.className = "brand-items";
+            createLi.id = el.id;
+            createLi.innerText = (el.name);
+            BRAND_LIST.append(createLi);
+            createLi.onclick = function() {
+                selectBrand.shift();
+                BRAND_SEARCH.value = el.name;
+                BRAND_SEARCH.setAttribute('id', el.id);
+                selectBrand.push(BRAND_SEARCH.value);
+            }
+        });
+
+        brandList.map(function (el) {
+            allPhoneArr.push(el);
+        })
+    }
+}
+
+selectBrand = [];
 
 var newResults = [];
 

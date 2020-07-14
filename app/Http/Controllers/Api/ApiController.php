@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\DeviceModel;
+use App\Models\Technic;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -12,6 +13,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ApiController extends Controller
 {
+    public function typeDevice(Request $request)
+    {
+        $data = Technic::all();
+
+        return response()->json([
+            'status' => 200,
+            'data' => $data
+        ]);
+    }
 
     public function brand(Request $request)
     {

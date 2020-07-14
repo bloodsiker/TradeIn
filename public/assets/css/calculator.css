@@ -20,10 +20,14 @@
 .left_block {
   margin-top: 30px; }
 
-.brand-search-text, .model-search-text {
+.brand-search-text,
+.model-search-text,
+.type-search-text {
   margin: 0; }
 
-.brand-search, .model-search {
+.brand-search,
+.model-search,
+.type-search {
   width: calc(100% - 2px);
   padding: 15px 0 15px 20px;
   border: 1px solid #dcdbda;
@@ -34,22 +38,34 @@
   color: black;
   cursor: pointer; }
 
-.brand-search::-webkit-input-placeholder, .model-search::-webkit-input-placeholder {
+.type-search::-webkit-input-placeholder,
+.brand-search::-webkit-input-placeholder,
+.model-search::-webkit-input-placeholder {
   color: #000000; }
 
-.brand-search::-moz-placeholder, .model-search::-moz-placeholder {
+.type-search::-moz-placeholder,
+.brand-search::-moz-placeholder,
+.model-search::-moz-placeholder {
   color: #000000; }
 
-.brand-search:-ms-input-placeholder, .model-search:-ms-input-placeholder {
+.type-search:-ms-input-placeholder,
+.brand-search:-ms-input-placeholder,
+.model-search:-ms-input-placeholder {
   color: #000000; }
 
-.brand-search::-ms-input-placeholder, .model-search::-ms-input-placeholder {
+.type-search::-ms-input-placeholder,
+.brand-search::-ms-input-placeholder,
+.model-search::-ms-input-placeholder {
   color: #000000; }
 
-.brand-search::placeholder, .model-search::placeholder {
+.type-search::placeholder,
+.brand-search::placeholder,
+.model-search::placeholder {
   color: #000000; }
 
-.brand-list, .model-list {
+.type-list,
+.brand-list,
+.model-list {
   margin: 5px 0;
   width: calc(100% - 2px);
   height: 100px;
@@ -64,10 +80,15 @@
           box-sizing: border-box;
   list-style-type: none; }
 
+.type-list {
+    display: none; }
+
 .brand-list {
   display: none; }
 
-.brand-list li:hover, .model-list li:hover {
+.type-list li:hover,
+.brand-list li:hover,
+.model-list li:hover {
   border: 1px solid #2e3d46;
   border-radius: 2px; }
 
@@ -272,10 +293,14 @@ mark {
     display: block; }
   .left_block {
     margin-top: 0; }
-  .model, .brand {
+  .type,
+  .model,
+  .brand {
     margin-top: 0;
     width: 100%; }
-  .brand-search, .model-search {
+  .type-search,
+  .brand-search,
+  .model-search {
     width: calc(100% - 2px);
     padding: 15px 0 15px 20px;
     border: 1px solid #dcdbda;
@@ -286,31 +311,47 @@ mark {
     color: black;
     font-weight: 700;
     cursor: pointer; }
-  .brand-search::-webkit-input-placeholder, .model-search::-webkit-input-placeholder {
+  .type-search::-webkit-input-placeholder,
+  .brand-search::-webkit-input-placeholder,
+  .model-search::-webkit-input-placeholder {
     color: #000000;
     font-weight: 700; }
-  .brand-search::-moz-placeholder, .model-search::-moz-placeholder {
+  .type-search::-moz-placeholder,
+  .brand-search::-moz-placeholder,
+  .model-search::-moz-placeholder {
     color: #000000;
     font-weight: 700; }
-  .brand-search:-ms-input-placeholder, .model-search:-ms-input-placeholder {
+  .type-search:-ms-input-placeholder,
+  .brand-search:-ms-input-placeholder,
+  .model-search:-ms-input-placeholder {
     color: #000000;
     font-weight: 700; }
-  .brand-search::-ms-input-placeholder, .model-search::-ms-input-placeholder {
+  .type-search::-ms-input-placeholder,
+  .brand-search::-ms-input-placeholder,
+  .model-search::-ms-input-placeholder {
     color: #000000;
     font-weight: 700; }
-  .brand-search::placeholder, .model-search::placeholder {
+  .type-search::placeholder,
+  .brand-search::placeholder,
+  .model-search::placeholder {
     color: #000000;
     font-weight: 700; }
-  .brand-list, .model-list {
+  .type-list,
+  .brand-list,
+  .model-list {
     position: absolute;
     width: calc(40% - 26px);
     height: 150px;
     z-index: 4;
     padding-left: 0;
     -ms-overflow-style: none; }
-  .brand-list::-webkit-scrollbar, .model-list::-webkit-scrollbar {
+  .type-list::-webkit-scrollbar,
+  .brand-list::-webkit-scrollbar,
+  .model-list::-webkit-scrollbar {
     display: none; }
-  .brand-list li, .model-list li {
+  .type-list li,
+  .brand-list li,
+  .model-list li {
     cursor: pointer;
     padding-left: 25px;}
   .power, .screen, .function_phone {

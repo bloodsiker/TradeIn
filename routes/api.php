@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
+Route::get('/type-device', 'Api\ApiController@typeDevice')->name('api.type_device');
 Route::get('/brands', 'Api\ApiController@brand')->name('api.brands');
 Route::get('/models', 'Api\ApiController@model')->name('api.models');
 Route::get('/all-models', 'Api\ApiController@allModels')->name('api.all_models');
