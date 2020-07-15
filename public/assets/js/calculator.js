@@ -84,9 +84,7 @@ $(function () {
             createLi.innerText = (el.name);
             TYPE_LIST.append(createLi);
             createLi.onclick = function() {
-                newResults.shift();
                 TYPE_SEARCH.value = el.name;
-                newResults.push(TYPE_SEARCH.value);
             }
         });
     }
@@ -155,20 +153,18 @@ UL_TYPE_LIST.onclick = function (e) {
         newResults.shift();
     }
 
-    if (newResults != TYPE_SEARCH.value) {
-        TYPE_SEARCH_TEXT.innerText = "Выберите модель из списка!"
-    } else {
-        UL_TYPE_LIST.classList.remove("disabled");
-        TYPE_SEARCH_TEXT.innerText = "";
 
-        var typeId = e.target.getAttribute('id');
+    UL_TYPE_LIST.classList.remove("disabled");
+    TYPE_SEARCH_TEXT.innerText = "";
 
-        $.getJSON(API_URL_BRANDS.replace('type_id=', 'type_id='+typeId), function (data) {
-            BRAND_LIST.classList.add("disabled");
-            brandList(data.data);
-            BRAND_SEARCH.focus();
-        });
-    }
+    var typeId = e.target.getAttribute('id');
+
+    $.getJSON(API_URL_BRANDS.replace('type_id=', 'type_id='+typeId), function (data) {
+        BRAND_LIST.classList.add("disabled");
+        brandList(data.data);
+        BRAND_SEARCH.focus();
+    });
+
 
     function brandList (brandList) {
         brandList.forEach(function(el){
