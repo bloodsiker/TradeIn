@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Exports\BuybackRequestExport;
+use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Mail\RequestChangeStatusShipped;
 use App\Models\BuybackBonus;
@@ -121,6 +122,8 @@ class BuybackRequestController extends Controller
 
             $buyRequest->save();
 
+            UserLog::log("Создал заявку на выкуп 'ID#{$buyRequest->id}'");
+
             return response(['status' => 1, 'type' => 'success', 'message' => 'Ваша заявка на выкуп отправлена!']);
         }
 
@@ -146,6 +149,8 @@ class BuybackRequestController extends Controller
 
             $buyRequest->save();
             $buyRequest->load('user', 'status', 'model');
+
+            UserLog::log("Изменил заявку на выкуп 'ID#{$buyRequest->id}'");
 
             if ($buyRequest->wasChanged('status_id') && $buyRequest->status_id == Status::STATUS_SENT) {
                 $admins = User::where('role_id', Role::ROLE_ADMIN)->get();
@@ -181,6 +186,8 @@ class BuybackRequestController extends Controller
 
                 $buyRequest->save();
 
+                UserLog::log("Сделал выплату бонуса по заявке на выкуп 'ID#{$buyRequest->id}'");
+
                 return response(['status' => 1, 'type' => 'success', 'message' => "Бонус по заявке выплачен в размере {$buyRequest->bonus} грн!"]);
             }
         }
@@ -197,6 +204,8 @@ class BuybackRequestController extends Controller
                 $buyRequest->is_debt = true;
                 $buyRequest->save();
 
+                UserLog::log("Списал долг склада по заявке на выкуп 'ID#{$buyRequest->id}' ");
+
                 return response(['status' => 1, 'type' => 'success', 'message' => "Списана задолженность склада в размере {$buyRequest->cost} грн!"]);
             }
         }
@@ -211,6 +220,8 @@ class BuybackRequestController extends Controller
         if ($buyRequest) {
             $buyRequest->is_deleted = true;
             $buyRequest->save();
+
+            UserLog::log("Удалил заявку на выкуп 'ID#{$buyRequest->id}'");
 
             return response(['status' => 1, 'type' => 'success', 'message' => "Заявка удалена!"]);
         }
@@ -232,6 +243,8 @@ class BuybackRequestController extends Controller
 
         $pdf = PDF::loadView('cabinet.buyback_request.pdf.act', compact('buyBackRequest'));
         PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        UserLog::log("Сгенерировал АКТ ПРИЕМА-ПЕРЕДАЧИ по заявке 'ID#{$buyBackRequest->id}' ");
 
 //        return view('cabinet.buyback_request.pdf.act', compact('buyBackRequest'));
         return $pdf->download(sprintf('Акт #%s %s.pdf', $buyBackRequest->id,  Carbon::now()->format('d.m.Y H:i')));
