@@ -109,7 +109,7 @@
                 <p class="phone_cost-change_cost">0</p>
                 <div class="get_offers_btn">
                     <div class="disabled-off-one disabled"></div>
-                    <button class="get_offers-button" id="btn-offer">Зарегистрировать заявку</button>
+                    <button class="get_offers-button" id="btn-offer">Регистрация обмена</button>
                 </div>
             </div>
             <div class="get_offers">
