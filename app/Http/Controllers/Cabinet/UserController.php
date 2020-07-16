@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cabinet;
 
+use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Imports\UserImport;
 use App\Models\Network;
@@ -101,6 +102,8 @@ class UserController extends Controller
 
             $user->save();
 
+            UserLog::log('Добавил нового пользователя '. $user->id);
+
             return redirect()->route('cabinet.user.list')->with('success', 'Пользователь добавлен!');
         }
 
@@ -134,6 +137,8 @@ class UserController extends Controller
 
             $user->save();
 
+            UserLog::log('Отредактировал пользователя '. $user->id);
+
             return redirect()->route('cabinet.user.list')->with('success', 'Информация обновлена');
         }
 
@@ -147,6 +152,8 @@ class UserController extends Controller
         if ($user) {
             $user->delete();
 
+            UserLog::log('Удалил пользователя '. $user->id);
+
             return response(['status' => 1, 'type' => 'success', 'message' => "Пользователь {$user->fullName()} удален!"]);
         }
 
@@ -157,6 +164,8 @@ class UserController extends Controller
     {
         if ($request->hasFile('file')) {
             Excel::import(new UserImport($request), $request->file('file'));
+            UserLog::log('Импортировал пользователей');
+
             return redirect()->back();
         }
 

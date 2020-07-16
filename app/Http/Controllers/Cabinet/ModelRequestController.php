@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cabinet;
 
+use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Models\DeviceModelRequest;
 use Illuminate\Http\Request;
@@ -36,6 +37,8 @@ class ModelRequestController extends Controller
             $modelRequest->model = $request->get('model');
             $modelRequest->save();
 
+            UserLog::log("Добавил заявку на добавление в калькулятор {$modelRequest->brand} {$modelRequest->model}");
+
             return redirect()->route('cabinet.model_request.list')->with('success', "Заявка добавлена!");
         }
 
@@ -55,6 +58,8 @@ class ModelRequestController extends Controller
             $modelRequest->status_color = $modelRequest->attributeStatus('color');
             $modelRequest->status_text = $modelRequest->attributeStatus('text');
 
+            UserLog::log("Отредактировал заявку на добавление в калькулятор {$modelRequest->brand} {$modelRequest->model}");
+
             return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $modelRequest]);
         }
 
@@ -67,6 +72,8 @@ class ModelRequestController extends Controller
 
         if ($modelRequest) {
             $modelRequest->delete();
+
+            UserLog::log("Удалил заявку на добавление в калькулятор {$modelRequest->brand} {$modelRequest->model}");
 
             return response(['status' => 1, 'type' => 'success', 'message' => "Заявка удалена!"]);
         }

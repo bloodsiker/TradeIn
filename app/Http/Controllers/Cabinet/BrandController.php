@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cabinet;
 
+use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use Illuminate\Http\Request;
@@ -30,6 +31,8 @@ class BrandController extends Controller
             $brand->name = $request->get('name');
             $brand->save();
 
+            UserLog::log("Добавил новый бренд '{$brand->name}'");
+
             return redirect()->route('cabinet.brand.list')->with('success', 'Бренд добавлен!');
         }
 
@@ -45,6 +48,8 @@ class BrandController extends Controller
 
             $brand->save();
 
+            UserLog::log("Отредактировал бренд с '{$brand->getOriginal('name')}' на '{$brand->name}'");
+
             return redirect()->route('cabinet.brand.list')->with('success', 'Информация обновлена');
         }
 
@@ -57,6 +62,8 @@ class BrandController extends Controller
 
         if ($brand) {
             $brand->delete();
+
+            UserLog::log("Удалил бренд '{$brand->name}'");
 
             return response(['status' => 1, 'type' => 'success', 'message' => "Производитель {$brand->name} удален!"]);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cabinet;
 
+use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Imports\ShopImport;
 use App\Models\Network;
@@ -47,6 +48,8 @@ class ShopController extends Controller
 
             $shop->save();
 
+            UserLog::log("Добавил новый магазин '{$shop->name}'");
+
             return redirect()->route('cabinet.shop.list')->with('success', 'Магазин добавлен!');
         }
 
@@ -66,6 +69,8 @@ class ShopController extends Controller
             $shop->save();
             $shop->load('network');
 
+            UserLog::log("Отредактировал магазин '{$shop->name}'");
+
             return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $shop]);
         }
 
@@ -78,6 +83,8 @@ class ShopController extends Controller
 
         if ($shop) {
             $shop->delete();
+
+            UserLog::log("Удалил магазин '{$shop->name}'");
 
             return response(['status' => 1, 'type' => 'success', 'message' => "Магазин {$shop->name} удален!"]);
         }
@@ -98,6 +105,9 @@ class ShopController extends Controller
         if ($request->hasFile('file')) {
 
             Excel::import(new ShopImport($request), $request->file('file'));
+
+            UserLog::log("Сделал импорт магазинов");
+
             return redirect()->back();
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cabinet;
 
+use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Models\Network;
 use App\Models\User;
@@ -32,6 +33,8 @@ class NetworkController extends Controller
 
             $network->save();
 
+            UserLog::log("Добавил новую торговую сеть {$network->name}");
+
             return redirect()->route('cabinet.network.list')->with('success', 'Торговая сеть добавлена!');
         }
 
@@ -51,6 +54,8 @@ class NetworkController extends Controller
 
             $network->save();
 
+            UserLog::log("Отредактировал торговую сеть {$network->name}");
+
             return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $network]);
         }
 
@@ -64,6 +69,8 @@ class NetworkController extends Controller
         if ($network) {
             $network->delete();
 
+            UserLog::log("Удалил торговую сеть {$network->name}");
+
             return response(['status' => 1, 'type' => 'success', 'message' => "Торговая сеть {$network->name} удалена!"]);
         }
 
@@ -76,12 +83,5 @@ class NetworkController extends Controller
         $users = User::where('network_id', $network->id)->orderBy('id', 'desc')->get();
 
         return view('cabinet.networks.users', compact('network', 'users'));
-    }
-
-    public function getAjaxData(Request $request)
-    {
-        $data = Network::find($request->get('id'));
-
-        return response(['status' => 1, 'data' => $data]);
     }
 }
