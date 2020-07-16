@@ -5,7 +5,7 @@
             <h1 class="calculator_title">Калькулятор оценки стоимости</h1>
             <h2 class="calculator_description">Помогите нам предоставить точную цену, ответив на вопросы ниже.</h2>
         </div>
-        <div class="right_block">
+        <div class="right_block" style="visibility: hidden">
         </div>
     </div>
 
