@@ -22,7 +22,7 @@
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 
     @stack('styles')
-    <script src="//code-ya.jivosite.com/widget/c4JV4iPW93" async></script>
+    <script src="//code-ya.jivosite.com/widget/S3RNsWnqrj" async></script>
 </head>
 <body class="page-profile">
 

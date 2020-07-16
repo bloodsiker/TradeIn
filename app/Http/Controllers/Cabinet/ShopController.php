@@ -35,7 +35,7 @@ class ShopController extends Controller
     {
         if ($request->isMethod('post')) {
             $request->validate([
-                'name'       => ['required', 'min:3', 'max:255'],
+                'name'       => ['required', 'min:1', 'max:255'],
                 'network_id' => ['required', 'numeric'],
             ]);
 

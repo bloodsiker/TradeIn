@@ -30,67 +30,13 @@
                             TRADE-IN
                         </h2>
                         <p class="tagline">
-                            Обміняй старий смартфон вигідно та надійно
+                            Програма для
+                            роздрібних мереж
                         </p>
                         <div class="actions">
                             <a href="{{ route('calculator') }}" class="button button_orange button_medium">Оцінити онлайн</a>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="steps ptb-100 bg_gray">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <h2 class="title tc">
-                        Як це працює?
-                    </h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 tc">
-                    <div class="steps_item">1</div>
-                    <h5 class="text_name tc">
-                        Оцініть пристрій
-                    </h5>
-                    <p class="description tc">
-                        Здійсніть оцінку вартості клієнтського пристрою за 15 секунд з допомогою онлайн- калькулятора
-                    </p>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 tc">
-                    <div class="steps_item">2</div>
-                    <h5 class="text_name tc">
-                        Зробість тест
-                    </h5>
-                    <p class="description tc">
-                        Протестуйте основні функції пристрою, керуючись простим алгоритмом діагностики
-                    </p>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 tc">
-                    <div class="steps_item">3</div>
-                    <h5 class="text_name tc">
-                        Заповність заявку
-                    </h5>
-                    <p class="description tc">
-                        Авторизуйтеся в системі оцінки та оформіть заявку на обмін. Підтвердження відбувається автоматично
-                    </p>
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 tc">
-                    <div class="steps_item">4</div>
-                    <h5 class="text_name tc">
-                        Підпишіть акт
-                    </h5>
-                    <p class="description tc">
-                        Роздрукуйте та підпишіть з клієнтом Акт прийома-передачі, який генерується системою автоматично
-                    </p>
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tc block_description">
-                    КОМПАНІЯ GENERAL SERVICES САМОСТІЙНЕ ОРГАНІЗУЄ ЗАБІР ТА ДОСТАВКУ ЗАМІНЕНИХ ПРИСТРОЇВ.
-                    <span class="text_orange">ПІСЛЯ ОТРИМАННЯ ТЕХНІКИ МИ НАРАХУЄМО БОНУС ПРОДАВЦЕВІ ЗА КОЖНУ КОРЕКТНО ОФОРМЛЕНУ ЗАЯВКУ НА ОБМІН.</span>
                 </div>
             </div>
         </div>
@@ -116,13 +62,13 @@
                     <h2>Довідка</h2>
                     <ul class="links">
                         <li class="item">
-                            <a class="link" href="{{ asset('share/about.pdf') }}" target="_blank">Пам’ятка продавця</a>
+                            <a class="link" href="{{ asset('share/about.png') }}" target="_blank">Пам’ятка продавця</a>
                         </li>
                         <li class="item">
                             <a class="link" href="{{ asset('share/instruction.pdf') }}" target="_blank">Інструкція по діагностиці</a>
                         </li>
                         <li class="item">
-                            <a class="link" href="https://youtu.be/tEywdiT48ZE">Відео-інструкція</a>
+                            <a class="link" href="https://youtu.be/tEywdiT48ZE" target="_blank">Відео-інструкція</a>
                         </li>
                     </ul>
                 </div>

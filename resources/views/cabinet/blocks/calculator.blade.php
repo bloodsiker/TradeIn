@@ -3,13 +3,13 @@
     <div class="select_cost">
         <div class="left_block">
             <div class="select">
-                <div class="type" id="typeList" data-url="{{ route('api.type_device') }}">
-                    <div class="type-search-one">
-                        <p class="type-search-text"></p>
-                        <input class="type-search" type="text" placeholder="Выберите тип устройства">
-                    </div>
-                    <ul class="type-list" id="type-list"></ul>
-                </div>
+{{--                <div class="type" id="typeList" data-url="{{ route('api.type_device') }}">--}}
+{{--                    <div class="type-search-one">--}}
+{{--                        <p class="type-search-text"></p>--}}
+{{--                        <input class="type-search" type="text" placeholder="Выберите тип устройства">--}}
+{{--                    </div>--}}
+{{--                    <ul class="type-list" id="type-list"></ul>--}}
+{{--                </div>--}}
                 <div class="brand" id="brandList" data-url="{{ route('api.brands', ['type_id' => '', 'network_id' => Auth::check() ? Auth::user()->network_id : null]) }}">
                     <div class="brand-search-one">
                         <p class="brand-search-text"></p>
