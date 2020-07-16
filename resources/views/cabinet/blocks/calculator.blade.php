@@ -2,14 +2,23 @@
 
     <div class="select_cost">
         <div class="left_block">
+            <h1 class="calculator_title">Калькулятор оценки стоимости</h1>
+            <h2 class="calculator_description">Помогите нам предоставить точную цену, ответив на вопросы ниже.</h2>
+        </div>
+        <div class="right_block">
+        </div>
+    </div>
+
+    <div class="select_cost">
+        <div class="left_block">
             <div class="select">
-{{--                <div class="type" id="typeList" data-url="{{ route('api.type_device') }}">--}}
-{{--                    <div class="type-search-one">--}}
-{{--                        <p class="type-search-text"></p>--}}
-{{--                        <input class="type-search" type="text" placeholder="Выберите тип устройства">--}}
-{{--                    </div>--}}
-{{--                    <ul class="type-list" id="type-list"></ul>--}}
-{{--                </div>--}}
+                <div class="type" id="typeList" data-url="{{ route('api.type_device') }}">
+                    <div class="type-search-one">
+                        <p class="type-search-text"></p>
+                        <input class="type-search" type="text" placeholder="Выберите тип устройства">
+                    </div>
+                    <ul class="type-list" id="type-list"></ul>
+                </div>
                 <div class="brand" id="brandList" data-url="{{ route('api.brands', ['type_id' => '', 'network_id' => Auth::check() ? Auth::user()->network_id : null]) }}">
                     <div class="brand-search-one">
                         <p class="brand-search-text"></p>
@@ -17,7 +26,7 @@
                     </div>
                     <ul class="brand-list" id="brand-list"></ul>
                 </div>
-                <div class="model" id="modelList" data-url="{{ route('api.models', ['brand_id'  => '', 'network_id' => Auth::check() ? Auth::user()->network_id : null]) }}">
+                <div class="model" id="modelList" data-url="{{ route('api.models', ['type_id' => '', 'brand_id'  => '', 'network_id' => Auth::check() ? Auth::user()->network_id : null]) }}">
                     <div class="model-search-one">
                         <p class="model-search-text"></p>
                         <input class="model-search" type="text" placeholder="Выберите модель">
@@ -98,10 +107,13 @@
             <div class="phone_cost">
                 <!-- <p class="phone_cost-text">Вартість</p> -->
                 <p class="phone_cost-change_cost">0</p>
+                <div class="get_offers_btn">
+                    <div class="disabled-off-one disabled"></div>
+                    <button class="get_offers-button" id="btn-offer">Зарегистрировать заявку</button>
+                </div>
             </div>
             <div class="get_offers">
-                <div class="disabled-off-one disabled"></div>
-                <button class="get_offers-button" id="btn-offer">Зарегистрировать заявку</button>
+                <p>В случае вопросов, обратитесь в службу поддержки партнеров</p>
             </div>
         </div>
     </div>

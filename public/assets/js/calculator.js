@@ -1,6 +1,9 @@
 const FEEDBACK_BUTTON = document.getElementsByClassName("feedback")[0];
 const FEED_SEND = document.getElementById("feed_send");
 const TYPE_LIST = document.getElementsByClassName("type-list")[0];
+const TYPE_SEARCH = document.getElementsByClassName("type-search")[0];
+const UL_TYPE_LIST = document.getElementsByClassName("type-list")[0];
+const TYPE_SEARCH_TEXT  = document.getElementsByClassName("type-search-text")[0];
 const BRAND_LIST = document.getElementsByClassName("brand-list")[0];
 const COST_BUTTON = document.getElementsByClassName("cost")[0];
 const BRAND_ITEMS = document.getElementsByClassName("brand-items")[0];
@@ -37,22 +40,32 @@ const DISABLE_OFF = document.getElementsByClassName("disabled-off");
 const DISABLE_OFF_ONE = document.getElementsByClassName("disabled-off-one")[0];
 const SCREEN_TITLE = document.getElementsByClassName("screen_title")[0];
 const FUNCTION_PHONE_TITLE = document.getElementsByClassName("function_phone-title")[0];
+const GET_TYPE = document.getElementById("type");
 const GET_BRAND = document.getElementById("brand");
 const GET_MODEL = document.getElementById("model");
 const GET_MODEL_ID = document.getElementById("model_id");
 const GET_COST = document.getElementById("cost");
 const FORM = document.getElementById("form");
 const TEXT_NO_RESULT = "К сожалению состояние устройства не соответствует условиям программе Trade-in";
+const API_URL_TYPES = document.getElementById("typeList").getAttribute('data-url');
 const API_URL_BRANDS = document.getElementById("brandList").getAttribute('data-url');
 const API_URL_MODELS = document.getElementById("modelList").getAttribute('data-url');
 
+TYPE_SEARCH.onclick = function () {
+    BRAND_SEARCH.value = "";
+    BRAND_LIST.classList.remove("disabled")
+    TYPE_SEARCH.value = "";
+    UL_TYPE_LIST.classList.toggle("disabled");
+    MODEL_SEARCH.value = "";
+    MODEL_LIST.classList.remove("disabled");
+}
 
 BRAND_SEARCH.onclick = function () {
     MODEL_LIST.classList.remove("disabled")
     BRAND_SEARCH.value = "";
     UL_BRAND_LIST.classList.toggle("disabled");
-
 }
+
 MODEL_SEARCH.onclick  = function() {
     MODEL_SEARCH.value = "";
     MODEL_LIST.classList.toggle("disabled");
@@ -60,27 +73,49 @@ MODEL_SEARCH.onclick  = function() {
 
 //Список
 allPhoneArr = [];
-//Загрузка базы
+ //Загрузка базы
 $(function () {
-    $.getJSON(API_URL_BRANDS, function (data) {
-        brandList(data.data);
+    $.getJSON(API_URL_TYPES, function (data) {
+        typeList(data.data);
     });
 
-    function brandList (brandList) {
-        brandList.forEach(function(el){
+    function typeList (typeList) {
+        typeList.forEach(function(el){
             var createLi = document.createElement("li");
-            createLi.className = "brand-items";
+            createLi.className = "type-items";
             createLi.id = el.id;
             createLi.innerText = (el.name);
-            BRAND_LIST.append(createLi);
+            TYPE_LIST.append(createLi);
             createLi.onclick = function() {
-                newResults.shift();
-                BRAND_SEARCH.value = el.name;
-                newResults.push(BRAND_SEARCH.value);
+                TYPE_SEARCH.value = el.name;
             }
         });
     }
 })
+
+TYPE_SEARCH.oninput = function () {
+    UL_TYPE_LIST.classList.add("disabled");
+    let val = this.value.trim();
+    var typeItemsLi = document.querySelectorAll('.type-list li');
+    if (val.length > 0) {
+        typeItemsLi.forEach(function (elem) {
+            if (elem.innerText.search(RegExp(val,"gi")) == -1) {
+                elem.classList.add('hide');
+                elem.innerHTML = elem.innerText;
+            } else {
+                elem.classList.remove('hide');
+                let str = elem.innerText;
+                elem.innerHTML = insertMark(str, elem.innerText.search(RegExp(val,"gi")), val.length);
+            }
+        });
+    }
+    else {
+        typeItemsLi.forEach(function (elem) {
+            elem.classList.remove('hide');
+            elem.innerHTML = elem.innerText;
+        });
+    }
+}
 
 //Поиск по брендам
 BRAND_SEARCH.oninput = function () {
@@ -111,6 +146,55 @@ function insertMark(string, pos, len) {
     return string.slice(0, pos) + '<mark>' + string.slice(pos, pos + len) + '</mark>' + string.slice(pos + len);
 }
 
+//Кнопка выбора типа
+UL_TYPE_LIST.onclick = function (e) {
+    BRAND_LIST.innerHTML = '';
+    BRAND_SEARCH.innerHTML = '';
+    MODEL_LIST.innerHTML = '';
+    MODEL_SEARCH.value = '';
+
+    if (newResults.length > 1) {
+        newResults.shift();
+    }
+
+    UL_TYPE_LIST.classList.remove("disabled");
+    TYPE_SEARCH_TEXT.innerText = "";
+    BRAND_SEARCH_TEXT.innerText = "";
+
+    var typeId = e.target.getAttribute('id');
+
+    $.getJSON(API_URL_BRANDS.replace('type_id=', 'type_id='+typeId), function (data) {
+        BRAND_LIST.classList.add("disabled");
+        brandList(data.data);
+        BRAND_SEARCH.focus();
+    });
+
+
+    function brandList (brandList) {
+        brandList.forEach(function(el){
+            var createLi = document.createElement("li");
+            createLi.className = "brand-items";
+            createLi.id = el.id;
+            createLi.setAttribute('type_id', typeId);
+            createLi.innerText = (el.name);
+            BRAND_LIST.append(createLi);
+            createLi.onclick = function() {
+                selectBrand.shift();
+                BRAND_SEARCH.value = el.name;
+                BRAND_SEARCH.setAttribute('id', el.id);
+                BRAND_SEARCH.setAttribute('type_id', typeId);
+                selectBrand.push(BRAND_SEARCH.value);
+            }
+        });
+
+        // brandList.map(function (el) {
+        //     allPhoneArr.push(el);
+        // })
+    }
+}
+
+selectBrand = [];
+
 var newResults = [];
 
 //Кнопка выбора бренда
@@ -122,20 +206,25 @@ UL_BRAND_LIST.onclick = function (e) {
         newResults.shift();
     }
 
-    if (newResults != BRAND_SEARCH.value) {
-        BRAND_SEARCH_TEXT.innerText = "Выберите модель из списка!"
-    } else {
-        UL_BRAND_LIST.classList.remove("disabled");
-        BRAND_SEARCH_TEXT.innerText = "";
+    UL_BRAND_LIST.classList.remove("disabled");
+    BRAND_SEARCH_TEXT.innerText = "";
 
-        var brandId = e.target.getAttribute('id');
+    var brandId = e.target.getAttribute('id');
+    var typeId = e.target.getAttribute('type_id');
+    var urlModels = API_URL_MODELS;
 
-        $.getJSON(API_URL_MODELS.replace('brand_id=', 'brand_id='+brandId), function (data) {
-            MODEL_LIST.classList.add("disabled");
-            modelList(data.data);
-            MODEL_SEARCH.focus();
-        });
-    }
+    console.log(typeId);
+
+    urlModels = urlModels.replace('brand_id=', 'brand_id='+brandId);
+    console.log(API_URL_MODELS);
+    urlModels = urlModels.replace('type_id=', 'type_id='+typeId);
+
+    $.getJSON(urlModels, function (data) {
+        MODEL_LIST.classList.add("disabled");
+        modelList(data.data);
+        MODEL_SEARCH.focus();
+    });
+
 
     function modelList (modelList) {
         modelList.forEach(function(el){
@@ -220,11 +309,11 @@ function sendModel(){
     DISABLE_OFF[3].classList.add("disabled");
     DISABLE_OFF[4].classList.add("disabled");
     POWER_OPTION1.classList.remove("clickbtn");
-    POWER_OPTION2.classList.remove("clickbtn");
-    SCREEN_OPTION1.classList.remove("clickbtn");
-    SCREEN_OPTION2.classList.remove("clickbtn");
-    FUNCTION_OPTION2.classList.remove("clickbtn");
-    FUNCTION_OPTION1.classList.remove("clickbtn");
+        POWER_OPTION2.classList.remove("clickbtn");
+        SCREEN_OPTION1.classList.remove("clickbtn");
+        SCREEN_OPTION2.classList.remove("clickbtn");
+        FUNCTION_OPTION2.classList.remove("clickbtn");
+        FUNCTION_OPTION1.classList.remove("clickbtn");
 
 
     costArr.shift();
@@ -240,13 +329,13 @@ let costArr = [];
 function selectCost() {
     //first block
     POWER_OPTION2.onclick = function () {
-        DISABLE_OFF_ONE.classList.add("disabled");
-        DISABLE_OFF[3].classList.remove("disabled");
-        DISABLE_OFF[4].classList.add("disabled");
-        DISABLE_OFF[2].classList.add("disabled");
-        DISABLE_OFF[1].classList.add("disabled");
-        FUNCTION_PHONE_TITLE.classList.remove("disabled");
-        SCREEN_STATE_OPTION.classList.add("enable");
+         DISABLE_OFF_ONE.classList.add("disabled");
+       DISABLE_OFF[3].classList.remove("disabled");
+       DISABLE_OFF[4].classList.add("disabled");
+       DISABLE_OFF[2].classList.add("disabled");
+       DISABLE_OFF[1].classList.add("disabled");
+       FUNCTION_PHONE_TITLE.classList.remove("disabled");
+       SCREEN_STATE_OPTION.classList.add("enable");
         SCREEN_TITLE.classList.remove("disabled");
         POWER_OPTION2.classList.add("clickbtn");
         POWER_OPTION1.classList.remove("clickbtn");
@@ -256,77 +345,77 @@ function selectCost() {
         FUNCTION_OPTION1.classList.remove("clickbtn");
 
 
-        SCREEN_STATE_OPTION1.onclick = function () {
-            DISABLE_OFF_ONE.classList.add("disabled");
+    SCREEN_STATE_OPTION1.onclick = function () {
+        DISABLE_OFF_ONE.classList.add("disabled");
+        CHANGE_COST.innerText = costArr[0].price_5 + " грн";
+        DISABLE_OFF[4].classList.remove("disabled");
+        COVER_STATE_OPTION.classList.add("enable");
+        SCREEN_STATE_OPTION.classList.remove("enable");
+
+        COVER_STATE_OPTION1.onclick = function () {
+            DISABLE_OFF_ONE.classList.remove("disabled");
             CHANGE_COST.innerText = costArr[0].price_5 + " грн";
-            DISABLE_OFF[4].classList.remove("disabled");
-            COVER_STATE_OPTION.classList.add("enable");
-            SCREEN_STATE_OPTION.classList.remove("enable");
-
-            COVER_STATE_OPTION1.onclick = function () {
-                DISABLE_OFF_ONE.classList.remove("disabled");
-                CHANGE_COST.innerText = costArr[0].price_5 + " грн";
-                COVER_STATE_OPTION.classList.remove("enable");
-            }
-            COVER_STATE_OPTION2.onclick = function () {
-                DISABLE_OFF_ONE.classList.remove("disabled");
-                CHANGE_COST.innerText = costArr[0].price_5 + " грн";
-                COVER_STATE_OPTION.classList.remove("enable");
-            }
-            COVER_STATE_OPTION3.onclick = function () {
-                DISABLE_OFF_ONE.classList.add("disabled");
-                CHANGE_COST.innerText = TEXT_NO_RESULT;
-                COVER_STATE_OPTION.classList.remove("enable");
-            }
-            COVER_STATE_OPTION4.onclick = function () {
-                DISABLE_OFF_ONE.classList.add("disabled");
-                CHANGE_COST.innerText = TEXT_NO_RESULT;
-                COVER_STATE_OPTION.classList.remove("enable");
-            }
-
-        }
-        SCREEN_STATE_OPTION2.onclick = function () {
-            DISABLE_OFF_ONE.classList.add("disabled");
-            CHANGE_COST.innerText = costArr[0].price_5 + " грн";
-            DISABLE_OFF[4].classList.remove("disabled")
-            COVER_STATE_OPTION.classList.add("enable");
-            SCREEN_STATE_OPTION.classList.remove("enable");
-
-            COVER_STATE_OPTION1.onclick = function () {
-                DISABLE_OFF_ONE.classList.remove("disabled");
-                CHANGE_COST.innerText = costArr[0].price_5 + " грн";
-                COVER_STATE_OPTION.classList.remove("enable");
-            }
-            COVER_STATE_OPTION2.onclick = function () {
-                DISABLE_OFF_ONE.classList.remove("disabled");
-                CHANGE_COST.innerText = costArr[0].price_5 + " грн";
-                COVER_STATE_OPTION.classList.remove("enable");
-            }
-            COVER_STATE_OPTION3.onclick = function () {
-                DISABLE_OFF_ONE.classList.add("disabled");
-                CHANGE_COST.innerText = TEXT_NO_RESULT;
-                COVER_STATE_OPTION.classList.remove("enable");
-            }
-            COVER_STATE_OPTION4.onclick = function () {
-                DISABLE_OFF_ONE.classList.add("disabled");
-                CHANGE_COST.innerText = TEXT_NO_RESULT;
-                COVER_STATE_OPTION.classList.remove("enable");
-            }
-        }
-        SCREEN_STATE_OPTION3.onclick = function () {
-            DISABLE_OFF_ONE.classList.add("disabled");
-            CHANGE_COST.innerText = TEXT_NO_RESULT;
-            DISABLE_OFF[4].classList.add("disabled");
-            SCREEN_STATE_OPTION.classList.remove("enable");
             COVER_STATE_OPTION.classList.remove("enable");
         }
-        SCREEN_STATE_OPTION4.onclick = function () {
-            DISABLE_OFF_ONE.classList.add("disabled");
-            CHANGE_COST.innerText = TEXT_NO_RESULT;
-            DISABLE_OFF[4].classList.add("disabled");
-            SCREEN_STATE_OPTION.classList.remove("enable");
+        COVER_STATE_OPTION2.onclick = function () {
+            DISABLE_OFF_ONE.classList.remove("disabled");
+            CHANGE_COST.innerText = costArr[0].price_5 + " грн";
             COVER_STATE_OPTION.classList.remove("enable");
         }
+        COVER_STATE_OPTION3.onclick = function () {
+            DISABLE_OFF_ONE.classList.add("disabled");
+            CHANGE_COST.innerText = TEXT_NO_RESULT;
+            COVER_STATE_OPTION.classList.remove("enable");
+        }
+        COVER_STATE_OPTION4.onclick = function () {
+            DISABLE_OFF_ONE.classList.add("disabled");
+            CHANGE_COST.innerText = TEXT_NO_RESULT;
+            COVER_STATE_OPTION.classList.remove("enable");
+        }
+
+    }
+    SCREEN_STATE_OPTION2.onclick = function () {
+        DISABLE_OFF_ONE.classList.add("disabled");
+        CHANGE_COST.innerText = costArr[0].price_5 + " грн";
+        DISABLE_OFF[4].classList.remove("disabled")
+        COVER_STATE_OPTION.classList.add("enable");
+        SCREEN_STATE_OPTION.classList.remove("enable");
+
+        COVER_STATE_OPTION1.onclick = function () {
+            DISABLE_OFF_ONE.classList.remove("disabled");
+            CHANGE_COST.innerText = costArr[0].price_5 + " грн";
+            COVER_STATE_OPTION.classList.remove("enable");
+        }
+        COVER_STATE_OPTION2.onclick = function () {
+            DISABLE_OFF_ONE.classList.remove("disabled");
+            CHANGE_COST.innerText = costArr[0].price_5 + " грн";
+            COVER_STATE_OPTION.classList.remove("enable");
+        }
+        COVER_STATE_OPTION3.onclick = function () {
+            DISABLE_OFF_ONE.classList.add("disabled");
+            CHANGE_COST.innerText = TEXT_NO_RESULT;
+            COVER_STATE_OPTION.classList.remove("enable");
+        }
+        COVER_STATE_OPTION4.onclick = function () {
+            DISABLE_OFF_ONE.classList.add("disabled");
+            CHANGE_COST.innerText = TEXT_NO_RESULT;
+            COVER_STATE_OPTION.classList.remove("enable");
+        }
+    }
+    SCREEN_STATE_OPTION3.onclick = function () {
+        DISABLE_OFF_ONE.classList.add("disabled");
+        CHANGE_COST.innerText = TEXT_NO_RESULT;
+        DISABLE_OFF[4].classList.add("disabled");
+        SCREEN_STATE_OPTION.classList.remove("enable");
+        COVER_STATE_OPTION.classList.remove("enable");
+    }
+    SCREEN_STATE_OPTION4.onclick = function () {
+        DISABLE_OFF_ONE.classList.add("disabled");
+        CHANGE_COST.innerText = TEXT_NO_RESULT;
+        DISABLE_OFF[4].classList.add("disabled");
+        SCREEN_STATE_OPTION.classList.remove("enable");
+        COVER_STATE_OPTION.classList.remove("enable");
+    }
 
     };
     POWER_OPTION1.onclick = function() {
@@ -369,7 +458,7 @@ function selectCost() {
             DISABLE_OFF[3].classList.remove("disabled");
             SCREEN_STATE_OPTION.classList.add("enable");
             FUNCTION_OPTION1.classList.add("clickbtn");
-            FUNCTION_OPTION2.classList.remove("clickbtn");
+        FUNCTION_OPTION2.classList.remove("clickbtn");
 
             SCREEN_STATE_OPTION1.onclick = function () {
                 DISABLE_OFF_ONE.classList.add("disabled");
@@ -419,7 +508,7 @@ function selectCost() {
                 COVER_STATE_OPTION3.onclick = function () {
                     DISABLE_OFF_ONE.classList.remove("disabled");
                     CHANGE_COST.innerText = costArr[0].price_5 + " грн";
-                    COVER_STATE_OPTION.classList.remove("enable");
+                     COVER_STATE_OPTION.classList.remove("enable");
                 }
                 COVER_STATE_OPTION4.onclick = function () {
                     DISABLE_OFF_ONE.classList.add("disabled");
@@ -471,7 +560,7 @@ function selectCost() {
             DISABLE_OFF[3].classList.remove("disabled");
             SCREEN_STATE_OPTION.classList.add("enable");
             FUNCTION_OPTION2.classList.add("clickbtn");
-            FUNCTION_OPTION1.classList.remove("clickbtn");
+        FUNCTION_OPTION1.classList.remove("clickbtn");
 
             SCREEN_STATE_OPTION1.onclick = function () {
                 DISABLE_OFF_ONE.classList.remove("disabled");
@@ -604,7 +693,7 @@ function selectCost() {
             COVER_STATE_OPTION2.onclick = function () {
                 DISABLE_OFF_ONE.classList.remove("disabled");
                 CHANGE_COST.innerText = costArr[0].price_4 + " грн";
-                COVER_STATE_OPTION.classList.remove("enable");
+             COVER_STATE_OPTION.classList.remove("enable");
             }
             COVER_STATE_OPTION3.onclick = function () {
                 DISABLE_OFF_ONE.classList.remove("disabled");

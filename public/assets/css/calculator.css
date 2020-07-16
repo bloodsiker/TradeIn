@@ -1,18 +1,35 @@
+.calculator_title {
+    font-size: 32px;
+    margin: 35px 0;
+    color: rgb(233, 137, 4);
+}
+.calculator_description {
+    font-size: 18px;
+}
 .power_option1, .power_option2, .screen_option1, .screen_option2, .function_phone-option1, .function_phone-option2, .get_offers-button {
   padding: 2% 0;
   color: #2e3d46;
   background-color: white;
-  border: 1px solid #2e3d46;
+  border: 1px solid rgb(233, 137, 4);
   border-radius: 2px;
   min-width: 43%;
   font-size: 1.1rem;
   cursor: pointer; }
 
 .power_option1:hover, .power_option2:hover, .screen_option1:hover, .screen_option2:hover, .function_phone-option1:hover, .function_phone-option2:hover, .get_offers-button:hover {
-  border-color: #2e3d46;
+  border-color: rgb(233, 137, 4);
   color: white;
-  background-color: #2e3d46; }
-
+  background-color: rgb(233, 137, 4); }
+#btn-offer {
+    border-color: rgb(233, 137, 4);
+    color: white;
+    background-color: rgb(233, 137, 4);
+}
+#btn-offer:hover {
+    border-color: rgb(233, 137, 4);
+    color: rgb(233, 137, 4);
+    background-color: white;
+}
 .cost_page {
   padding-top: 30px;
   margin: 0 auto;}
@@ -237,10 +254,10 @@ mark {
   margin: 0;
   padding: 16px 0;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 32px;
   font-weight: 700;
-  color: #2e3d46;
-  background-color: #f3f2f2; }
+  color: rgb(233, 137, 4);
+  background-color: #fff; }
 
 .phone_cost-text {
   font-size: 1.7rem;
@@ -250,18 +267,33 @@ mark {
   color: #2e3d46; }
 
 .phone_cost-change_cost {
+  margin-top: 0;
+  margin-bottom: 0;
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 54px;
   font-weight: 700;
-  color: #2e3d46;
-  background-color: white; }
+  color: rgb(233, 137, 4);
+  padding: 35px 0;
+  background-color: #f3f2f2; }
+
+.get_offers_btn {
+    margin: 0;
+    padding: 5px 0 40px;
+    text-align: center;
+    font-size: 1.3rem;
+    background-color: #f3f2f2; }
 
 .get_offers {
   margin: 0;
   padding: 16px 0;
   text-align: center;
   font-size: 1.3rem;
-  background-color: #f3f2f2; }
+  background-color: #fff; }
+
+.get_offers p {
+    font-size: 19px;
+    margin-bottom: 0;
+}
 
 .get_offers-button {
   padding: 2%; }
@@ -283,6 +315,9 @@ mark {
     color: #dc3545;
     font-weight: 600;
     text-decoration: underline;
+}
+.phone_cost {
+
 }
 
 @media screen and (min-width: 1200px) {
@@ -391,9 +426,9 @@ mark {
   .power_option1, .power_option2, .screen_option1, .screen_option2, .function_phone-option1, .function_phone-option2 {
     padding: 0;
     margin-bottom: 0;
-    color: #2e3d46;
+    color: rgb(233, 137, 4);
     background-color: white;
-    border: 1px solid #2e3d46;
+    border: 1px solid rgb(233, 137, 4);
     border-radius: 2px;
     font-size: 1rem;
     min-width: 60px;
@@ -413,7 +448,8 @@ mark {
     width: 40%;
     height: -webkit-fit-content;
     height: -moz-fit-content;
-    height: fit-content; }
+    height: fit-content;
+  }
   .right_block {
     margin-top: 0;
     width: 30%;
@@ -446,6 +482,6 @@ mark {
           justify-content: space-around; } } }
 
 .clickbtn {
-    border-color: #2e3e45;
+    border-color: rgb(233, 137, 4);
     color: white;
-    background-color: #2e3e45; }
+    background-color: rgb(233, 137, 4); }

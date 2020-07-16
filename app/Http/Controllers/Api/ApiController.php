@@ -31,7 +31,7 @@ class ApiController extends Controller
         $data = DeviceModel::select('brands.id', 'brands.name')
             ->where('network_id', $request->get('network_id'))
             ->where('device_models.is_deleted', false)
-//            ->where('device_models.technic_id', $technicId)
+            ->where('device_models.technic_id', $technicId)
             ->join('brands', 'brands.id', '=', 'device_models.brand_id')
             ->groupBy('brands.id')->get();
 
@@ -39,7 +39,7 @@ class ApiController extends Controller
             $data = DeviceModel::select('brands.id', 'brands.name')
                 ->where('network_id', null)
                 ->where('device_models.is_deleted', false)
-//                ->where('device_models.technic_id', $technicId)
+                ->where('device_models.technic_id', $technicId)
                 ->join('brands', 'brands.id', '=', 'device_models.brand_id')
                 ->groupBy('brands.id')->get();
         }
@@ -52,17 +52,21 @@ class ApiController extends Controller
 
     public function model(Request $request)
     {
-        if ($request->get('brand_id')) {
+        $technicId = $request->get('type_id');
+
+        if ($request->get('brand_id') && $technicId) {
             $brand = Brand::find($request->get('brand_id'));
             if ($brand) {
                 $data = DeviceModel::where(['brand_id' => $brand->id, 'network_id' => $request->get('network_id')])
                     ->where('device_models.is_deleted', false)
+                    ->where('device_models.technic_id', $technicId)
                     ->select(['id', 'brand_id', 'name', 'price', 'price_1', 'price_2', 'price_3', 'price_4', 'price_5'])
                     ->get();
 
                 if (!$data->count()) {
                     $data = DeviceModel::where(['brand_id' => $brand->id, 'network_id' => null])
                         ->where('device_models.is_deleted', false)
+                        ->where('device_models.technic_id', $technicId)
                         ->select(['id', 'brand_id', 'name', 'price', 'price_1', 'price_2', 'price_3', 'price_4', 'price_5'])
                         ->get();
                 }
