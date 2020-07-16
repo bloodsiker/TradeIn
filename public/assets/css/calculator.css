@@ -291,7 +291,7 @@ mark {
   background-color: #fff; }
 
 .get_offers p {
-    font-size: 19px;
+    font-size: 18px;
     margin-bottom: 0;
 }
 
@@ -317,7 +317,8 @@ mark {
     text-decoration: underline;
 }
 .phone_cost {
-
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 @media screen and (min-width: 1200px) {
@@ -375,7 +376,7 @@ mark {
   .brand-list,
   .model-list {
     position: absolute;
-    width: calc(40% - 26px);
+    width: calc(45% - 26px);
     height: 150px;
     z-index: 4;
     padding-left: 0;
@@ -445,14 +446,14 @@ mark {
         -ms-flex-pack: space-evenly;
             justify-content: space-evenly; }
   .right_block, .left_block {
-    width: 40%;
+    width: 45%;
     height: -webkit-fit-content;
     height: -moz-fit-content;
     height: fit-content;
   }
   .right_block {
     margin-top: 0;
-    width: 30%;
+    width: 35%;
     -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.12);
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.12);
     -webkit-box-sizing: border-box;

@@ -85,7 +85,7 @@ class ApiController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'data' => DeviceModel::with('brand')
+            'data' => DeviceModel::with('brand', 'technic')
                 ->where('network_id', $request->get('network_id'))
                 ->where('device_models.is_deleted', false)
                 ->get()
