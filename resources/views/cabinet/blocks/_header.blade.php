@@ -1,11 +1,11 @@
 <header class="navbar navbar-header navbar-header-fixed">
     <a href="" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a>
     <div class="navbar-brand">
-        <a href="{{ route('cabinet.main') }}"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS.png') }}" alt=""></a>
+        <a href="{{ route('cabinet.main') }}"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS_orange.png') }}" alt=""></a>
     </div>
     <div id="navbarMenu" class="navbar-menu-wrapper">
         <div class="navbar-menu-header">
-            <a href="{{ route('cabinet.main') }}"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS.png') }}" alt=""></a>
+            <a href="{{ route('cabinet.main') }}"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS_orange.png') }}" alt=""></a>
             <a id="mainMenuClose" href=""><i data-feather="x"></i></a>
         </div>
         <ul class="nav navbar-menu">

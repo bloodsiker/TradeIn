@@ -308,6 +308,9 @@ img {
   padding: 36px 0;
 }
 /* 2.TEXT STYLES */
+.logo {
+    margin-top: 35px;
+}
 .header_title {
   font-weight: 700;
   font-size: 70px;
@@ -477,6 +480,7 @@ img {
 }
 .header .welcome {
   padding-top: 100px;
+  padding-left: 50px;
 }
 .header .welcome .actions a:not(:first-child) {
   margin-left: 30px;

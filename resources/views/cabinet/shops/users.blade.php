@@ -53,7 +53,7 @@
                                     <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
                                     @if(Auth::user()->isAdmin())
                                         <td>
-                                            <a href="{{ route('cabinet.user.edit', ['id' => $user->id]) }}" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon">
+                                            <a href="{{ route('cabinet.user.edit', ['id' => $user->id]) }}" class="btn btn-xxs btn-success btn-icon">
                                                 <i class="far fa-edit"></i>
                                             </a>
                                         </td>

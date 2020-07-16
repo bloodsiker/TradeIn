@@ -11,7 +11,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                         <div class="logo mb-center mb-space">
                             <a href="{{ route('main') }}">
-                                <img src="{{ asset('assets/homepage/images/Logo_GS.png') }}" alt="Logo">
+                                <img src="{{ asset('assets/img/logo/Logo_GS_orange.png')}}" alt="Logo">
                             </a>
                         </div>
                     </div>
