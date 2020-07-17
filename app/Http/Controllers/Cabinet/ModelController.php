@@ -48,7 +48,7 @@ class ModelController extends Controller
             $query->where('name', 'LIKE', "%{$request->get('model')}%");
         }
 
-        $models = $query->get();
+        $models = $query->paginate(200);
 
         return view('cabinet.models.list', compact('models', 'brands', 'networks', 'network', 'brand', 'technics'));
     }
