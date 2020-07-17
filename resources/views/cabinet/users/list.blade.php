@@ -28,7 +28,7 @@
                 <form action="{{ route('cabinet.user.list') }}" method="GET" novalidate>
                     <div class="form-row">
                         @if(Auth::user()->isAdmin())
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <select class="custom-select network-filter" name="network_id">
                                     <option value=""></option>
                                     @foreach($networks as $network)

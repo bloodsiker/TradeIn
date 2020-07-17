@@ -145,11 +145,32 @@ class UserController extends Controller
         return view('cabinet.users.edit', compact('user', 'roles', 'networks', 'shops'));
     }
 
-    public function logs()
+    public function logs(Request $request)
     {
-        $logs = \App\Models\UserLog::orderBy('id', 'DESC')->paginate(30);
+        $networks = Network::all();
+        $shops = Shop::all();
+        $users = User::all();
 
-        return view('cabinet.users.logs', compact('logs'));
+        $query = \App\Models\UserLog::select('user_logs.*');
+        $query->join('users', 'users.id', '=', 'user_logs.user_id')
+            ->leftJoin('shops', 'users.shop_id', '=', 'shops.id')
+            ->leftJoin('networks', 'users.network_id', '=', 'networks.id');
+
+        if ($request->get('network_id')) {
+            $query->where('users.network_id', $request->get('network_id'));
+        }
+
+        if ($request->get('shop_id')) {
+            $query->where('users.shop_id', $request->get('shop_id'));
+        }
+
+        if ($request->get('user_id')) {
+            $query->where('user_id', $request->get('user_id'));
+        }
+
+        $logs = $query->orderBy('id', 'DESC')->paginate(30);
+
+        return view('cabinet.users.logs', compact('logs', 'users', 'networks', 'shops'));
     }
 
     public function delete(Request $request)
