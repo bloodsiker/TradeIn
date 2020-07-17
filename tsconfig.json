@@ -1,0 +1,32 @@
+{
+    "apiKey": "68cb6099fc69880122b1c572531a7d15",
+    "modelName": "InternetDocument",
+    "calledMethod": "save",
+    "methodProperties": {
+        "NewAddress": "1",
+        "PayerType": "Sender",
+        "PaymentMethod": "Cash",
+        "CargoType": "Cargo",
+        "VolumeGeneral": "0.1",
+        "Weight": "10",
+        "ServiceType": "WarehouseWarehouse",
+        "SeatsAmount": "1",
+        "Description": "абажур",
+        "Cost": "500",
+        "CitySender": "8d5a980d-391c-11dd-90d9-001a92567626",
+        "Sender": "2816e9a7-d46b-11e7-becf-005056881c6b",
+        "SenderAddress": "0d545ece-e1c2-11e3-8c4a-0050568002cf",
+        "ContactSender": "43501c3e-d882-11e8-8b24-005056881c6b",
+        "SendersPhone": "380935147288",
+        "RecipientCityName": "Киев",
+        "RecipientArea": "",
+        "RecipientAreaRegions": "",
+        "RecipientAddressName": "150",
+        "RecipientHouse": "",
+        "RecipientFlat": "",
+        "RecipientName": "Тест Тест Тест",
+        "RecipientType": "PrivatePerson",
+        "RecipientsPhone": "380991234567",
+        "DateTime": "18.07.2020"
+    }
+}

@@ -110,43 +110,21 @@
                                 </select>
                             </div>
 
-                            <div class="form-group col-md-6">
-                                <label for="CitySender">Город <span class="text-danger">*</span></label>
-                                <select class="custom-select" id="CitySender" name="CitySender">
-                                    <option selected></option>
-                                    @foreach($cities['data'] as $city)
-                                        <option value="{{ $city['Ref'] }}" data-ref="{{ $city['Ref'] }}">{{ $city['DescriptionRu'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group col-md-6">
-                                <label for="SenderAddress">Отделение <span class="text-danger">*</span></label>
-                                <select class="custom-select" id="SenderAddress" name="SenderAddress" required>
-                                    <option disabled></option>
-                                </select>
-                            </div>
-
-{{--                            <div class="form-group col-md-4">--}}
-{{--                                <label for="name">Имя <span class="text-danger">*</span></label>--}}
-{{--                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" id="name" placeholder="Имя" required>--}}
-{{--                                @error('name')--}}
-{{--                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>--}}
-{{--                                @enderror--}}
+{{--                            <div class="form-group col-md-6">--}}
+{{--                                <label for="CitySender">Город <span class="text-danger">*</span></label>--}}
+{{--                                <select class="custom-select" id="CitySender" name="CitySender">--}}
+{{--                                    <option selected></option>--}}
+{{--                                    @foreach($cities['data'] as $city)--}}
+{{--                                        <option value="{{ $city['Ref'] }}" data-ref="{{ $city['Ref'] }}">{{ $city['DescriptionRu'] }}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
 {{--                            </div>--}}
-{{--                            <div class="form-group col-md-4">--}}
-{{--                                <label for="surname">Фамилия <span class="text-danger">*</span></label>--}}
-{{--                                <input type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ old('surname') }}" id="surname" placeholder="Фамилия" required>--}}
-{{--                                @error('surname')--}}
-{{--                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>--}}
-{{--                                @enderror--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group col-md-4">--}}
-{{--                                <label for="patronymic">Отчество</label>--}}
-{{--                                <input type="text" class="form-control @error('patronymic') is-invalid @enderror" name="patronymic" value="{{ old('patronymic') }}" id="patronymic" placeholder="Отчество">--}}
-{{--                                @error('patronymic')--}}
-{{--                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>--}}
-{{--                                @enderror--}}
+
+{{--                            <div class="form-group col-md-6">--}}
+{{--                                <label for="SenderAddress">Отделение <span class="text-danger">*</span></label>--}}
+{{--                                <select class="custom-select" id="SenderAddress" name="SenderAddress" required>--}}
+{{--                                    <option disabled></option>--}}
+{{--                                </select>--}}
 {{--                            </div>--}}
                         </div>
 
@@ -154,8 +132,8 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-3">
-                                <label for="LastName">Фамилия</label>
-                                <input type="text" class="form-control @error('LastName') is-invalid @enderror" name="LastName" value="{{ old('LastName') }}" id="LastName" placeholder="Фамилия">
+                                <label for="LastName">Фамилия <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('LastName') is-invalid @enderror" name="LastName" value="{{ old('LastName') }}" id="LastName" placeholder="Фамилия" required>
                                 @error('LastName')
                                     <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
@@ -170,8 +148,8 @@
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label for="MiddleName">Отчество <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('MiddleName') is-invalid @enderror" name="MiddleName" value="{{ old('MiddleName') }}" id="MiddleName" placeholder="Отчество" required>
+                                <label for="MiddleName">Отчество</label>
+                                <input type="text" class="form-control @error('MiddleName') is-invalid @enderror" name="MiddleName" value="{{ old('MiddleName') }}" id="MiddleName" placeholder="Отчество">
                                 @error('MiddleName')
                                     <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
@@ -186,50 +164,24 @@
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="city">Город <span class="text-danger">*</span></label>
-                                <select class="custom-select" id="city" name="CityRecipient">
-                                    <option selected></option>
-                                    @foreach($cities['data'] as $city)
-                                        <option value="{{ $city['DescriptionRu'] }}" data-ref="{{ $city['Ref'] }}">{{ $city['DescriptionRu'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group col-md-6">
-                                <label for="warehouse">Отделение <span class="text-danger">*</span></label>
-                                <select class="custom-select" id="warehouse" name="RecipientAddressName" required>
-                                    <option disabled></option>
-                                </select>
-                            </div>
-                        </div>
-
 {{--                        <div class="form-row">--}}
-{{--                            <div class="form-group col-md-4">--}}
-{{--                                <label for="RecipientCityName">Город получателя <span class="text-danger">*</span></label>--}}
-{{--                                <input type="text" class="form-control @error('RecipientCityName') is-invalid @enderror" name="RecipientCityName" value="{{ old('RecipientCityName') }}" id="RecipientCityName" autocomplete="off" required>--}}
-{{--                                @error('RecipientCityName')--}}
-{{--                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>--}}
-{{--                                @enderror--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group col-md-4">--}}
-{{--                                <label for="RecipientArea">Область</label>--}}
-{{--                                <input type="text" class="form-control @error('RecipientArea') is-invalid @enderror" name="RecipientArea" value="{{ old('RecipientArea') }}" id="RecipientArea" autocomplete="off">--}}
-{{--                                @error('RecipientArea')--}}
-{{--                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>--}}
-{{--                                @enderror--}}
+{{--                            <div class="form-group col-md-6">--}}
+{{--                                <label for="city">Город <span class="text-danger">*</span></label>--}}
+{{--                                <select class="custom-select" id="city" name="CityRecipient">--}}
+{{--                                    <option selected></option>--}}
+{{--                                    @foreach($cities['data'] as $city)--}}
+{{--                                        <option value="{{ $city['Ref'] }}" data-ref="{{ $city['Ref'] }}">{{ $city['DescriptionRu'] }}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
 {{--                            </div>--}}
 
-{{--                            <div class="form-group col-md-4">--}}
-{{--                                <label for="RecipientAddressName">Номер отделения <span class="text-danger">*</span></label>--}}
-{{--                                <input type="text" class="form-control @error('RecipientAddressName') is-invalid @enderror" name="RecipientAddressName" value="{{ old('RecipientAddressName') }}" id="RecipientAddressName" autocomplete="off" required>--}}
-{{--                                @error('RecipientAddressName')--}}
-{{--                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>--}}
-{{--                                @enderror--}}
+{{--                            <div class="form-group col-md-6">--}}
+{{--                                <label for="warehouse">Отделение <span class="text-danger">*</span></label>--}}
+{{--                                <select class="custom-select" id="warehouse" name="RecipientAddressName" required>--}}
+{{--                                    <option disabled></option>--}}
+{{--                                </select>--}}
 {{--                            </div>--}}
 {{--                        </div>--}}
-
 
                         <div class="form-row d-flex justify-content-end mg-t-20">
                             <button type="submit" class="btn btn-sm btn-dark"><i class="far fa-save"></i> Создать</button>

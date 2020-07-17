@@ -158,18 +158,22 @@ class NovaPoshtaController extends Controller
                 "Description" => $request->get('Description'),
                 "Cost" => $request->get('Cost'),
 
-                "CitySender" => $request->get('CitySender'),
+//                "CitySender" => $request->get('CitySender'),
+                "CitySender" => '8d5a980d-391c-11dd-90d9-001a92567626',
 //                "Sender" => $request->get('ContactSender'),
                 "Sender" => $senderInfo['data'][0]['Ref'],
-                "SenderAddress" => $request->get('SenderAddress'),
+//                "SenderAddress" => $request->get('SenderAddress'),
+                "SenderAddress" => '0d545ece-e1c2-11e3-8c4a-0050568002cf',
 //                "ContactSender" => $request->get('ContactSender'),
                 "ContactSender" => $senderContact['data'][0]['Ref'],
                 "SendersPhone" => $senderContact['data'][0]['Phones'],
 
-                "RecipientCityName" => $request->get('CityRecipient'), //Киев
+//                "RecipientCityName" => $request->get('CityRecipient'), //Киев
+                "RecipientCityName" => 'Киев', //Киев
                 "RecipientArea" => "",
                 "RecipientAreaRegions" => "",
-                "RecipientAddressName" => $request->get('RecipientAddressName'), //Склад
+//                "RecipientAddressName" => $request->get('RecipientAddressName'), //Склад
+                "RecipientAddressName" => '150', //Склад
                 "RecipientHouse" => "",
                 "RecipientFlat" => "",
                 "RecipientName" => "{$request->get('LastName')} {$request->get('FirstName')} {$request->get('MiddleName')}",
