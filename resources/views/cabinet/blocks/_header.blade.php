@@ -134,7 +134,7 @@
             <a href="" class="dropdown-link" data-toggle="dropdown" data-display="static">
                 <div class="avatar avatar-sm"><img src="{{ asset(Auth::user()->getAvatar()) }}" class="rounded-circle" alt=""></div>
             </a>
-            <div class="dropdown-menu dropdown-menu-right tx-13">
+            <div class="dropdown-menu dropdown-menu-right tx-12">
                 <div class="avatar avatar-lg mg-b-15"><img src="{{ asset(Auth::user()->getAvatar()) }}" class="rounded-circle" alt=""></div>
                 <h6 class="tx-semibold mg-b-5">{{ Auth::user()->fullName() }}</h6>
                 <p class="mg-b-25 tx-12 tx-color-03">{{ Auth::user()->role->name }}</p>

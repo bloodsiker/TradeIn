@@ -145,6 +145,13 @@ class UserController extends Controller
         return view('cabinet.users.edit', compact('user', 'roles', 'networks', 'shops'));
     }
 
+    public function logs()
+    {
+        $logs = \App\Models\UserLog::orderBy('id', 'DESC')->paginate(30);
+
+        return view('cabinet.users.logs', compact('logs'));
+    }
+
     public function delete(Request $request)
     {
         $user = User::findOrFail($request->get('id'));
