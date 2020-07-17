@@ -36,6 +36,9 @@
                                 <th scope="col">Телефон</th>
                                 <th scope="col">Торговая сеть</th>
                                 <th scope="col">Статус</th>
+                                @if(Auth::user()->isAdmin())
+                                    <th scope="col"></th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
@@ -48,6 +51,13 @@
                                     <td>{{ $user->phone }}</td>
                                     <td><span class="badge badge-success">{{ $user->network ? $user->network->name : null }}</span></td>
                                     <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
+                                    @if(Auth::user()->isAdmin())
+                                        <td>
+                                            <a href="{{ route('cabinet.user.edit', ['id' => $user->id]) }}" class="btn btn-xxs btn-success btn-icon">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>

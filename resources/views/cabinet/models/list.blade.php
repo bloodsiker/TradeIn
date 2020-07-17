@@ -122,6 +122,10 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="container-paginate">
+                        {{ $models->appends(request()->all())->links('cabinet.blocks._pagination') }}
+                    </div>
                 @else
                     <div class="alert alert-primary d-flex align-items-center" role="alert">
                         @if(request('network_id'))

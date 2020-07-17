@@ -1,18 +1,18 @@
 <header class="navbar navbar-header navbar-header-fixed">
     <a href="" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a>
     <div class="navbar-brand">
-        <a href="{{ route('cabinet.main') }}"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS.png') }}" alt=""></a>
+        <a href="{{ route('cabinet.main') }}"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS_orange.png') }}" alt=""></a>
     </div>
     <div id="navbarMenu" class="navbar-menu-wrapper">
         <div class="navbar-menu-header">
-            <a href="{{ route('cabinet.main') }}"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS.png') }}" alt=""></a>
+            <a href="{{ route('cabinet.main') }}"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS_orange.png') }}" alt=""></a>
             <a id="mainMenuClose" href=""><i data-feather="x"></i></a>
         </div>
         <ul class="nav navbar-menu">
             <li class="nav-label pd-l-20 pd-lg-l-25 d-lg-none">Навигация</li>
             <li class="nav-item {{ request()->is('cabinet/calculator*') ? 'active' : null }}"><a href="{{ route('cabinet.main') }}" class="nav-link"><i data-feather="box"></i> Калькулятор</a></li>
             <li class="nav-item with-sub">
-                <a href="" class="nav-link"><i data-feather="package"></i> Заявки</a>
+                <a href="" class="nav-link"><i data-feather="mail"></i> Заявки</a>
                 <ul class="navbar-menu-sub">
                     <li class="nav-sub-item"><a href="{{ route('cabinet.buyback_request.list') }}" class="nav-sub-link"><i data-feather="mail"></i>Заявки на выкуп</a></li>
                     @if(Auth::user()->isAdmin() || Auth::user()->isShop())
@@ -22,7 +22,7 @@
             </li>
             @if(Auth::user()->isAdmin())
                 <li class="nav-item with-sub">
-                    <a href="" class="nav-link"><i data-feather="package"></i> Справочник</a>
+                    <a href="" class="nav-link"><i data-feather="bar-chart-2"></i> Справочник</a>
                     <ul class="navbar-menu-sub">
                         <li class="nav-sub-item"><a href="{{ route('cabinet.network.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Торговые сети</a></li>
                         <li class="nav-sub-item"><a href="{{ route('cabinet.shop.list') }}" class="nav-sub-link"><i data-feather="bar-chart-2"></i>Магазины</a></li>
@@ -37,7 +37,7 @@
             <li class="nav-item {{ request()->is('cabinet/help*') ? 'active' : null }}"><a href="{{ route('cabinet.help.list') }}" class="nav-link"><i data-feather="file-text"></i> Инструкции</a></li>
 
             @if(Auth::user()->isAdmin() || Auth::user()->isNetwork())
-                <li class="nav-item {{ request()->is('cabinet/user*') ? 'active' : null }}"><a href="{{ route('cabinet.user.list') }}" class="nav-link"><i data-feather="box"></i> Пользователи</a></li>
+                <li class="nav-item {{ request()->is('cabinet/user*') ? 'active' : null }}"><a href="{{ route('cabinet.user.list') }}" class="nav-link"><i data-feather="users"></i> Пользователи</a></li>
             @endif
 
 {{--            <li class="nav-item {{ request()->is('cabinet/chat*') ? 'active' : null }}"><a href="{{ route('cabinet.chat.index') }}" class="nav-link"><i data-feather="message-square"></i> Чат</a></li>--}}
@@ -134,7 +134,7 @@
             <a href="" class="dropdown-link" data-toggle="dropdown" data-display="static">
                 <div class="avatar avatar-sm"><img src="{{ asset(Auth::user()->getAvatar()) }}" class="rounded-circle" alt=""></div>
             </a>
-            <div class="dropdown-menu dropdown-menu-right tx-13">
+            <div class="dropdown-menu dropdown-menu-right tx-12">
                 <div class="avatar avatar-lg mg-b-15"><img src="{{ asset(Auth::user()->getAvatar()) }}" class="rounded-circle" alt=""></div>
                 <h6 class="tx-semibold mg-b-5">{{ Auth::user()->fullName() }}</h6>
                 <p class="mg-b-25 tx-12 tx-color-03">{{ Auth::user()->role->name }}</p>

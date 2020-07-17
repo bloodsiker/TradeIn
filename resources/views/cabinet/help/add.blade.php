@@ -70,7 +70,7 @@
                                     <div class="custom-file">
                                         <input type="file" name="image" class="custom-file-input" id="image" onchange="processSelectedFiles(this)"
                                                aria-describedby="image">
-                                        <label class="custom-file-label" id="file-name" for="image">Выберете файт</label>
+                                        <label class="custom-file-label" id="file-name" for="image">Выберите файл</label>
                                     </div>
                                 </div>
                             </div>

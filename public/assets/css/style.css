@@ -12,6 +12,11 @@ body {background-color: #f5f6fa;font-size: 0.80rem;!important;}
 .table-white {background: #fff;box-shadow: 6px 0 6px rgba(0,0,0,0.3);}
 .table-white thead {background-color: #3b4863;color: #fff}
 .table-white th, .table-white td, .table-white thead th, .table-white tbody + tbody {border-color: #99a0ae;}
+.container-paginate{margin-top: 20px}
+.page-link{color: #3b4763;}
+.page-link:hover{color: #3b4763;}
+.page-link:focus{box-shadow: none}
+.page-item.active .page-link {background-color: #3b4763;border-color: #3b4763;}
 
 #editor-container {
     height: auto;

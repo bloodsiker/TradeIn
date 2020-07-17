@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese');
+@font-face {
+    font-family: 'Gotham Pro Regular';
+    src: url(../fonts/GothaProReg.otf); }
 /*-------------
 [Table of contents]
 
@@ -31,7 +33,7 @@
 /*------------------------------------------------------------------*
 [ Color codes ]
 
-        Color1:           #ff6012
+        Color1:           rgb(233 137 4);
         Color2:           #18213d
         Color3:           #47506d
         Color4:           #e4e5e9
@@ -50,7 +52,7 @@
 /* 1.DEFAULT STYLES */
 body {
   height: 100%;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Gotham Pro Regular";
 }
 p,
 span,
@@ -112,7 +114,10 @@ img {
     background: #323e48;
 }
 .bg_orange {
-  background: #ff6012;
+  background: rgb(233 137 4);;
+}
+.text_orange{
+    color: rgb(233 137 4);;
 }
 .container {
   max-width: 100%;
@@ -154,19 +159,20 @@ img {
 .button_grey:hover,
 .button_grey:focus {
   color: #ffffff;
-  background-color: #ff6012;
-  border-color: #ff6012;
+  background-color: rgb(233 137 4);;
+  border-color: rgb(233 137 4);;
 }
 .button_orange {
   color: #fff;
-  background: #ff6012;
-  border-color: #ff6012;
+  background: rgb(233 137 4);;
+  border-color: rgb(233 137 4);;
+  border-radius: 0;
 }
 .button_orange:hover,
 .button_orange:focus {
-  color: #ffffff;
-  background-color: #18213d;
-  border-color: #18213d;
+    color: rgb(233 137 4);
+    background-color: #fff;
+    border-color: rgb(233 137 4);
 }
 .button_brdr {
   color: #fff;
@@ -256,7 +262,7 @@ img {
 .social__link_style-2:hover,
 .social__link_style-2:focus,
 .social__link_style-2:active {
-  background: #ff6012;
+  background: rgb(233 137 4);;
   color: #fff;
 }
 .social__link_style-3 {
@@ -272,7 +278,7 @@ img {
 .social__link_style-3:hover,
 .social__link_style-3:focus,
 .social__link_style-3:active {
-  color: #ff6012;
+  color: rgb(233 137 4);;
 }
 .pt-100 {
   padding-top: 100px;
@@ -302,14 +308,18 @@ img {
   padding: 36px 0;
 }
 /* 2.TEXT STYLES */
+.logo {
+    margin-top: 35px;
+}
 .header_title {
   font-weight: 700;
-  font-size: 90px;
+  font-size: 70px;
   line-height: 1.1;
   letter-spacing: 0px;
 }
 .tagline {
   position: relative;
+  font-family: "Gotham Pro Regular";
   font-size: 16px;
   line-height: 1.2;
   text-transform: uppercase;
@@ -343,14 +353,12 @@ img {
   font-size: 15px;
   line-height: 1.47;
   font-weight: 300;
-  font-family: "Open Sans", sans-serif;
 }
 .description {
   position: relative;
   font-size: 15px;
   line-height: 1.47;
   font-weight: 300;
-  font-family: "Open Sans", sans-serif;
 }
 .text_name {
   position: relative;
@@ -363,7 +371,6 @@ img {
   font-size: 15px;
   line-height: 1.47;
   font-weight: 300;
-  font-family: 'Open Sans', sans-serif;
 }
 .title_2 {
   position: relative;
@@ -382,7 +389,6 @@ img {
   position: relative;
   line-height: 1.47;
   font-weight: 300;
-  font-family: "Open Sans", sans-serif;
   font-size: 15px;
 }
 .steps_item {
@@ -458,11 +464,10 @@ img {
   text-decoration: none;
   font-weight: 300;
   font-style: normal;
-  font-family: 'Open Sans', sans-serif;
 }
 /* 3.HEADER */
 .header {
-  background-image: url(../images/bg.jpg);
+  background-image: url(../images/bg.png);
   background-position: center center;
   color: #fff;
 }
@@ -470,8 +475,8 @@ img {
   padding: 27px 0;
 }
 .header .welcome {
-  padding-top: 100px;
-  text-align: center;
+  padding-top: 130px;
+  padding-left: 80px;
 }
 .header .welcome .actions a:not(:first-child) {
   margin-left: 30px;
@@ -480,9 +485,12 @@ img {
   margin-bottom: 32px;
   text-transform: capitalize;
   text-shadow: 2px 2px 6px black;
+  font-family: "Gotham Pro Regular";
+  color: #000;
 }
 .header .tagline {
   margin-bottom: 66px;
+  color: #000;
 }
 .header .tagline:before {
   position: absolute;
@@ -507,7 +515,7 @@ img {
   text-align: left;
 }
 .about .welcome {
-  color: #ff6012;
+  color: rgb(233 137 4);;
   margin-bottom: 22px;
 }
 .about .title {
@@ -523,7 +531,7 @@ img {
 }
 /* 5.ADVANTAGES */
 .advantages .welcome {
-  color: #ff6012;
+  color: rgb(233 137 4);;
   margin-bottom: 22px;
 }
 .advantages .title {
@@ -577,7 +585,7 @@ img {
   text-align: left;
 }
 .member_info .welcome {
-  color: #ff6012;
+  color: rgb(233 137 4);;
   margin-bottom: 6px;
 }
 .member_info .title {
@@ -607,7 +615,7 @@ img {
   -webkit-border-radius: 30px;
   -moz-border-radius: 30px;
   border-radius: 30px;
-  background: #ff6012;
+  background: rgb(233 137 4);;
   transition: .5s ease;
 }
 .member .progressbar .percentCount {
@@ -615,7 +623,6 @@ img {
   right: 0;
   top: -22px;
   font-weight: bold;
-  font-family: "Open Sans", sans-serif;
   font-size: 15px;
 }
 /* 8.CLIENTS */
@@ -646,7 +653,7 @@ img {
   background: transparent;
   border-width: 1px;
   border-style: solid;
-  border-color: #ff6012;
+  border-color: rgb(233 137 4);;
   display: block;
   -webkit-backface-visibility: visible;
   -webkit-border-radius: 50%;
@@ -654,7 +661,7 @@ img {
   border-radius: 50%;
 }
 .clients .owl-carousel .owl-dots .owl-dot.active span {
-  background: #ff6012;
+  background: rgb(233 137 4);;
 }
 .clients .owl-carousel .owl-prev,
 .clients .owl-carousel .owl-next {
@@ -717,7 +724,7 @@ img {
 }
 /* 9.TEAM */
 .team .welcome {
-  color: #ff6012;
+  color: rgb(233 137 4);;
   margin-bottom: 9px;
 }
 .team .title {
@@ -729,7 +736,7 @@ img {
   margin-bottom: 42px;
 }
 .team .text_name {
-  color: #ff6012;
+  color: rgb(233 137 4);;
 }
 .team .member_description {
   color: #18213d;
@@ -744,7 +751,7 @@ img {
 }
 /* 10.STEPS */
 .steps .welcome {
-  color: #ff6012;
+  color: rgb(233 137 4);;
   margin-bottom: 5px;
 }
 .steps .title {
@@ -761,7 +768,7 @@ img {
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
-  background: #ff6012;
+  background: rgb(233 137 4);;
   display: inline-block;
   color: #fff;
 }
@@ -808,7 +815,7 @@ img {
   text-decoration: none;
 }
 .gallery__image_link:hover:before {
-  background: #ff6012;
+  background: rgb(233 137 4);;
   opacity: 0.68;
 }
 .gallery__image_link:hover:after {
@@ -835,7 +842,7 @@ img {
   padding: 150px 0;
 }
 .product_info .welcome {
-  color: #ff6012;
+  color: rgb(233 137 4);;
   margin-bottom: 5px;
 }
 .product_info .title {
@@ -882,7 +889,7 @@ img {
   line-height: 51px;
   font-size: 16px;
   background: #fff;
-  color: #ff6012;
+  color: rgb(233 137 4);;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
@@ -892,7 +899,7 @@ img {
   -o-transition: 0.3s;
 }
 .questions .accordion .card .card-header .collapsed:after {
-  background: #ff6012;
+  background: rgb(233 137 4);;
   color: #fff;
 }
 .questions .accordion .card-block {
@@ -919,7 +926,6 @@ img {
   font-size: 15px;
   line-height: 1.47;
   font-weight: 300;
-  font-family: "Open Sans", sans-serif;
 }
 .questions .accordion ul {
   padding: 0;
@@ -934,7 +940,6 @@ img {
   font-size: 15px;
   line-height: 1.47;
   font-weight: 300;
-  font-family: "Open Sans", sans-serif;
 }
 .questions .accordion ul li:before {
   position: absolute;
@@ -1051,14 +1056,13 @@ img {
   margin-bottom: 50px;
 }
 .pricing_item .plans_description {
-  font-family: "Open Sans", sans-serif;
   margin-bottom: 40px;
 }
 .pricing_item.active {
-  border-color: #ff6012;
+  border-color: rgb(233 137 4);;
 }
 .pricing_item.active .plans_price {
-  color: #ff6012;
+  color: rgb(233 137 4);;
 }
 /* 18.PROJECT TIMELINE */
 .timeline {
@@ -1106,7 +1110,6 @@ img {
   -moz-transition: 0.3s;
   -ms-transition: 0.3s;
   -o-transition: 0.3s;
-  font-family: "Open Sans", sans-serif;
   border: none;
   font-weight: 300;
   outline: 0;
@@ -1130,7 +1133,6 @@ img {
   -o-transition: 0.3s;
   border: none;
   font-weight: 300;
-  font-family: "Open Sans", sans-serif;
   outline: 0;
 }
 .contacts .form ::-webkit-input-placeholder {
@@ -1145,7 +1147,7 @@ img {
   opacity: 1;
 }
 .contacts .form .button {
-  font-family: "Montserrat", sans-serif;
+
 }
 .form-success {
     border: 1px solid #ddd;
@@ -1158,11 +1160,14 @@ img {
   padding: 75px 0 52px;
 }
 .footer_logo {
-  margin-bottom: 23px;
+  margin-bottom: 12px;
+  color: rgb(233 137 4);
+  font-weight: 700;
+  font-size: 36px;
 }
 .footer .description {
   color: #fff;
-  margin-bottom: 50px;
+  margin-bottom: 15px;
 }
 .footer .links {
   list-style: none;
@@ -1179,7 +1184,6 @@ img {
 .footer .links .item .link {
   color: #fff;
   font-size: 15px;
-  font-family: "Open Sans", sans-serif;
   font-weight: 300;
   -webkit-transition: 0.3s;
   -moz-transition: 0.3s;
@@ -1191,7 +1195,6 @@ img {
 }
 .footer h2 {
   font-size: 18px;
-  font-family: "Open Sans", sans-serif;
   font-weight: 700;
   -webkit-transition: 0.3s;
   -moz-transition: 0.3s;
@@ -1203,13 +1206,12 @@ img {
 }
 .footer .details {
   color: #fff;
-  font-family: "Open Sans", sans-serif;
   margin-bottom: 27px;
 }
 .footer .details span {
   display: inline-block;
   margin-right: 7px;
-  color: #ff6012;
+  color: rgb(233 137 4);;
 }
 .footer .phone_link {
   display: inline-block;
@@ -1230,7 +1232,6 @@ img {
   -moz-transition: 0.3s;
   -ms-transition: 0.3s;
   -o-transition: 0.3s;
-  font-family: "Open Sans", sans-serif;
   border: 1px solid #fff;
   font-weight: 300;
   outline: 0;
@@ -1249,14 +1250,14 @@ img {
   opacity: 1;
 }
 .footer .form .button {
-  font-family: "Montserrat", sans-serif;
+
 }
 .img-icon-footer {
     display: inline-block;
     margin: 0 15px;
 }
 .img-icon-footer:first-child {
-    width: 80px;
+    width: 65px;
 }
 .img-icon-footer:last-child {
     width: 115px;
@@ -1267,7 +1268,6 @@ img {
 }
 .privacy .description {
   color: #000;
-  font-family: "Open Sans", sans-serif;
 }
 .privacy .privacy_link {
   transition: .3s;
@@ -1285,7 +1285,7 @@ img {
   right: 40px;
   bottom: 40px;
   text-align: center;
-  background-color: #ff6012;
+  background-color: rgb(233 137 4);;
   -webkit-transition: 0.3s;
   -moz-transition: 0.3s;
   -ms-transition: 0.3s;
@@ -1314,3 +1314,7 @@ img {
   color: #fff;
 }
 /* 23.MIXINS */
+
+.block_description {
+    margin-top: 70px;
+}

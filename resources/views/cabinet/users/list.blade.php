@@ -12,6 +12,7 @@
                 <div class="mg-t-20 mg-sm-t-0">
                     @if(Auth::user()->isAdmin())
                         <a href="#modal-import" class="btn btn-sm btn-dark" data-toggle="modal">Импорт</a>
+                        <a href="{{ route('cabinet.user.logs') }}" class="btn btn-sm btn-dark">Логи</a>
                         <a href="{{ route('cabinet.user.add') }}" class="btn btn-sm btn-dark">Создать</a>
                     @endif
                 </div>
@@ -27,7 +28,7 @@
                 <form action="{{ route('cabinet.user.list') }}" method="GET" novalidate>
                     <div class="form-row">
                         @if(Auth::user()->isAdmin())
-                            <div class="form-group col-md-2">
+                            <div class="form-group col-md-3">
                                 <select class="custom-select network-filter" name="network_id">
                                     <option value=""></option>
                                     @foreach($networks as $network)

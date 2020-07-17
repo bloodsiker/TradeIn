@@ -1,7 +1,7 @@
 <header class="navbar navbar-header navbar-header-fixed">
     <a href="" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a>
     <div class="navbar-brand">
-        <a href="{{ route('main') }}" class="df-logo"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS.png') }}" alt=""></a>
+        <a href="{{ route('main') }}" class="df-logo"><img width="200px" src="{{ asset('assets/img/logo/Logo_GS_orange.png')}}" alt=""></a>
     </div>
     <div id="navbarMenu" class="navbar-menu-wrapper">
         <div class="navbar-menu-header">

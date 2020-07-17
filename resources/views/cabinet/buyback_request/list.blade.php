@@ -132,7 +132,7 @@
                                     <td><small>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('d.m.Y H:i') }}</small></td>
                                     <td>
                                         @if(Auth::user()->isAdmin() || (Auth::user()->isShop() && Auth::id() === $buyRequest->user_id))
-                                            @if($buyRequest->user->network)
+                                            @if($buyRequest->user->network && $buyRequest->user->actForm)
                                                 <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                                     <i class="far fa-edit"></i>
                                                 </a>

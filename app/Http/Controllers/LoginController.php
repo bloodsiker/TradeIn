@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\UserLog;
 use App\Mail\PasswordRecoveryShipped;
 use App\Models\User;
 use Carbon\Carbon;
@@ -24,6 +25,7 @@ class LoginController extends Controller
 
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
                 if (Auth::user()->is_active) {
+                    UserLog::log('Вошёл в кабинет');
                     return redirect()->route('cabinet.main');
                 }
 
@@ -52,6 +54,7 @@ class LoginController extends Controller
 
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
                 if (Auth::user()->is_active) {
+                    UserLog::log('Вошёл в кабинет');
                     return response(['status' => 1, 'message' => 'Authentication success']);
                 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cabinet;
 
+use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Imports\UserImport;
 use App\Models\Network;
@@ -101,6 +102,8 @@ class UserController extends Controller
 
             $user->save();
 
+            UserLog::log('Добавил нового пользователя '. $user->id);
+
             return redirect()->route('cabinet.user.list')->with('success', 'Пользователь добавлен!');
         }
 
@@ -134,10 +137,45 @@ class UserController extends Controller
 
             $user->save();
 
+            UserLog::log('Отредактировал пользователя '. $user->id);
+
             return redirect()->route('cabinet.user.list')->with('success', 'Информация обновлена');
         }
 
         return view('cabinet.users.edit', compact('user', 'roles', 'networks', 'shops'));
+    }
+
+    public function logs(Request $request)
+    {
+        $networks = Network::all();
+        $shops = Shop::all();
+        $users = User::all();
+
+        $query = \App\Models\UserLog::select('user_logs.*');
+        $query->join('users', 'users.id', '=', 'user_logs.user_id')
+            ->leftJoin('shops', 'users.shop_id', '=', 'shops.id')
+            ->leftJoin('networks', 'users.network_id', '=', 'networks.id');
+
+        if ($request->get('network_id')) {
+            $query->where('users.network_id', $request->get('network_id'));
+        }
+
+        if ($request->get('shop_id')) {
+            $query->where('users.shop_id', $request->get('shop_id'));
+        }
+
+        if ($request->get('user_id')) {
+            $query->where('user_id', $request->get('user_id'));
+        }
+
+        if ($request->get('date')) {
+            $date = Carbon::parse($request->get('date'))->format('Y-m-d');
+            $query->whereDate('user_logs.created_at', '=', $date);
+        }
+
+        $logs = $query->orderBy('id', 'DESC')->paginate(30);
+
+        return view('cabinet.users.logs', compact('logs', 'users', 'networks', 'shops'));
     }
 
     public function delete(Request $request)
@@ -146,6 +184,8 @@ class UserController extends Controller
 
         if ($user) {
             $user->delete();
+
+            UserLog::log('Удалил пользователя '. $user->id);
 
             return response(['status' => 1, 'type' => 'success', 'message' => "Пользователь {$user->fullName()} удален!"]);
         }
@@ -157,6 +197,8 @@ class UserController extends Controller
     {
         if ($request->hasFile('file')) {
             Excel::import(new UserImport($request), $request->file('file'));
+            UserLog::log('Импортировал пользователей');
+
             return redirect()->back();
         }
 

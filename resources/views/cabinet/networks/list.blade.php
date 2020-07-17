@@ -13,8 +13,8 @@
                     <a href="#modal-data" class="btn btn-sm btn-dark btn-block" data-toggle="modal">Создать</a>
                 </div>
             </div>
-        </div><!-- container -->
-    </div><!-- content -->
+        </div>
+    </div>
 @endsection
 
 @section('content')
@@ -107,6 +107,28 @@
                             <input type="text" class="form-control" name="name" id="edit-name" placeholder="Название" autocomplete="off" required>
                             <input type="hidden" name="id" value="">
                         </div>
+
+                        <div class="divider-text mt-4 mb-4">Данные для акта приема-передачи</div>
+
+                        <div class="form-group">
+                            <label for="paragraph_1">Доверитель</label>
+                            <textarea name="paragraph_1" class="form-control" id="paragraph_1" cols="30" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="paragraph_2">Поверенный</label>
+                            <textarea name="paragraph_2" class="form-control" id="paragraph_2" cols="30" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tov">ТОВ</label>
+                            <input type="text" class="form-control" name="tov" id="tov" placeholder="ТОВ" autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="shop">Сеть магазинов</label>
+                            <input type="text" class="form-control" name="shop" id="shop" placeholder="Сеть магазинов" autocomplete="off">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
@@ -145,6 +167,10 @@
                             modalNetwork.modal('toggle');
                             modalNetwork.find('input[name=name]').val(response.data.name);
                             modalNetwork.find('input[name=id]').val(response.data.id);
+                            modalNetwork.find('textarea[name=paragraph_1]').val(response.data.paragraph_1);
+                            modalNetwork.find('textarea[name=paragraph_2]').val(response.data.paragraph_2);
+                            modalNetwork.find('input[name=tov]').val(response.data.tov);
+                            modalNetwork.find('input[name=shop]').val(response.data.shop);
                         } else {
                             $.notify('Error get network object', 'error');
                         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cabinet;
 
+use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Models\BuybackBonus;
 use Illuminate\Http\Request;
@@ -34,6 +35,8 @@ class BuybackBonusController extends Controller
             $bonus->bonus = $request->get('bonus');
             $bonus->save();
 
+            UserLog::log("Добавил новую позицию для бонусов c {$bonus->cost_from} по {$bonus->cost_to} = {$bonus->bonus}");
+
             return redirect()->route('cabinet.buyback_bonus.list')->with('success', "Правило для бонуса добавлено!");
         }
 
@@ -50,6 +53,8 @@ class BuybackBonusController extends Controller
             $bonus->bonus = $request->get('bonus');
             $bonus->save();
 
+            UserLog::log("Отредактировал позицию для бонусов c {$bonus->cost_from} до {$bonus->cost_to} = {$bonus->bonus}");
+
             return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $bonus]);
         }
 
@@ -62,6 +67,8 @@ class BuybackBonusController extends Controller
 
         if ($bonus) {
             $bonus->delete();
+
+            UserLog::log("Удалил позицию для бонусов");
 
             return response(['status' => 1, 'type' => 'success', 'message' => "Правило для бонуса удалено!"]);
         }

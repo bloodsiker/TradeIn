@@ -6,21 +6,6 @@
     <link href="{{ asset('assets/css/calculator.css') }}" rel="stylesheet">
 @endpush
 
-@section('subHeader')
-    <div class="sub-content content-fixed bd-b">
-        <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
-            <div class="d-sm-flex align-items-center justify-content-between">
-                <div>
-                    <h4 class="mg-b-0">Калькулятор оценки стоимости устройства</h4>
-                </div>
-                <div class="mg-t-20 mg-sm-t-0">
-
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
-
 @section('content')
 
     @include('cabinet.blocks.calculator')

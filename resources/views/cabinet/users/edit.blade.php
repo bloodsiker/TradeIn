@@ -10,7 +10,7 @@
                     <h4 class="mg-b-0">Редактировать пользователя {{ $user->fullName() }}</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0">
-                    <a href="{{ route('cabinet.user.list') }}" class="btn btn-sm btn-dark btn-block">
+                    <a href="{{ redirect()->back()->getTargetUrl() }}" class="btn btn-sm btn-dark btn-block">
                         <i class="fa fa-undo"></i>
                         Назад
                     </a>

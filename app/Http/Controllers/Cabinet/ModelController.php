@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cabinet;
 
+use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Imports\DeviceModelImport;
 use App\Models\Brand;
@@ -47,7 +48,7 @@ class ModelController extends Controller
             $query->where('name', 'LIKE', "%{$request->get('model')}%");
         }
 
-        $models = $query->get();
+        $models = $query->paginate(200);
 
         return view('cabinet.models.list', compact('models', 'brands', 'networks', 'network', 'brand', 'technics'));
     }
@@ -68,6 +69,8 @@ class ModelController extends Controller
             $model->price_4 = $request->get('price_4') ?: 0;
             $model->price_5 = $request->get('price_5') ?: 0;
             $model->save();
+
+            UserLog::log("Добавил новую модель {$model->name}");
 
             return redirect()->back()->with('success', "Модель {$model->name} добавлен!");
         }
@@ -93,6 +96,8 @@ class ModelController extends Controller
             $model->save();
             $model->load('brand', 'technic');
 
+            UserLog::log("Отредактировал модель {$model->name}");
+
             return response(['status' => 1, 'type' => 'success', 'message' => 'Информация обновлена!', 'data' => $model]);
         }
 
@@ -106,6 +111,8 @@ class ModelController extends Controller
         if ($model) {
             $model->is_deleted = true;
             $model->save();
+
+            UserLog::log("Удалил модель {$model->name}");
 
             return response(['status' => 1, 'type' => 'success', 'message' => "Модель {$model->name} удалена!"]);
         }
@@ -121,9 +128,11 @@ class ModelController extends Controller
             Excel::import(new DeviceModelImport($request), $request->file('file'));
 
             if ($request->has('action') && $action === 0) {
+                UserLog::log("Сделал импорт цен для устройств (Обновление)");
 
                 return redirect()->back()->with('success', "Импорт прошел успешно, данные обновлены!");
             } elseif ($request->has('action') && $action === 1) {
+                UserLog::log("Сделал импорт цен для устройств (Новые данные)");
 
                 return redirect()->back()->with('success', "Импорт прошел успешно, новые данные внесены в базу");
             }

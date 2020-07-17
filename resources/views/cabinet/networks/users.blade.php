@@ -37,6 +37,9 @@
                                 <th scope="col">Магазин</th>
                                 <th scope="col">Роль</th>
                                 <th scope="col">Статус</th>
+                                @if(Auth::user()->isAdmin())
+                                    <th scope="col"></th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
@@ -50,6 +53,13 @@
                                     <td><span class="badge badge-success">{{ $user->shop ? $user->shop->name : null }}</span></td>
                                     <td>{{ $user->role->name }}</td>
                                     <td><span class="badge badge-pill badge-{{ $user->attributeStatus('color') }}">{{ $user->attributeStatus('text') }}</span></td>
+                                    @if(Auth::user()->isAdmin())
+                                        <td>
+                                            <a href="{{ route('cabinet.user.edit', ['id' => $user->id]) }}" class="btn btn-xxs btn-success btn-icon">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>
