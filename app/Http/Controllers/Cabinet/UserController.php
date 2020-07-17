@@ -168,6 +168,11 @@ class UserController extends Controller
             $query->where('user_id', $request->get('user_id'));
         }
 
+        if ($request->get('date')) {
+            $date = Carbon::parse($request->get('date'))->format('Y-m-d');
+            $query->whereDate('user_logs.created_at', '=', $date);
+        }
+
         $logs = $query->orderBy('id', 'DESC')->paginate(30);
 
         return view('cabinet.users.logs', compact('logs', 'users', 'networks', 'shops'));

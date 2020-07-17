@@ -28,7 +28,7 @@
                 <form action="{{ route('cabinet.user.logs') }}" method="GET" novalidate>
                     <div class="form-row">
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
                             <select class="custom-select network-filter" name="network_id">
                                 <option value=""></option>
                                 @foreach($networks as $network)
@@ -55,7 +55,11 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
+                            <input type="text" class="form-control filter_date" name="date" value="{{ request('date') ?: null }}" placeholder="Дата" autocomplete="off">
+                        </div>
+
+                        <div class="form-group col-md-2">
                             <div class="btn-group" role="group">
                                 <button type="submit" class="btn btn-dark">Применить</button>
                                 <a href="{{ route('cabinet.user.logs') }}" class="btn btn-danger">Сбросить</a>
@@ -116,6 +120,15 @@
     <script>
         $(function() {
             'use strict'
+
+            $('.filter_date').datepicker({
+                todayHighlight: true,
+                orientation: "bottom left",
+                language: "{{app()->getLocale()}}",
+                isRTL: false,
+                autoClose: true,
+                format: "dd.mm.yyyy",
+            });
 
             $('.network-filter').select2({
                 placeholder: 'Торговая сеть',
