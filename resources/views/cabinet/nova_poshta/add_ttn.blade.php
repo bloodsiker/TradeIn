@@ -100,13 +100,30 @@
                         <div class="divider-text mt-4 mb-4">Отправитель</div>
 
                         <div class="form-row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-12">
                                 <label for="ContactSender">Отправитель <span class="text-danger">*</span></label>
                                 <select class="custom-select" id="ContactSender" name="ContactSender" required>
                                     <option selected></option>
                                     @foreach($counterparties as $person)
                                         <option value="{{ $person->ref }}">{{ $person->fullName() }}</option>
                                     @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="CitySender">Город <span class="text-danger">*</span></label>
+                                <select class="custom-select" id="CitySender" name="CitySender">
+                                    <option selected></option>
+                                    @foreach($cities['data'] as $city)
+                                        <option value="{{ $city['Ref'] }}" data-ref="{{ $city['Ref'] }}">{{ $city['DescriptionRu'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="SenderAddress">Отделение <span class="text-danger">*</span></label>
+                                <select class="custom-select" id="SenderAddress" name="SenderAddress" required>
+                                    <option disabled></option>
                                 </select>
                             </div>
 
@@ -136,53 +153,55 @@
                         <div class="divider-text mt-4 mb-4">Получатель</div>
 
                         <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="city">Город <span class="text-danger">*</span></label>
-                                <select class="custom-select" id="city" name="CityRecipient">
-                                    <option selected></option>
-                                    @foreach($cities['data'] as $city)
-                                        <option value="{{ $city['Ref'] }}" data-ref="{{ $city['Ref'] }}">{{ $city['DescriptionRu'] }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="form-group col-md-3">
+                                <label for="LastName">Фамилия</label>
+                                <input type="text" class="form-control @error('LastName') is-invalid @enderror" name="LastName" value="{{ old('LastName') }}" id="LastName" placeholder="Фамилия">
+                                @error('LastName')
+                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
+                                @enderror
                             </div>
 
-                            <div class="form-group col-md-6">
-                                <label for="warehouse">Отделение <span class="text-danger">*</span></label>
-                                <select class="custom-select" id="warehouse" name="RecipientAddress" required>
-                                    <option disabled></option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-3">
                                 <label for="FirstName">Имя <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('FirstName') is-invalid @enderror" name="FirstName" value="{{ old('FirstName') }}" id="FirstName" placeholder="Имя" required>
                                 @error('FirstName')
                                     <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="MiddleName">Фамилия <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('MiddleName') is-invalid @enderror" name="MiddleName" value="{{ old('MiddleName') }}" id="MiddleName" placeholder="Фамилия" required>
+
+                            <div class="form-group col-md-3">
+                                <label for="MiddleName">Отчество <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('MiddleName') is-invalid @enderror" name="MiddleName" value="{{ old('MiddleName') }}" id="MiddleName" placeholder="Отчество" required>
                                 @error('MiddleName')
                                     <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="LastName">Отчество</label>
-                                <input type="text" class="form-control @error('LastName') is-invalid @enderror" name="LastName" value="{{ old('LastName') }}" id="LastName" placeholder="Отчество">
-                                @error('LastName')
-                                    <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-3">
                                 <label for="RecipientsPhone">Телефон <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('RecipientsPhone') is-invalid @enderror" name="RecipientsPhone" value="{{ old('RecipientsPhone') }}" id="RecipientsPhone" autocomplete="off" required>
                                 @error('RecipientsPhone')
                                 <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="city">Город <span class="text-danger">*</span></label>
+                                <select class="custom-select" id="city" name="CityRecipient">
+                                    <option selected></option>
+                                    @foreach($cities['data'] as $city)
+                                        <option value="{{ $city['DescriptionRu'] }}" data-ref="{{ $city['Ref'] }}">{{ $city['DescriptionRu'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="warehouse">Отделение <span class="text-danger">*</span></label>
+                                <select class="custom-select" id="warehouse" name="RecipientAddressName" required>
+                                    <option disabled></option>
+                                </select>
                             </div>
                         </div>
 
@@ -260,6 +279,41 @@
                                 shop += "<option value='" + id + "'>" + name + "</option>";
                             }
                             _form.find('select#warehouse').html(shop);
+                        }
+                    }
+                });
+            });
+
+            $('#CitySender').select2({
+                placeholder: 'Город',
+                searchInputPlaceholder: 'Поиск города',
+                allowClear: true,
+            });
+
+            $('#CitySender').on('select2:select', function (e) {
+                let _form = $('form#nova-poshta'),
+                    url = '{{ route('cabinet.nova_poshta.add_ttn') }}',
+                    city = $(e.params.data.element).data('ref'),
+                    filter = {city: city, action: 'getWarehouse'};
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: filter,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.success === true) {
+                            var shop = "";
+
+                            for (var i = 0; i < response.data.length; i++) {
+                                var id = response.data[i].Ref,
+                                    name = response.data[i].DescriptionRu;
+
+                                shop += "<option value='" + id + "'>" + name + "</option>";
+                            }
+                            _form.find('select#SenderAddress').html(shop);
                         }
                     }
                 });

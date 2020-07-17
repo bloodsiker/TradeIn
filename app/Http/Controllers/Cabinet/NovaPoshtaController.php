@@ -133,11 +133,53 @@ class NovaPoshtaController extends Controller
 //        ]);
 
         if ($request->isMethod('post')) {
-            $this->insertDocument($np, $request);
+            $this->insertDocument2($np, $request);
         }
 
         return view('cabinet.nova_poshta.add_ttn',
             compact('cities', 'typeOfPayers', 'paymentForms', 'cargoTypes', 'counterparties'));
+    }
+
+    private function insertDocument2(NovaPoshtaApi $np, Request $request)
+    {
+        $senderInfo = $np->getCounterparties('Sender', 1);
+        $senderContact = $np->getCounterpartyContactPersons($senderInfo['data'][0]['Ref']);
+
+        $result = $np->newInternetDocument2(
+            [
+                "NewAddress" => "1",
+                "PayerType" => $request->get('PayerType'),
+                "PaymentMethod" => $request->get('PaymentMethod'),
+                "CargoType" => $request->get('CargoType'),
+                "VolumeGeneral" => $request->get('VolumeGeneral'),
+                "Weight" => $request->get('Weight'),
+                "ServiceType" => "WarehouseWarehouse",
+                "SeatsAmount" => "1",
+                "Description" => $request->get('Description'),
+                "Cost" => $request->get('Cost'),
+
+                "CitySender" => $request->get('CitySender'),
+//                "Sender" => $request->get('ContactSender'),
+                "Sender" => $senderInfo['data'][0]['Ref'],
+                "SenderAddress" => $request->get('SenderAddress'),
+//                "ContactSender" => $request->get('ContactSender'),
+                "ContactSender" => $senderContact['data'][0]['Ref'],
+                "SendersPhone" => $senderContact['data'][0]['Phones'],
+
+                "RecipientCityName" => $request->get('CityRecipient'), //Киев
+                "RecipientArea" => "",
+                "RecipientAreaRegions" => "",
+                "RecipientAddressName" => $request->get('RecipientAddressName'), //Склад
+                "RecipientHouse" => "",
+                "RecipientFlat" => "",
+                "RecipientName" => "{$request->get('LastName')} {$request->get('FirstName')} {$request->get('MiddleName')}",
+                "RecipientType" => "PrivatePerson",
+                "RecipientsPhone" => $request->get('RecipientsPhone'),
+                "DateTime" => date('d.m.Y')
+            ]
+        );
+
+        dd($result);
     }
 
     private function insertDocument(NovaPoshtaApi $np, Request $request)
@@ -181,9 +223,9 @@ class NovaPoshtaController extends Controller
             ],
             // Данные получателя
             [
-                'FirstName' => $request->get('FirstName'),
-                'MiddleName' => $request->get('MiddleName'),
-                'LastName' => $request->get('LastName'),
+                'FirstName' => $request->get('FirstName'), // Имя
+                'MiddleName' => $request->get('MiddleName'), // Отчество
+                'LastName' => $request->get('LastName'), // Фамилия
                 'Phone' => $request->get('RecipientsPhone'),
                 'City' => $request->get('RecipientCityName'),
                 'Region' => $request->get('RecipientArea', ''),

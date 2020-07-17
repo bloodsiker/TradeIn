@@ -970,6 +970,44 @@ class NovaPoshtaApi
         return $this->model('InternetDocument')->save($paramsInternetDocument);
     }
 
+    public function newInternetDocument2($paramsInternetDocument)
+    {
+
+//        $paramsInternetDocument = [
+//          "NewAddress" => "1",
+//          "PayerType" => "Sender",
+//          "PaymentMethod" => "Cash",
+//          "CargoType" => "Cargo",
+//          "VolumeGeneral" => "0.1",
+//          "Weight" => "10",
+//          "ServiceType" => "WarehouseWarehouse",
+//          "SeatsAmount" => "1",
+//          "Description" => "абажур",
+//          "Cost" => "500",
+//          "CitySender" => "8d5a980d-391c-11dd-90d9-001a92567626",
+//          "Sender" => "5ace4a2e-13ee-11e5-add9-005056887b8d",
+//          "SenderAddress" => "d492290b-55f2-11e5-ad08-005056801333",
+//          "ContactSender" => "613b77c4-1411-11e5-ad08-005056801333",
+//          "SendersPhone" => "380991234567",
+//          "RecipientCityName" => "Киев",
+//          "RecipientArea" => "",
+//          "RecipientAreaRegions" => "",
+//          "RecipientAddressName" => "1",
+//          "RecipientHouse" => "",
+//          "RecipientFlat" => "",
+//          "RecipientName" => "Тест Тест Тест",
+//          "RecipientType" => "PrivatePerson",
+//          "RecipientsPhone" => "380991234567",
+//          "DateTime" => date('d.m.Y')
+//        ];
+
+        // Check for required params and set defaults
+//        $this->checkInternetDocumentRecipient($recipient);
+//        $this->checkInternetDocumentParams($params);
+
+        return $this->model('InternetDocument')->save($paramsInternetDocument);
+    }
+
     /**
      * Get only link on internet document for printing.
      *
