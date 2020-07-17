@@ -142,9 +142,10 @@ class NovaPoshtaController extends Controller
 
     private function insertDocument(NovaPoshtaApi $np, Request $request)
     {
-//        $senderInfo = $np->getCounterparties('Sender', 1, '', '');
-//        $senderInfo = $np->getCounterpartyContactPersons('2819ab78-d46b-11e7-becf-005056881c6b');
-        $senderInfo = $np->getCounterpartyContactPersons($request->get('ContactSender'));
+        $senderInfo = $np->getCounterparties('Sender', 1, '', '');
+        $senderInfo = $np->getCounterpartyContactPersons('2819ab78-d46b-11e7-becf-005056881c6b');
+//        $senderInfo = $np->getCounterpartyContactPersons($request->get('ContactSender'));
+        dd($senderInfo);
         // Выбор отправителя в конкретном городе (в данном случае - в первом попавшемся)
         $sender = $senderInfo['data'][0];
 //        dump($senderInfo);die;
