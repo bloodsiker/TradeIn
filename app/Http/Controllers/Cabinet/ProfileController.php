@@ -50,6 +50,7 @@ class ProfileController extends Controller
             $user->surname = $request->get('surname');
             $user->patronymic = $request->get('patronymic');
             $user->phone = $request->get('phone');
+            $user->nova_poshta_key = $request->get('nova_poshta_key');
             $user->birthday = Carbon::parse($request->get('birthday'))->format('Y-m-d');
 
             if ($request->hasFile('avatar')) {

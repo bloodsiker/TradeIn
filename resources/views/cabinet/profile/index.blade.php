@@ -111,12 +111,21 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="nova_poshta_key">API ключ Новой почты</label>
+                                    <input type="text" class="form-control @error('nova_poshta_key') is-invalid @enderror" name="nova_poshta_key" value="{{  Auth::user()->nova_poshta_key }}" id="nova_poshta_key" autocomplete="off">
+                                    @error('nova_poshta_key')
+                                        <span class="invalid-feedback"> <strong>{{ $message }}</strong></span>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="custom-file">
                                         <input type="file" name="avatar" class="custom-file-input" id="avatar" onchange="processSelectedFiles(this)"
                                                aria-describedby="avatar">
-                                        <label class="custom-file-label" id="file-name" for="avatar">Выберите файл</label>
+                                        <label class="custom-file-label" id="file-name" for="avatar">Выберите изображение для аватара</label>
                                     </div>
                                 </div>
                             </div>

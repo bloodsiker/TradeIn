@@ -30,4 +30,9 @@ class BuybackRequest extends Model
     {
         return $this->hasOne(Status::class, 'id', 'status_id');
     }
+
+    public function ttn()
+    {
+        return $this->belongsToMany(NovaPoshta::class);
+    }
 }

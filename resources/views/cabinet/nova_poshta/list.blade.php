@@ -10,7 +10,6 @@
                     <h4 class="mg-b-0">Список ТТН накладных</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
-                    <a href="{{ route('cabinet.nova_poshta.counterparty') }}" class="btn btn-sm btn-dark">Контрагенты</a>
                     <a href="{{ route('cabinet.nova_poshta.add_ttn') }}" class="btn btn-sm btn-dark">Создать ТТН</a>
                 </div>
             </div>
@@ -34,15 +33,25 @@
                         <table class="table table-sm table-white table-hover table-bordered">
                             <thead>
                             <tr>
-                                <th scope="col" width="40px">ID</th>
                                 <th scope="col">Пользователь</th>
+                                <th scope="col">Номер экспресс-накладной</th>
+                                <th scope="col">Стоимость (грн)</th>
+                                <th scope="col">Прогноз даты доставки</th>
+                                <th scope="col" width="50px"></th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($listTtn as $ttn)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ $ttn->user->fullName() }}</td>
+                                    <td>{{ $ttn->ttn }}</td>
+                                    <td>{{ $ttn->cost }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($ttn->date_delivery)->format('d.m.Y') }}</td>
+                                    <td>
+                                        <a href="{{ route('cabinet.nova_poshta.ttn', ['ttn' => $ttn->ttn]) }}" class="btn btn-xxs btn-success btn-icon">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

@@ -82,9 +82,9 @@ Route::group(['middleware' => ['web']], function () {
         Route::get('/buyback-request/pdf/{id}', 'Cabinet\BuybackRequestController@pdf')->name('cabinet.buyback_request.pdf');
 
         Route::match(['post', 'get'], '/nova-poshta', 'Cabinet\NovaPoshtaController@list')->name('cabinet.nova_poshta.list');
-        Route::match(['post', 'get'], '/nova-poshta/add-counterparty', 'Cabinet\NovaPoshtaController@addCounterparty')->name('cabinet.nova_poshta.add_counterparty');
-        Route::match(['post', 'get'], '/nova-poshta/counterparty', 'Cabinet\NovaPoshtaController@counterparty')->name('cabinet.nova_poshta.counterparty');
         Route::match(['post', 'get'], '/nova-poshta/add-ttn', 'Cabinet\NovaPoshtaController@addTtn')->name('cabinet.nova_poshta.add_ttn');
+        Route::match(['post', 'get'], '/nova-poshta/add-to-ttn', 'Cabinet\NovaPoshtaController@addToTtn')->name('cabinet.nova_poshta.add_to_ttn');
+        Route::match(['post', 'get'], '/nova-poshta/ttn/{ttn}', 'Cabinet\NovaPoshtaController@ttn')->name('cabinet.nova_poshta.ttn');
 
         Route::match(['post', 'get'], '/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
         Route::post('/act-form', 'Cabinet\ProfileController@actForm')->name('cabinet.profile.act_form');

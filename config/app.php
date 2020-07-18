@@ -1,9 +1,6 @@
 <?php
 
 return [
-
-    'nova_poshta_key' => env('NOVA_POSHTA_KEY', '68cb6099fc69880122b1c572531a7d15'),
-
     /*
     |--------------------------------------------------------------------------
     | Application Name

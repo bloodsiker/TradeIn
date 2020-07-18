@@ -8,6 +8,7 @@ use App\Mail\RequestChangeStatusShipped;
 use App\Models\BuybackBonus;
 use App\Models\BuybackRequest;
 use App\Models\Network;
+use App\Models\NovaPoshta;
 use App\Models\NovaPoshtaCounterparty;
 use App\Models\NovaPoshtaCounterpartyPerson;
 use App\Models\Role;
@@ -29,118 +30,89 @@ class NovaPoshtaController extends Controller
 {
     public function list(Request $request)
     {
-        $listTtn = [];
+        $listTtn = NovaPoshta::all();
 
         return view('cabinet.nova_poshta.list', compact('listTtn'));
     }
 
-    public function counterparty(Request $request)
+    public function ttn(Request $request, $ttn)
     {
-        $listCounterparty = NovaPoshtaCounterparty::where('user_id', \Auth::id())->get();
+        $ttnObject = NovaPoshta::where('ttn', $ttn)->first();
 
-        return view('cabinet.nova_poshta.counterparty', compact('listCounterparty'));
-    }
+//        $np = new NovaPoshtaApi(\Auth::user()->nova_poshta_key);
+//        $result = $np->documentsTracking($ttnObject->ttn);
 
-    public function addCounterparty(Request $request)
-    {
-        $listTtn = [];
+        $query = BuybackRequest::select('buyback_requests.*')->with('status');
+        $query->join('users', 'users.id', '=', 'buyback_requests.user_id')
+            ->leftJoin('shops', 'users.shop_id', '=', 'shops.id')
+            ->leftJoin('networks', 'users.network_id', '=', 'networks.id')
+            ->leftJoin('nova_poshta_requests', 'nova_poshta_requests.request_id', '=', 'buyback_requests.id')
+            ->where('nova_poshta_requests.np_id', '=', null);
 
-        if ($request->isMethod('post')) {
-            $vika = '364362610047bf3f07e7d65b0a4e9844';
-//            $np = new NovaPoshtaApi(config('app.nova_poshta_key'));
-            $np = new NovaPoshtaApi($vika);
-
-            $counterparty = $np->model('Counterparty')->save([
-                'FirstName' => $request->get('FirstName'),
-                'MiddleName' => $request->get('MiddleName'),
-                'LastName' => $request->get('LastName'),
-                'Phone' => $request->get('phone'),
-                'Email' => $request->get('email', ''),
-                'CounterpartyType' => 'PrivatePerson',
-                'CounterpartyProperty' => 'Recipient',
-            ]);
-
-            if ($counterparty['success']) {
-
-                $counterpartyObject = NovaPoshtaCounterparty::where('ref', $counterparty['data'][0]['Ref'])->first();
-
-                if ($counterpartyObject) {
-                    return redirect()->route('cabinet.nova_poshta.add_counterparty')->with('danger', 'Такой контрагент уже есть в системе');
-                }
-
-                $counterpartyObject = new NovaPoshtaCounterparty();
-                $counterpartyObject->user_id = \Auth::id();
-                $counterpartyObject->ref = $counterparty['data'][0]['Ref'];
-                $counterpartyObject->first_name = $counterparty['data'][0]['FirstName'];
-                $counterpartyObject->middle_name = $counterparty['data'][0]['MiddleName'];
-                $counterpartyObject->last_name = $counterparty['data'][0]['LastName'];
-                $counterpartyObject->save();
-
-                if ($counterparty['data'][0]['ContactPerson']['success']) {
-                    $person = $counterparty['data'][0]['ContactPerson']['data'][0];
-
-                    $counterpartyPerson = NovaPoshtaCounterpartyPerson::where('ref', $person['Ref'])->first();
-
-                    if (!$counterpartyPerson) {
-                        $counterpartyPerson = new NovaPoshtaCounterpartyPerson();
-                        $counterpartyPerson->counterparty_id = $counterpartyObject->id;
-                        $counterpartyPerson->ref = $person['Ref'];
-                        $counterpartyPerson->first_name = $person['FirstName'];
-                        $counterpartyPerson->middle_name = $person['MiddleName'];
-                        $counterpartyPerson->last_name = $person['LastName'];
-
-                        $counterpartyPerson->save();
-                    }
-                }
-
-                return redirect()->route('cabinet.nova_poshta.counterparty')->with('success', 'Контрагент добавлен!');
-            }
+        if (\Auth::user()->isNetwork()) {
+            $query->where('networks.id', \Auth::user()->network_id);
         }
 
-        return view('cabinet.nova_poshta.add_counterparty', compact('listTtn'));
+        if (\Auth::user()->isShop()) {
+            $query->where('shops.id', \Auth::user()->shop_id);
+        }
+
+        $buyRequests = $query->where('buyback_requests.is_deleted', false)->orderBy('id', 'DESC')->get();
+
+        return view('cabinet.nova_poshta.ttn', compact('ttnObject', 'buyRequests'));
+    }
+
+    public function addToTtn(Request $request)
+    {
+        $ttnObject = NovaPoshta::find($request->get('ttn'))->first();
+
+        $buyRequest = BuybackRequest::find($request->get('id'));
+
+        $ttnObject->requests()->attach($buyRequest);
+        $data = $buyRequest->model->technic->name . ' / ' . $buyRequest->model->brand->name . ' / ' . $buyRequest->model->name;
+
+        return response(['status' => 1, 'type' => 'success', 'message' => "Добавленно к посылке!", 'data' => $data]);
+
+//        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка, не удалось добавить!']);
     }
 
     public function addTtn(Request $request)
     {
+        $cities = $typeOfPayers = $paymentForms = $cargoTypes = [];
+        $senderContact =  $recipientContact = [];
+
+        if (\Auth::user()->nova_poshta_key) {
 //        $vika = '364362610047bf3f07e7d65b0a4e9844';
-        $np = new NovaPoshtaApi(config('app.nova_poshta_key'));
-//        $np = new NovaPoshtaApi($vika);
+            $np = new NovaPoshtaApi(\Auth::user()->nova_poshta_key);
 
-//        $senderInfo = $np->getCounterparties('Sender', 1, 'Овсійчук Дмитро Віталійович', 'Київ');
-//        $senderInfo = $np->getCounterpartyContactPersons('2819ab78-d46b-11e7-becf-005056881c6b');
-//        dump($senderInfo);die;
+            $senderInfo = $np->getCounterparties('Sender', 1);
+            $senderContact = $np->getCounterpartyContactPersons($senderInfo['data'][0]['Ref']);
+            $recipientInfo = $np->getCounterparties('Recipient', 1);
+            $recipientContact = $np->getCounterpartyContactPersons($recipientInfo['data'][0]['Ref']);
 
-        $cities = $np->getCities();
+            $cities = $np->getCities();
 
-        $typeOfPayers = $np->getTypesOfPayers();
-        $paymentForms = $np->getPaymentForms();
-        $cargoTypes = $np->getCargoTypes();
-        $counterparties = NovaPoshtaCounterparty::where('user_id', \Auth::id())->with('person')->get();
+            $typeOfPayers = $np->getTypesOfPayers();
+            $paymentForms = $np->getPaymentForms();
+            $cargoTypes = $np->getCargoTypes();
 
-        if ($request->isXmlHttpRequest() && $request->get('action') === 'getWarehouse') {
-            $result = $np->getWarehouses($request->get('city'));
-            return response()->json($result);
-        }
+            if ($request->isXmlHttpRequest() && $request->get('action') === 'getWarehouse') {
+                $result = $np->getWarehouses($request->get('city'));
+                return response()->json($result);
+            }
 
-//        $counterparty = $np->model('Counterparty')->save([
-//            'FirstName' => 'Дмитрий',
-//            'MiddleName' => 'Витальевич',
-//            'LastName' => 'Овсийчук',
-//            'Phone' => '0935147288',
-//            'Email' => 'maldini2@ukr.net',
-//            'CounterpartyType' => 'PrivatePerson',
-//            'CounterpartyProperty' => 'Recipient',
-//        ]);
+            if ($request->isMethod('post')) {
+                $this->insertDocument($np, $request);
 
-        if ($request->isMethod('post')) {
-            $this->insertDocument2($np, $request);
+                return redirect()->route('cabinet.nova_poshta.list');
+            }
         }
 
         return view('cabinet.nova_poshta.add_ttn',
-            compact('cities', 'typeOfPayers', 'paymentForms', 'cargoTypes', 'counterparties'));
+            compact('cities', 'typeOfPayers', 'paymentForms', 'cargoTypes', 'senderContact', 'recipientContact'));
     }
 
-    private function insertDocument2(NovaPoshtaApi $np, Request $request)
+    private function insertDocument(NovaPoshtaApi $np, Request $request)
     {
         $senderInfo = $np->getCounterparties('Sender', 1);
         $senderContact = $np->getCounterpartyContactPersons($senderInfo['data'][0]['Ref']);
@@ -158,22 +130,22 @@ class NovaPoshtaController extends Controller
                 "Description" => $request->get('Description'),
                 "Cost" => $request->get('Cost'),
 
-//                "CitySender" => $request->get('CitySender'),
-                "CitySender" => '8d5a980d-391c-11dd-90d9-001a92567626',
+                "CitySender" => $request->get('CitySender'),
+//                "CitySender" => '8d5a980d-391c-11dd-90d9-001a92567626',
 //                "Sender" => $request->get('ContactSender'),
                 "Sender" => $senderInfo['data'][0]['Ref'],
-//                "SenderAddress" => $request->get('SenderAddress'),
-                "SenderAddress" => '0d545ece-e1c2-11e3-8c4a-0050568002cf',
+                "SenderAddress" => $request->get('SenderAddress'),
+//                "SenderAddress" => '0d545ece-e1c2-11e3-8c4a-0050568002cf',
 //                "ContactSender" => $request->get('ContactSender'),
                 "ContactSender" => $senderContact['data'][0]['Ref'],
                 "SendersPhone" => $senderContact['data'][0]['Phones'],
 
-//                "RecipientCityName" => $request->get('CityRecipient'), //Киев
-                "RecipientCityName" => 'Киев', //Киев
+                "RecipientCityName" => $request->get('CityRecipient'), //Киев
+//                "RecipientCityName" => 'Малин', //Киев
                 "RecipientArea" => "",
                 "RecipientAreaRegions" => "",
-//                "RecipientAddressName" => $request->get('RecipientAddressName'), //Склад
-                "RecipientAddressName" => '150', //Склад
+                "RecipientAddressName" => $request->get('RecipientAddressName'), //Склад
+//                "RecipientAddressName" => '3', //Склад
                 "RecipientHouse" => "",
                 "RecipientFlat" => "",
                 "RecipientName" => "{$request->get('LastName')} {$request->get('FirstName')} {$request->get('MiddleName')}",
@@ -183,98 +155,14 @@ class NovaPoshtaController extends Controller
             ]
         );
 
-        dd($result);
-    }
-
-    private function insertDocument(NovaPoshtaApi $np, Request $request)
-    {
-        $senderInfo = $np->getCounterparties('Sender', 1, '', '');
-        $senderInfo = $np->getCounterpartyContactPersons('2819ab78-d46b-11e7-becf-005056881c6b');
-//        $senderInfo = $np->getCounterpartyContactPersons($request->get('ContactSender'));
-        dd($senderInfo);
-        // Выбор отправителя в конкретном городе (в данном случае - в первом попавшемся)
-        $sender = $senderInfo['data'][0];
-//        dump($senderInfo);die;
-        // Информация о складе отправителя
-//        $senderWarehouses = $np->getWarehouses($sender['City']);
-
-        $result = $np->newInternetDocument(
-        // Данные отправителя
-            [
-                // Данные пользователя
-                'Sender' => $request->get('ContactSender'),
-                'ContactSender' => $sender['Ref'],
-                'SendersPhone' => $sender['Phones'],
-//                'FirstName' => $sender['FirstName'],
-//                'MiddleName' => $sender['MiddleName'],
-//                'LastName' => $sender['LastName'],
-                // Вместо FirstName, MiddleName, LastName можно ввести зарегистрированные ФИО отправителя или название фирмы для юрлиц
-                // (можно получить, вызвав метод getCounterparties('Sender', 1, '', ''))
-                // 'Description' => $sender['Description'],
-                // Необязательное поле, в случае отсутствия будет использоваться из данных контакта
-                // 'Phone' => '0631112233',
-                // Город отправления
-                // 'City' => 'Белгород-Днестровский',
-                // Область отправления
-                // 'Region' => 'Одесская',
-                'CitySender' => '69da41f3-3f5d-11de-b509-001d92f78698',
-//                'CitySender' => $sender['City'],
-                // Отделение отправления по ID (в данном случае - в первом попавшемся)
-                'SenderAddress' => '16922847-e1c2-11e3-8c4a-0050568002cf',
-//                'SenderAddress' => $senderWarehouses['data'][0]['Ref'],
-                // Отделение отправления по адресу
-                // 'Warehouse' => $senderWarehouses['data'][0]['DescriptionRu'],
-            ],
-            // Данные получателя
-            [
-                'FirstName' => $request->get('FirstName'), // Имя
-                'MiddleName' => $request->get('MiddleName'), // Отчество
-                'LastName' => $request->get('LastName'), // Фамилия
-                'Phone' => $request->get('RecipientsPhone'),
-                'City' => $request->get('RecipientCityName'),
-                'Region' => $request->get('RecipientArea', ''),
-                'Warehouse' => $request->get('RecipientAddressName'),
-                'CounterpartyType' => 'PrivatePerson',
-                'CityRecipient' => $request->get('CityRecipient'),
-                'CityRef' => $request->get('CityRecipient'),
-                'RecipientAddress' => $request->get('RecipientAddress'),
-                'Recipient' => '',
-            ],
-            [
-                // Дата отправления
-                'DateTime' => date('d.m.Y'),
-                // Тип доставки, дополнительно - getServiceTypes()
-                'ServiceType' => 'WarehouseWarehouse',
-                // Тип оплаты, дополнительно - getPaymentForms()
-                'PaymentMethod' => $request->get('PaymentMethod'),
-                // Кто оплачивает за доставку
-                'PayerType' => $request->get('PayerType'),
-                // Стоимость груза в грн
-                'Cost' => $request->get('Cost'),
-                // Кол-во мест
-                'SeatsAmount' => '1',
-                // Описание груза
-                'Description' => $request->get('Description'),
-                // Тип доставки, дополнительно - getCargoTypes
-                'CargoType' => $request->get('CargoType'),
-                // Вес груза
-                'Weight' => $request->get('Weight'),
-                // Объем груза в куб.м.
-                'VolumeGeneral' => $request->get('VolumeGeneral'),
-                // Обратная доставка
-//                'BackwardDeliveryData' => [
-//                    [
-//                        // Кто оплачивает обратную доставку
-//                        'PayerType' => 'Recipient',
-//                        // Тип доставки
-//                        'CargoType' => 'Money',
-//                        // Значение обратной доставки
-//                        'RedeliveryString' => 4552,
-//                    ]
-//                ]
-            ]
-        );
-
-        dump($result);die;
+        if ($result['success']) {
+            $ttn = new NovaPoshta();
+            $ttn->user_id = \Auth::id();
+            $ttn->ttn = $result['data'][0]['IntDocNumber'];
+            $ttn->ref = $result['data'][0]['Ref'];
+            $ttn->cost = $result['data'][0]['CostOnSite'];
+            $ttn->date_delivery = $result['data'][0]['EstimatedDeliveryDate'];
+            $ttn->save();
+        }
     }
 }

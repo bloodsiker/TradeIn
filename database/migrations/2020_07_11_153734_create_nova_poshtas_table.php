@@ -15,32 +15,26 @@ class CreateNovaPoshtasTable extends Migration
     {
         Schema::create('nova_poshtas', function (Blueprint $table) {
             $table->id();
-            $table->string('ttn');
-            $table->timestamps();
-        });
-
-        Schema::create('nova_poshta_counterparties', function (Blueprint $table) {
-            $table->id();
             $table->bigInteger('user_id')->unsigned();
             $table->string('ref');
-            $table->string('first_name');
-            $table->string('middle_name');
-            $table->string('last_name');
+            $table->string('ttn');
+            $table->string('cost');
+            $table->date('date_delivery');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 
-        Schema::create('nova_poshta_counterparty_persons', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('counterparty_id')->unsigned();
-            $table->string('ref');
-            $table->string('first_name');
-            $table->string('middle_name');
-            $table->string('last_name');
-            $table->timestamps();
+        Schema::create('nova_poshta_requests', function (Blueprint $table) {
+            $table->bigInteger('np_id')->unsigned();
+            $table->bigInteger('request_id')->unsigned();
 
-            $table->foreign('counterparty_id')->references('id')->on('nova_poshta_counterparties')->onDelete('cascade');
+            $table->foreign('np_id')->references('id')->on('nova_poshtas')->onDelete('cascade');
+            $table->foreign('request_id')->references('id')->on('buyback_requests')->onDelete('cascade');
+        });
+
+        Schema::create('users', function (Blueprint $table) {
+            $table->string('nova_poshta_key')->nullable();
         });
     }
 
@@ -51,8 +45,11 @@ class CreateNovaPoshtasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nova_poshta_counterparty_persons');
-        Schema::dropIfExists('nova_poshta_counterparties');
+        Schema::dropIfExists('nova_poshta_requests');
         Schema::dropIfExists('nova_poshtas');
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('nova_poshta_key');
+        });
     }
 }
