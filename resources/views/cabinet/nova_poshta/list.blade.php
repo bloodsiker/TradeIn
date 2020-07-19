@@ -7,7 +7,7 @@
         <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
             <div class="d-sm-flex align-items-center justify-content-between">
                 <div>
-                    <h4 class="mg-b-0">Список ТТН накладных</h4>
+                    <h4 class="mg-b-0">Список экспресс-накладных</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
                     <a href="{{ route('cabinet.nova_poshta.add_ttn') }}" class="btn btn-sm btn-dark">Создать ТТН</a>
@@ -24,8 +24,8 @@
                 @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
-                @if (session('danger'))
-                    <div class="alert alert-danger">{{ session('danger') }}</div>
+                @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
                 @endif
 
                 @if(count($listTtn))
@@ -33,20 +33,26 @@
                         <table class="table table-sm table-white table-hover table-bordered">
                             <thead>
                             <tr>
+                                <th scope="col">ID</th>
                                 <th scope="col">Пользователь</th>
                                 <th scope="col">Номер экспресс-накладной</th>
                                 <th scope="col">Стоимость (грн)</th>
+                                <th scope="col">Кол-во устройств</th>
                                 <th scope="col">Прогноз даты доставки</th>
+                                <th scope="col">Создано</th>
                                 <th scope="col" width="50px"></th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($listTtn as $ttn)
                                 <tr>
+                                    <td>{{ $ttn->id }}</td>
                                     <td>{{ $ttn->user->fullName() }}</td>
                                     <td>{{ $ttn->ttn }}</td>
                                     <td>{{ $ttn->cost }}</td>
+                                    <td>{{ $ttn->requests->count() }}</td>
                                     <td>{{ \Carbon\Carbon::parse($ttn->date_delivery)->format('d.m.Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($ttn->created_at)->format('d.m.Y H:i') }}</td>
                                     <td>
                                         <a href="{{ route('cabinet.nova_poshta.ttn', ['ttn' => $ttn->ttn]) }}" class="btn btn-xxs btn-success btn-icon">
                                             <i class="far fa-edit"></i>

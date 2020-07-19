@@ -85,6 +85,7 @@ Route::group(['middleware' => ['web']], function () {
         Route::match(['post', 'get'], '/nova-poshta/add-ttn', 'Cabinet\NovaPoshtaController@addTtn')->name('cabinet.nova_poshta.add_ttn');
         Route::match(['post', 'get'], '/nova-poshta/add-to-ttn', 'Cabinet\NovaPoshtaController@addToTtn')->name('cabinet.nova_poshta.add_to_ttn');
         Route::match(['post', 'get'], '/nova-poshta/ttn/{ttn}', 'Cabinet\NovaPoshtaController@ttn')->name('cabinet.nova_poshta.ttn');
+        Route::match(['post', 'get'], '/nova-poshta/ttn/{ttn}/delete', 'Cabinet\NovaPoshtaController@deleteTtn')->name('cabinet.nova_poshta.delete_ttn');
 
         Route::match(['post', 'get'], '/profile', 'Cabinet\ProfileController@profile')->name('cabinet.profile');
         Route::post('/act-form', 'Cabinet\ProfileController@actForm')->name('cabinet.profile.act_form');

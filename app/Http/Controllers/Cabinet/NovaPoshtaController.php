@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Exports\BuybackRequestExport;
+use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Mail\RequestChangeStatusShipped;
 use App\Models\BuybackBonus;
@@ -30,7 +31,20 @@ class NovaPoshtaController extends Controller
 {
     public function list(Request $request)
     {
-        $listTtn = NovaPoshta::all();
+        $query = NovaPoshta::select('nova_poshtas.*')
+            ->join('users', 'users.id', '=', 'nova_poshtas.user_id')
+            ->leftJoin('shops', 'users.shop_id', '=', 'shops.id')
+            ->leftJoin('networks', 'users.network_id', '=', 'networks.id');
+
+        if (\Auth::user()->isNetwork()) {
+            $query->where('networks.id', \Auth::user()->network_id);
+        }
+
+        if (\Auth::user()->isShop()) {
+            $query->where('shops.id', \Auth::user()->shop_id);
+        }
+
+        $listTtn = $query->orderBy('id', 'DESC')->get();
 
         return view('cabinet.nova_poshta.list', compact('listTtn'));
     }
@@ -64,16 +78,22 @@ class NovaPoshtaController extends Controller
 
     public function addToTtn(Request $request)
     {
-        $ttnObject = NovaPoshta::find($request->get('ttn'))->first();
+        $ttnObject = NovaPoshta::find($request->get('ttn'));
 
         $buyRequest = BuybackRequest::find($request->get('id'));
 
-        $ttnObject->requests()->attach($buyRequest);
-        $data = $buyRequest->model->technic->name . ' / ' . $buyRequest->model->brand->name . ' / ' . $buyRequest->model->name;
+        if ($request->get('action') === 'addToTtn') {
+            $ttnObject->requests()->attach($buyRequest);
+            return view('cabinet.nova_poshta.blocks.ttn_request_inline', compact('buyRequest', 'ttnObject'));
 
-        return response(['status' => 1, 'type' => 'success', 'message' => "Добавленно к посылке!", 'data' => $data]);
+        } elseif ($request->get('action') === 'removeFromTtn') {
+            $ttnObject->requests()->detach($buyRequest);
+            $buyRequest->load('user', 'model', 'status');
 
-//        return response(['status' => 0, 'type' => 'error', 'message' => 'Ошибка, не удалось добавить!']);
+            return view('cabinet.nova_poshta.blocks.ttn_request_row', compact('buyRequest', 'ttnObject'));
+        }
+
+        return response(['status' => 1, 'type' => 'success', 'message' => "Добавленно к посылке!", 'data' => $data ?? null]);
     }
 
     public function addTtn(Request $request)
@@ -102,14 +122,42 @@ class NovaPoshtaController extends Controller
             }
 
             if ($request->isMethod('post')) {
-                $this->insertDocument($np, $request);
+                $ttn = $this->insertDocument($np, $request);
 
-                return redirect()->route('cabinet.nova_poshta.list');
+                return redirect()->route('cabinet.nova_poshta.ttn' , ['ttn' => $ttn->ttn]);
             }
         }
 
         return view('cabinet.nova_poshta.add_ttn',
             compact('cities', 'typeOfPayers', 'paymentForms', 'cargoTypes', 'senderContact', 'recipientContact'));
+    }
+
+    public function deleteTtn(Request $request, $ttn)
+    {
+        if (\Auth::user()->nova_poshta_key) {
+            $np = new NovaPoshtaApi(\Auth::user()->nova_poshta_key);
+            $ttn = NovaPoshta::where('ttn', $ttn)->first();
+
+            if ($ttn) {
+                $deleteTtn = $np->model('InternetDocument')->delete([
+                    'DocumentRefs' => [$ttn->ref],
+                ]);
+
+                if ($deleteTtn['success']) {
+                    $ttn->delete();
+
+                    UserLog::log("Удалил экспресс-накладную  ТТН {$ttn->ttn}");
+
+                    return redirect()->route('cabinet.nova_poshta.list')->with('success', 'Экспресс-накладная удалена!');
+                }
+
+                return redirect()->route('cabinet.nova_poshta.list')->with('error', 'Не удалось удалить экспресс-накладную');
+            }
+
+            return redirect()->route('cabinet.nova_poshta.list')->with('error', 'Экспресс-накладная не найдена!');
+        }
+
+        return redirect()->route('cabinet.nova_poshta.list')->with('error', 'Не удалось удалить экспресс-накладную');
     }
 
     private function insertDocument(NovaPoshtaApi $np, Request $request)
@@ -158,11 +206,20 @@ class NovaPoshtaController extends Controller
         if ($result['success']) {
             $ttn = new NovaPoshta();
             $ttn->user_id = \Auth::id();
+            $ttn->sender = $senderContact['data'][0]['Description'];
+            $ttn->sender_phone = $senderContact['data'][0]['Phones'];
+            $ttn->recipient = "{$request->get('LastName')} {$request->get('FirstName')} {$request->get('MiddleName')}";
+            $ttn->recipient_phone = $request->get('RecipientsPhone');
+            $ttn->description = $request->get('Description');
             $ttn->ttn = $result['data'][0]['IntDocNumber'];
             $ttn->ref = $result['data'][0]['Ref'];
             $ttn->cost = $result['data'][0]['CostOnSite'];
-            $ttn->date_delivery = $result['data'][0]['EstimatedDeliveryDate'];
+            $ttn->date_delivery = Carbon::parse($result['data'][0]['EstimatedDeliveryDate'])->format('Y-m-d');
             $ttn->save();
+
+            UserLog::log("Создал экспресс-накладную  ТТН {$ttn->ttn}");
+
+            return $ttn;
         }
     }
 }

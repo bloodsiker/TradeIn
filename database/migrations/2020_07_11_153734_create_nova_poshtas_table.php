@@ -16,6 +16,11 @@ class CreateNovaPoshtasTable extends Migration
         Schema::create('nova_poshtas', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned();
+            $table->string('sender');
+            $table->string('sender_phone')->nullable();
+            $table->string('recipient');
+            $table->string('recipient_phone')->nullable();
+            $table->text('description');
             $table->string('ref');
             $table->string('ttn');
             $table->string('cost');

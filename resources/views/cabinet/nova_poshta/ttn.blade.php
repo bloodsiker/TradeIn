@@ -40,6 +40,22 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Отправитель</td>
+                                    <td>
+                                        {{ $ttnObject->sender }}
+                                        <br>
+                                        <small><b>Телефон:</b> {{ $ttnObject->sender_phone }}</small>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Получатель</td>
+                                    <td>
+                                        {{ $ttnObject->recipient }}
+                                        <br>
+                                        <small><b>Телефон:</b> {{ $ttnObject->recipient_phone }}</small>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Номер экспресс-накладной</td>
                                     <td>{{ $ttnObject->ttn }}</td>
                                 </tr>
@@ -52,15 +68,18 @@
                                     <td>{{ \Carbon\Carbon::parse($ttnObject->date_delivery)->format('d.m.Y') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Устройства в поставке</td>
+                                    <td>Содержимое посылки</td>
                                     <td>
                                         <ul id="list_device">
                                             <li class="d-none"></li>
-                                            @foreach($ttnObject->requests as $singleRequest)
-                                                <li>{{ $singleRequest->model->technic->name }} / {{ $singleRequest->model->brand->name }} / {{ $singleRequest->model->name }}</li>
+                                            @foreach($ttnObject->requests as $buyRequest)
+                                                @include('cabinet.nova_poshta.blocks.ttn_request_inline')
                                             @endforeach
                                         </ul>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="text-right"><a href="{{ route('cabinet.nova_poshta.delete_ttn', ['ttn' => $ttnObject->ttn]) }}" class="btn btn-danger btn-xxs">Удалить экспресс-накладную</a></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -70,7 +89,7 @@
                         <div class="text-center">
                             <h4>Список заявок на выкуп</h4>
                         </div>
-                        <table class="table table-sm table-white table-hover table-bordered">
+                        <table class="table table-sm table-white table-hover table-bordered tableTtnRequest">
                             <thead>
                             <tr>
                                 <th scope="col" width="40px">ID</th>
@@ -86,29 +105,7 @@
                             </thead>
                             <tbody>
                             @foreach($buyRequests as $buyRequest)
-                                <tr data-id="{{ $buyRequest->id }}" data-ttn="{{ $ttnObject->id }}">
-                                    <td>{{ $buyRequest->id }}</td>
-                                    <td>{{ $buyRequest->user->fullName() }}</td>
-                                    <td>
-                                        @if( $buyRequest->model)
-                                            <small><b>Тип:</b> {{ $buyRequest->model->technic ? $buyRequest->model->technic->name : null }}</small>
-                                            <br>
-                                            <small><b>Производитель:</b> {{ $buyRequest->model->brand->name }}</small>
-                                            <br>
-                                            <small><b>Модель:</b> {{ $buyRequest->model->name }}</small>
-                                        @endif
-                                    </td>
-                                    <td class="td-imei">{{ $buyRequest->imei }}</td>
-                                    <td class="td-packet">{{ $buyRequest->packet }}</td>
-                                    <td class="td-cost">{{ $buyRequest->cost }}</td>
-                                    <td class="td-status">{{ $buyRequest->status->name }}</td>
-                                    <td><small>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('d.m.Y H:i') }}</small></td>
-                                    <td>
-                                        <a href="#" class="btn btn-xxs btn-dark btn-icon addToTtn">
-                                            <i class="fas fa-plus"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                @include('cabinet.nova_poshta.blocks.ttn_request_row')
                             @endforeach
                             </tbody>
                         </table>
@@ -130,7 +127,7 @@
         $(function(){
             'use strict'
 
-            $('.addToTtn').click(function (e) {
+            $('.tableTtnRequest').on('click', '.addToTtn', function (e) {
                 e.preventDefault();
 
                 let _parent = $(this).parent().parent('tr'),
@@ -140,19 +137,42 @@
                 $.ajax({
                     url: "{{ route('cabinet.nova_poshta.add_to_ttn') }}",
                     type: "POST",
-                    data: {ttn: ttn, id: id},
+                    data: {action: 'addToTtn', ttn: ttn, id: id},
                     cache: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (response) {
-                        if (response.status === 1) {
-                            _parent.remove();
-                            $('#list_device li').last().after('<li>'+ response.data +'</li>');
-                            $.notify(response.message, response.type);
+                        _parent.remove();
+                        $('#list_device li').last().after(response);
+                    }
+                });
+            });
+
+            $('#list_device').on('click', '.remove-from-ttn', function (e) {
+                let _parent = $(this).parent(),
+                    ttn = _parent.data('ttn'),
+                    id = _parent.data('id');
+
+                $.ajax({
+                    url: "{{ route('cabinet.nova_poshta.add_to_ttn') }}",
+                    type: "POST",
+                    data: {action: 'removeFromTtn', ttn: ttn, id: id},
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+
+                        let tbody = $('.tableTtnRequest').find('tbody'),
+                            tr = tbody.find('tr');
+
+                        if (tr.length) {
+                            tr.last().before(response);
                         } else {
-                            $.notify(response.message, response.type);
+                            tbody.html(response);
                         }
+                        _parent.remove();
                     }
                 });
             });

@@ -1,13 +1,13 @@
 @extends('cabinet.layouts.main')
 
-@section('title', 'Создать номер накладной Новой почты')
+@section('title', 'Создать экспресс-накладную')
 
 @section('subHeader')
     <div class="sub-content content-fixed bd-b">
         <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
             <div class="d-sm-flex align-items-center justify-content-between">
                 <div>
-                    <h4 class="mg-b-0">Создать ТТН</h4>
+                    <h4 class="mg-b-0">Создать экспресс-накладную</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
                     <a href="{{ route('cabinet.nova_poshta.list') }}" class="btn btn-sm btn-secondary">
@@ -47,10 +47,11 @@
                                 <div class="form-group col-md-4">
                                     <label for="PayerType">Плательщик <span class="text-danger">*</span></label>
                                     <select class="custom-select" id="PayerType" name="PayerType" required>
-                                        <option value=""></option>
-                                        @foreach($typeOfPayers['data'] as $typeOfPayer)
-                                            <option value="{{ $typeOfPayer['Ref'] }}">{{ $typeOfPayer['Description'] }}</option>
-                                        @endforeach
+                                        <option value="Sender">Відправник</option>
+                                        <option value="Recipient">Одержувач</option>
+{{--                                        @foreach($typeOfPayers['data'] as $typeOfPayer)--}}
+{{--                                            <option value="{{ $typeOfPayer['Ref'] }}">{{ $typeOfPayer['Description'] }}</option>--}}
+{{--                                        @endforeach--}}
                                     </select>
                                 </div>
 
@@ -129,7 +130,7 @@
 
                             <div class="form-group">
                                 <label for="RecipientContact">Список контрагентов получателей <span class="text-danger">*</span></label>
-                                <select class="custom-select" id="RecipientContact" name="RecipientContact" required>
+                                <select class="custom-select" id="RecipientContact" name="RecipientContact">
                                     <option value="">Новый получатель</option>
                                     @foreach($recipientContact['data'] as $contact)
                                         <option value="{{ $contact['Ref'] }}"

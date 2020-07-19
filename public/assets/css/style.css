@@ -17,6 +17,15 @@ body {background-color: #f5f6fa;font-size: 0.80rem;!important;}
 .page-link:hover{color: #3b4763;}
 .page-link:focus{box-shadow: none}
 .page-item.active .page-link {background-color: #3b4763;border-color: #3b4763;}
+.remove-from-ttn {color: #fff;
+    background-color: #bd2130;
+    border-color: #b21f2d;
+    padding: 3px 3px 1px 3px;
+    border-radius: 4px;
+}
+.remove-from-ttn:hover {
+    cursor: pointer;
+}
 
 #editor-container {
     height: auto;
