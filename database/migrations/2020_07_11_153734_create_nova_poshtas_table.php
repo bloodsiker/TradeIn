@@ -38,7 +38,7 @@ class CreateNovaPoshtasTable extends Migration
             $table->foreign('request_id')->references('id')->on('buyback_requests')->onDelete('cascade');
         });
 
-        Schema::create('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->string('nova_poshta_key')->nullable();
         });
     }
