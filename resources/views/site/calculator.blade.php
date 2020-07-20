@@ -15,7 +15,7 @@
                 <form action="{{ route('cabinet.buyback_request.add') }}" method="POST" id="form" novalidate>
                     <div id="form-step-1">
                         <div class="modal-header">
-                            <h6 class="modal-title" id="titleModal">Оставить заявку</h6>
+                            <h6 class="modal-title">Об устройстве</h6>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
