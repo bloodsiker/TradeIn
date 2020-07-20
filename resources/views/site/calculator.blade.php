@@ -140,7 +140,7 @@
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('assets/js/calculator.js') }}"></script>
+    <script src="{{ asset('assets/js/calculator.js?v=1.0.0') }}"></script>
     <script>
         $(function(){
             'use strict'
