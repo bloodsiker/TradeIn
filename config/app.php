@@ -182,6 +182,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\HeaderNewMessagesComposer::class,
         App\Providers\UserLogServiceProvider::class,
+        App\Providers\RepositoryServiceProvider::class,
 
     ],
 

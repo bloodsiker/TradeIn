@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\Shop;
 use App\Models\Status;
 use App\Models\User;
+use App\Repositories\Interfaces\BuybackRequestRepositoryInterface;
 use App\Services\NovaPoshtaApi;
 use Carbon\Carbon;
 use DB;
@@ -26,15 +27,22 @@ use PDF;
  */
 class BuybackRequestController extends Controller
 {
+    /**
+     * @var BuybackRequestRepositoryInterface
+     */
+    private $buybackRequestRepository;
+
+    public function __construct(BuybackRequestRepositoryInterface $buybackRequestRepository)
+    {
+        $this->buybackRequestRepository = $buybackRequestRepository;
+    }
+
     public function list(Request $request)
     {
         $statuses = Status::all();
         $allowStatuses = [];
         $shops = $networks = $users = [];
-        $query = BuybackRequest::select('buyback_requests.*')->with('status');
-        $query->join('users', 'users.id', '=', 'buyback_requests.user_id')
-            ->leftJoin('shops', 'users.shop_id', '=', 'shops.id')
-            ->leftJoin('networks', 'users.network_id', '=', 'networks.id');
+        $query = $this->buybackRequestRepository->baseQuery();
 
         if (\Auth::user()->isAdmin()) {
             $networks = Network::all();
@@ -56,41 +64,41 @@ class BuybackRequestController extends Controller
                     ->with('danger', 'Вы не можете просматривать заявки пользователей которые не находятся в вашей торговой сети!');
             }
 
-            $query->where('networks.id', \Auth::user()->network_id);
+            $this->buybackRequestRepository->filterNetwork($query, \Auth::user()->network_id);
         }
 
         if (\Auth::user()->isShop()) {
             $allowStatuses = [Status::STATUS_NEW, Status::STATUS_SENT];
             $users = User::where('shop_id', \Auth::user()->shop_id)->get();
-            $query->where('shops.id', \Auth::user()->shop_id);
+            $this->buybackRequestRepository->byUser($query, \Auth::user()->shop_id);
         }
 
         if (!\Auth::user()->isShop()) {
             if ($request->get('network_id')) {
-                $query->where('networks.id', $request->get('network_id'));
+                $this->buybackRequestRepository->filterNetwork($query, $request->get('network_id'));
             }
 
             if ($request->get('shop_id')) {
-                $query->where('shops.id', $request->get('shop_id'));
+                $this->buybackRequestRepository->filterShop($query, $request->get('shop_id'));
             }
         }
 
         if ($request->get('user_id')) {
-            $query->where('user_id', $request->get('user_id'));
+            $this->buybackRequestRepository->byUser($query, $request->get('user_id'));
         }
 
         if ($request->get('date_from') && $request->get('date_to')) {
             $from = Carbon::parse($request->get('date_from'))->format('Y-m-d').' 00:00';
             $to = Carbon::parse($request->get('date_to'))->format('Y-m-d').' 23:59';
-            $query->whereBetween('buyback_requests.created_at', [$from, $to]);
+            $this->buybackRequestRepository->filterByDate($query, $from, $to);
         } elseif ($request->get('date_from') && empty($request->get('date_to'))) {
             $from = Carbon::parse($request->get('date_from'))->format('Y-m-d').' 00:00';
             $to = Carbon::now()->format('Y-m-d').' 23:59';
-            $query->whereBetween('buyback_requests.created_at', [$from, $to]);
+            $this->buybackRequestRepository->filterByDate($query, $from, $to);
         }
 
         if ($request->get('status_id')) {
-            $query->where('status_id', $request->get('status_id'));
+            $this->buybackRequestRepository->filterStatus($query, $request->get('status_id'));
         }
 
         $buyRequests = $query->where('buyback_requests.is_deleted', false)->orderBy('id', 'DESC')->get();
@@ -103,24 +111,7 @@ class BuybackRequestController extends Controller
     {
         if ($request->isMethod('post')) {
 
-            $buyRequest = new BuybackRequest();
-            $buyRequest->user_id = \Auth::user()->id;
-            $buyRequest->model_id = $request->get('model_id');
-            $buyRequest->imei = $request->get('imei');
-            $buyRequest->packet = $request->get('packet');
-            $buyRequest->cost = (int) $request->get('cost');
-
-            $bonuses = BuybackBonus::all();
-            $bonusAdd = 0;
-            foreach ($bonuses as $bonus) {
-                if ($buyRequest->cost >= $bonus->cost_from && $buyRequest->cost < $bonus->cost_to) {
-                    $bonusAdd = $bonus->bonus;
-                }
-            }
-
-            $buyRequest->bonus = $bonusAdd;
-
-            $buyRequest->save();
+            $buyRequest = $this->buybackRequestRepository->add($request);
 
             UserLog::log("Создал заявку на выкуп 'ID#{$buyRequest->id}'");
 
@@ -134,20 +125,7 @@ class BuybackRequestController extends Controller
     {
         if ($request->isMethod('post') && $request->get('id')) {
 
-            $buyRequest = BuybackRequest::find($request->get('id'));
-
-            if (!$buyRequest->is_accrued && $request->get('status_id') == Status::STATUS_TAKE) {
-                $buyRequest->is_accrued = true;
-            }
-
-            if ($request->filled('status_id')) {
-                $buyRequest->status_id = $request->get('status_id');
-            }
-
-            $buyRequest->imei = $request->get('imei');
-            $buyRequest->packet = $request->get('packet');
-
-            $buyRequest->save();
+            $buyRequest = $this->buybackRequestRepository->update($request);
             $buyRequest->load('user', 'status', 'model');
 
             UserLog::log("Изменил заявку на выкуп 'ID#{$buyRequest->id}'");
