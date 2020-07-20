@@ -111,24 +111,7 @@ class BuybackRequestController extends Controller
     {
         if ($request->isMethod('post')) {
 
-            $buyRequest = new BuybackRequest();
-            $buyRequest->user_id = \Auth::user()->id;
-            $buyRequest->model_id = $request->get('model_id');
-            $buyRequest->imei = $request->get('imei');
-            $buyRequest->packet = $request->get('packet');
-            $buyRequest->cost = (int) $request->get('cost');
-
-            $bonuses = BuybackBonus::all();
-            $bonusAdd = 0;
-            foreach ($bonuses as $bonus) {
-                if ($buyRequest->cost >= $bonus->cost_from && $buyRequest->cost < $bonus->cost_to) {
-                    $bonusAdd = $bonus->bonus;
-                }
-            }
-
-            $buyRequest->bonus = $bonusAdd;
-
-            $buyRequest->save();
+            $buyRequest = $this->buybackRequestRepository->add($request);
 
             UserLog::log("Создал заявку на выкуп 'ID#{$buyRequest->id}'");
 
@@ -142,20 +125,7 @@ class BuybackRequestController extends Controller
     {
         if ($request->isMethod('post') && $request->get('id')) {
 
-            $buyRequest = BuybackRequest::find($request->get('id'));
-
-            if (!$buyRequest->is_accrued && $request->get('status_id') == Status::STATUS_TAKE) {
-                $buyRequest->is_accrued = true;
-            }
-
-            if ($request->filled('status_id')) {
-                $buyRequest->status_id = $request->get('status_id');
-            }
-
-            $buyRequest->imei = $request->get('imei');
-            $buyRequest->packet = $request->get('packet');
-
-            $buyRequest->save();
+            $buyRequest = $this->buybackRequestRepository->update($request);
             $buyRequest->load('user', 'status', 'model');
 
             UserLog::log("Изменил заявку на выкуп 'ID#{$buyRequest->id}'");

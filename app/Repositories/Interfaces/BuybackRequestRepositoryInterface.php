@@ -2,8 +2,15 @@
 
 namespace App\Repositories\Interfaces;
 
+use Illuminate\Http\Request;
+
 interface BuybackRequestRepositoryInterface
 {
+    /**
+     * @return mixed
+     */
+    public function get($id);
+
     /**
      * @return mixed
      */
@@ -50,4 +57,18 @@ interface BuybackRequestRepositoryInterface
      * @return mixed
      */
     public function filterByDate($query, $from, $to);
+
+    /**
+     * @param Request $request
+     *
+     * @return mixed
+     */
+    public function add(Request $request);
+
+    /**
+     * @param Request $request
+     *
+     * @return mixed
+     */
+    public function update(Request $request);
 }
