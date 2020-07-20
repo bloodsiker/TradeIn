@@ -152,37 +152,6 @@ class ProfileController extends Controller
         return view('cabinet.profile.bonus', compact('now', 'lastMonth', 'bonuses', 'sumPaid', 'users', 'networks', 'shops'));
     }
 
-    public function actForm(Request $request)
-    {
-        $user = \Auth::user();
-        $actForm = $user->actForm;
-
-        if ($request->isMethod('post')) {
-
-            if ($actForm) {
-                $actForm->fio = $request->get('fio');
-                $actForm->address = $request->get('address');
-                $actForm->type_document = $request->get('type_document');
-                $actForm->serial_number = $request->get('serial_number');
-                $actForm->issued_by = $request->get('issued_by');
-            } else {
-                $actForm = new UserActForm();
-                $actForm->fio = $request->get('fio');
-                $actForm->address = $request->get('address');
-                $actForm->type_document = $request->get('type_document');
-                $actForm->serial_number = $request->get('serial_number');
-                $actForm->issued_by = $request->get('issued_by');
-                $actForm->user()->associate($user);
-            }
-
-            $actForm->save();
-
-            return redirect()->route('cabinet.profile')->with('success', 'Анкета обновлена!');
-        }
-
-        return view('cabinet.profile.index', compact('user', 'account'));
-    }
-
     /**
      * @param Request $request
      *

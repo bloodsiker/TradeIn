@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\BuybackBonus;
 use App\Models\BuybackRequest;
+use App\Models\BuybackRequestActForm;
 use App\Models\Status;
 use App\Repositories\Interfaces\BuybackRequestRepositoryInterface;
 use Illuminate\Http\Request;
@@ -75,6 +76,16 @@ class BuybackRequestRepository implements BuybackRequestRepositoryInterface
         $buyRequest->bonus = $bonusAdd;
 
         $buyRequest->save();
+
+        $actForm = new BuybackRequestActForm();
+        $actForm->fio = $request->get('fio');
+        $actForm->address = $request->get('address');
+        $actForm->type_document = $request->get('type_document');
+        $actForm->serial_number = $request->get('serial_number');
+        $actForm->issued_by = $request->get('issued_by');
+        $actForm->request()->associate($buyRequest);
+
+        $actForm->save();
 
         return $buyRequest;
     }

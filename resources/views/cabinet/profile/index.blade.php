@@ -134,60 +134,6 @@
                     </div>
                 </div>
 
-                <div class="card mg-b-20 mg-lg-b-25">
-                    <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
-                        <h6 class="tx-uppercase tx-semibold mg-b-0">Анкета клиента для заполнения акта приёма-передачи</h6>
-                        <nav class="nav nav-with-icon tx-13">
-                        </nav>
-                    </div>
-                    <div class="card-body pd-25">
-                        <form action="{{ route('cabinet.profile.act_form') }}" id="actForm" method="POST" novalidate>
-                            @csrf
-
-                            <div class="form-group">
-                                <label for="fio">ФИО</label>
-                                <input type="text" class="form-control @error('fio') is-invalid @enderror" name="fio" value="{{ Auth::user()->actForm ? Auth::user()->actForm->fio : null }}" id="fio" placeholder="ФИО" required>
-                                @error('fio')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="address">Адрес</label>
-                                <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{ Auth::user()->actForm ? Auth::user()->actForm->address : null }}" id="address" placeholder="Адрес" required>
-                                @error('address')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="type_document">Тип документа</label>
-                                <select class="custom-select" id="type_document" name="type_document">
-                                    <option value="Паспорт">Паспорт</option>
-                                    <option value="Водительское удостоверение">Водительское удостоверение</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="serial_number">Серия номер документа</label>
-                                <input type="text" class="form-control @error('serial_number') is-invalid @enderror" name="serial_number" value="{{ Auth::user()->actForm ? Auth::user()->actForm->serial_number : null }}" id="serial_number" placeholder="Серия номер документа" required>
-                                @error('serial_number')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="issued_by">Кем и когда выдан</label>
-                                <input type="text" class="form-control @error('issued_by') is-invalid @enderror" name="issued_by" value="{{ Auth::user()->actForm ? Auth::user()->actForm->issued_by : null }}" id="issued_by" placeholder="Кем и когда выдан" required>
-                                @error('issued_by')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                            <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-save"></i> Сохранить</button>
-                        </form>
-                    </div>
-                </div>
-
                 <div class="card card-profile-interest">
                     <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
                         <h6 class="tx-uppercase tx-semibold mg-b-0">Авторизация через социальные сети</h6>

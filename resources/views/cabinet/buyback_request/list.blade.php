@@ -132,11 +132,12 @@
                                     <td><small>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('d.m.Y H:i') }}</small></td>
                                     <td>
                                         @if(Auth::user()->isAdmin() || (Auth::user()->isShop() && Auth::id() === $buyRequest->user_id))
-                                            @if($buyRequest->user->network && $buyRequest->user->actForm)
-                                                <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
-                                                    <i class="far fa-edit"></i>
-                                                </a>
 
+                                            <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+
+                                            @if($buyRequest->user->network && $buyRequest->actForm)
                                                 <a href="{{ route('cabinet.buyback_request.pdf', ['id' => $buyRequest->id]) }}" data-toggle="tooltip" title="Акт PDF" class="btn btn-xxs btn-warning btn-icon">
                                                     <i class="far fa-file-pdf"></i>
                                                 </a>

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserActFormsTable extends Migration
+class CreateBuybackRequestActFormsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateUserActFormsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_act_forms', function (Blueprint $table) {
+        Schema::create('buyback_request_act_forms', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('request_id')->unsigned();
             $table->string('fio')->nullable();
             $table->string('address')->nullable();
             $table->string('type_document')->nullable();
@@ -23,7 +23,7 @@ class CreateUserActFormsTable extends Migration
             $table->text('issued_by')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('request_id')->references('id')->on('buyback_requests')->onDelete('cascade');
         });
     }
 
@@ -34,6 +34,6 @@ class CreateUserActFormsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_act_forms');
+        Schema::dropIfExists('buyback_request_act_forms');
     }
 }

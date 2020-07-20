@@ -899,26 +899,81 @@ GET_OFFERS.onclick = function () {
     GET_COST.value = CHANGE_COST.textContent;
 }
 
+$('#next_step').on('click', function (e) {
+    e.preventDefault();
+
+    $('#form-step-1').addClass('hide');
+    $('#form-step-2').removeClass('hide');
+});
+
+$('#back_step').on('click', function (e) {
+    e.preventDefault();
+
+    $('#form-step-1').removeClass('hide');
+    $('#form-step-2').addClass('hide');
+});
+
 FEED_SEND.onclick = function(e) {
     e.preventDefault();
 
-    let _form = $('#form');
+    let _form = $('#form'),
+        form_not_error = true,
+        address = _form.find('#address').val(),
+        serial_number = _form.find('#serial_number').val(),
+        issued_by = _form.find('#issued_by').val(),
+        fio = _form.find('#fio').val();
 
-    $.ajax({
-        type: _form.attr('method'),
-        url: _form.attr('action'),
-        data: _form.serializeArray(),
-    }).done(function(response) {
-        _form.find('.modal-header > #titleModal').addClass('hide');
-        _form.find('.modal-footer > #feed_send').addClass('hide');
-        _form.find('.modal-body > .form-block').addClass('hide');
-        _form.find('.modal-body > .success-block').removeClass('hide').find('h2').text(response.message);
-        _form.trigger('reset');
-        function reloadPage() {
-            location.reload();
-        }
-        setTimeout(reloadPage, 2000);
-    });
+    if (fio.length < 1) {
+        form_not_error = false;
+        _form.find('#fio').css('border-color', 'red');
+    } else {
+        form_not_error = true;
+        _form.find('#fio').removeAttr('style')
+    }
+
+    if (address.length < 1) {
+        form_not_error = false;
+        _form.find('#address').css('border-color', 'red');
+    } else {
+        form_not_error = true;
+        _form.find('#address').removeAttr('style')
+    }
+
+    if (issued_by.length < 1) {
+        form_not_error = false;
+        _form.find('#issued_by').css('border-color', 'red');
+    } else {
+        form_not_error = true;
+        _form.find('#issued_by').removeAttr('style')
+    }
+
+    if (serial_number.length < 1) {
+        form_not_error = false;
+        _form.find('#serial_number').css('border-color', 'red');
+    } else {
+        form_not_error = true;
+        _form.find('#serial_number').removeAttr('style')
+    }
+
+
+    if (form_not_error) {
+        $.ajax({
+            type: _form.attr('method'),
+            url: _form.attr('action'),
+            data: _form.serializeArray(),
+        }).done(function(response) {
+            _form.find('.modal-header > .modal-title').addClass('hide');
+            _form.find('.modal-footer > #feed_send').addClass('hide');
+            _form.find('.modal-footer > #back_step').addClass('hide');
+            _form.find('.modal-body > .form-block').addClass('hide');
+            _form.find('.modal-body > .success-block').removeClass('hide').find('h2').text(response.message);
+            _form.trigger('reset');
+            function reloadPage() {
+                location.reload();
+            }
+            setTimeout(reloadPage, 2000);
+        });
+    }
 }
 
 

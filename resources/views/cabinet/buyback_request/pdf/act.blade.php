@@ -49,7 +49,7 @@
     <div class="mt-15">
         <p>{{ $buyBackRequest->user->network->paragraph_1 }}</p>
         <p class="mt-10">
-            {{ $buyBackRequest->user->network->paragraph_2 }} <span class="underline">{{ $buyBackRequest->user->actForm->fio }}</span>, який мешкає за адресою: <span class="underline">{{ $buyBackRequest->user->actForm->address }}</span>, посвідчення особи видане (ким, коли) <span class="underline">{{ $buyBackRequest->user->actForm->serial_number }}</span> <span class="underline">{{ $buyBackRequest->user->actForm->issued_by }}</span>
+            {{ $buyBackRequest->user->network->paragraph_2 }} <span class="underline">{{ $buyBackRequest->actForm->fio }}</span>, який мешкає за адресою: <span class="underline">{{ $buyBackRequest->actForm->address }}</span>, посвідчення особи видане (ким, коли) <span class="underline">{{ $buyBackRequest->actForm->serial_number }}</span> <span class="underline">{{ $buyBackRequest->actForm->issued_by }}</span>
         </p>
     </div>
     <div>
@@ -93,9 +93,9 @@
                 </td>
                 <td width="50%" style="vertical-align: text-top">
                     <p>Клієнт</p>
-                    <p>{{ $buyBackRequest->user->actForm->fio }}, {{ $buyBackRequest->user->actForm->address }},
-                        {{ $buyBackRequest->user->actForm->type_document }}: {{ $buyBackRequest->user->actForm->serial_number }}.
-                        {{ $buyBackRequest->user->actForm->issued_by }}
+                    <p>{{ $buyBackRequest->actForm->fio }}, {{ $buyBackRequest->actForm->address }},
+                        {{ $buyBackRequest->actForm->type_document }}: {{ $buyBackRequest->actForm->serial_number }}.
+                        {{ $buyBackRequest->actForm->issued_by }}
                     </p>
                     <br>
                     <br>

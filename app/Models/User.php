@@ -59,11 +59,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Chat::class);
     }
 
-    public function actForm()
-    {
-        return $this->hasOne(UserActForm::class);
-    }
-
     public function fullName()
     {
         return $this->name .' ' . $this->surname .' ' .$this->patronymic;
