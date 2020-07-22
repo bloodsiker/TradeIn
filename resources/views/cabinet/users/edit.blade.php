@@ -121,6 +121,29 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="divider-text mt-4 mb-4">Данные для акта приема-передачи</div>
+
+                        <div class="form-group">
+                            <label for="act_paragraph_1">Доверитель</label>
+                            <textarea name="act_paragraph_1" class="form-control" id="act_paragraph_1" cols="30" rows="3">{{ $user->act_paragraph_1 }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="act_paragraph_2">Поверенный</label>
+                            <textarea name="act_paragraph_2" class="form-control" id="act_paragraph_2" cols="30" rows="3">{{ $user->act_paragraph_2 }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="act_tov">ТОВ</label>
+                            <input type="text" class="form-control" name="act_tov" id="act_tov" value="{{ $user->act_tov }}" placeholder="ТОВ" autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="act_shop">Сеть магазинов</label>
+                            <input type="text" class="form-control" name="act_shop" id="act_shop" value="{{ $user->act_shop }}" placeholder="Сеть магазинов" autocomplete="off">
+                        </div>
+
                         <button type="submit" class="btn btn-sm btn-dark float-right"><i class="far fa-save"></i> Сохранить</button>
                     </fieldset>
                 </form>

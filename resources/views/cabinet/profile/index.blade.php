@@ -134,6 +134,38 @@
                     </div>
                 </div>
 
+                <div class="card mg-b-20 mg-lg-b-25">
+                    <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
+                        <h6 class="tx-uppercase tx-semibold mg-b-0">Данные для акта приема-передачи</h6>
+                        <nav class="nav nav-with-icon tx-13">
+                        </nav>
+                    </div><!-- card-header -->
+                    <div class="card-body pd-25">
+                        <form action="" id="infoUser" method="POST" enctype="multipart/form-data" novalidate>
+                            @csrf
+                            <div class="form-group">
+                                <label for="act_paragraph_1">Доверитель</label>
+                                <textarea name="act_paragraph_1" class="form-control" id="act_paragraph_1" readonly cols="30" rows="3">{{ Auth::user()->act_paragraph_1 }}</textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="act_paragraph_2">Поверенный</label>
+                                <textarea name="act_paragraph_2" class="form-control" id="act_paragraph_2" readonly cols="30" rows="3">{{ Auth::user()->act_paragraph_2 }}</textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="act_tov">ТОВ</label>
+                                <input type="text" class="form-control" name="act_tov" id="act_tov" value="{{ Auth::user()->act_tov }}" placeholder="ТОВ" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="act_shop">Сеть магазинов</label>
+                                <input type="text" class="form-control" name="act_shop" id="act_shop" value="{{ Auth::user()->act_shop }}" placeholder="Сеть магазинов" readonly>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <div class="card card-profile-interest">
                     <div class="card-header pd-y-15 pd-x-20 d-flex align-items-center justify-content-between">
                         <h6 class="tx-uppercase tx-semibold mg-b-0">Авторизация через социальные сети</h6>

@@ -98,6 +98,11 @@ class UserController extends Controller
                 'birthday'   => $request->filled('birthday') ? Carbon::parse($request->get('birthday'))->format('Y-m-d') : null,
                 'is_active'  => $request->get('is_active'),
                 'password'   => Hash::make($request->get('password')),
+
+                'act_paragraph_1'   => $request->get('act_paragraph_1'),
+                'act_paragraph_2'   => $request->get('act_paragraph_2'),
+                'act_tov'           => $request->get('act_tov'),
+                'act_shop'          => $request->get('act_shop'),
             ]);
 
             $user->save();
@@ -134,6 +139,11 @@ class UserController extends Controller
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->get('password'));
             }
+
+            $user->act_paragraph_1 = $request->get('act_paragraph_1');
+            $user->act_paragraph_2 = $request->get('act_paragraph_2');
+            $user->act_tov = $request->get('act_tov');
+            $user->act_shop = $request->get('act_shop');
 
             $user->save();
 

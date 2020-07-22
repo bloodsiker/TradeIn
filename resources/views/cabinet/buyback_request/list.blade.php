@@ -164,11 +164,11 @@
                                                 </a>
                                             @endif
 
-                                            @if($buyRequest->status_id === \App\Models\Status::STATUS_NEW)
-                                                <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </a>
-                                            @endif
+{{--                                            @if($buyRequest->status_id === \App\Models\Status::STATUS_NEW)--}}
+{{--                                                <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">--}}
+{{--                                                    <i class="fas fa-trash-alt"></i>--}}
+{{--                                                </a>--}}
+{{--                                            @endif--}}
                                         @endif
                                     </td>
                                 </tr>
@@ -287,7 +287,7 @@
             });
 
             @if(Auth::user()->isAdmin())
-                deleteObject('.table', '.btnDelete', "{{ route('cabinet.buyback_request.delete') }}");
+                {{--deleteObject('.table', '.btnDelete', "{{ route('cabinet.buyback_request.delete') }}");--}}
 
                 $('table').on('click', '.btnDebt', function (e) {
                     e.preventDefault();

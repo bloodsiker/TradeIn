@@ -121,6 +121,29 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="divider-text mt-4 mb-4">Данные для акта приема-передачи</div>
+
+                        <div class="form-group">
+                            <label for="act_paragraph_1">Доверитель</label>
+                            <textarea name="act_paragraph_1" class="form-control" id="act_paragraph_1" cols="30" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="act_paragraph_2">Поверенный</label>
+                            <textarea name="act_paragraph_2" class="form-control" id="act_paragraph_2" cols="30" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="act_tov">ТОВ</label>
+                            <input type="text" class="form-control" name="act_tov" id="act_tov" placeholder="ТОВ" autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="act_shop">Сеть магазинов</label>
+                            <input type="text" class="form-control" name="act_shop" id="act_shop" placeholder="Сеть магазинов" autocomplete="off">
+                        </div>
+
                         <div class="form-row d-flex justify-content-end mt-1">
                             <button type="submit" class="btn btn-sm btn-dark"><i class="far fa-save"></i> Создать</button>
                         </div>
