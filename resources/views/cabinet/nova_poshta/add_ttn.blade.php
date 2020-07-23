@@ -179,7 +179,22 @@
                             </div>
 
                             <div class="form-row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-1">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="check_warehouse" name="ServiceType" value="WarehouseWarehouse" class="custom-control-input" checked>
+                                        <label class="custom-control-label" for="check_warehouse">Склад</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-1">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="check_address" name="ServiceType" value="WarehouseDoors" class="custom-control-input">
+                                        <label class="custom-control-label" for="check_address">Адрес</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
                                     <label for="CityRecipient">Город <span class="text-danger">*</span></label>
                                     <select class="custom-select" id="CityRecipient" name="CityRecipient">
                                         <option selected></option>
@@ -189,11 +204,25 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-md-6">
+
+                                <div class="form-group col-md-8 warehouse_warehouse">
                                     <label for="RecipientAddressName">Отделение <span class="text-danger">*</span></label>
                                     <select class="custom-select" id="RecipientAddressName" name="RecipientAddressName" required>
                                         <option disabled></option>
                                     </select>
+                                </div>
+
+                                <div class="form-group col-md-6 warehouse_doors d-none">
+                                    <label for="RecipientStreetName">Улица <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="RecipientStreetName" value="" id="RecipientStreetName">
+                                </div>
+                                <div class="form-group col-md-1 warehouse_doors d-none">
+                                    <label for="RecipientHouse">Дом <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="RecipientHouse" value="" id="RecipientHouse">
+                                </div>
+                                <div class="form-group col-md-1 warehouse_doors d-none">
+                                    <label for="RecipientFlat">Квартира <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="RecipientFlat" value="" id="RecipientFlat">
                                 </div>
                             </div>
 
@@ -222,6 +251,27 @@
                 placeholder: 'Город',
                 searchInputPlaceholder: 'Поиск города',
                 allowClear: true,
+            });
+
+            $('input[type=radio][name=ServiceType]').change(function() {
+                if (this.value == 'WarehouseWarehouse') {
+                    $('.warehouse_warehouse').removeClass('d-none');
+                    $('.warehouse_doors').addClass('d-none');
+                    $('select[name=RecipientAddressName]').attr('required', true)
+
+                    $('input[name=RecipientStreetName]').removeAttr('required')
+                    $('input[name=RecipientHouse]').removeAttr('required')
+                    $('input[name=RecipientFlat]').removeAttr('required')
+                }
+                else if (this.value == 'WarehouseDoors') {
+                    $('.warehouse_warehouse').addClass('d-none');
+                    $('.warehouse_doors').removeClass('d-none');
+                    $('input[name=RecipientStreetName]').attr('required', true)
+                    $('input[name=RecipientHouse]').attr('required', true)
+                    $('input[name=RecipientFlat]').attr('required', true)
+
+                    $('select[name=RecipientAddressName]').removeAttr('required')
+                }
             });
 
             $('#CityRecipient').on('select2:select', function (e) {

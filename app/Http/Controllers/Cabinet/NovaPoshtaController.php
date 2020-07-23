@@ -165,6 +165,12 @@ class NovaPoshtaController extends Controller
         $senderInfo = $np->getCounterparties('Sender', 1);
         $senderContact = $np->getCounterpartyContactPersons($senderInfo['data'][0]['Ref']);
 
+        if ($request->get('ServiceType') == 'WarehouseWarehouse') {
+            $address = $request->get('RecipientAddressName');
+        } elseif ($request->get('ServiceType') == 'WarehouseDoors') {
+            $address = $request->get('RecipientStreetName');
+        }
+
         $result = $np->newInternetDocument2(
             [
                 "NewAddress" => "1",
@@ -173,7 +179,7 @@ class NovaPoshtaController extends Controller
                 "CargoType" => $request->get('CargoType'),
                 "VolumeGeneral" => $request->get('VolumeGeneral'),
                 "Weight" => $request->get('Weight'),
-                "ServiceType" => "WarehouseWarehouse",
+                "ServiceType" => $request->get('ServiceType'),
                 "SeatsAmount" => "1",
                 "Description" => $request->get('Description'),
                 "Cost" => $request->get('Cost'),
@@ -192,10 +198,10 @@ class NovaPoshtaController extends Controller
 //                "RecipientCityName" => 'Малин', //Киев
                 "RecipientArea" => "",
                 "RecipientAreaRegions" => "",
-                "RecipientAddressName" => $request->get('RecipientAddressName'), //Склад
+                "RecipientAddressName" => $address ?? '', //Склад
 //                "RecipientAddressName" => '3', //Склад
-                "RecipientHouse" => "",
-                "RecipientFlat" => "",
+                "RecipientHouse" => $request->get('RecipientHouse'),
+                "RecipientFlat" => $request->get('RecipientFlat'),
                 "RecipientName" => "{$request->get('LastName')} {$request->get('FirstName')} {$request->get('MiddleName')}",
                 "RecipientType" => "PrivatePerson",
                 "RecipientsPhone" => $request->get('RecipientsPhone'),
