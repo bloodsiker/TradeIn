@@ -1,4 +1,4 @@
-<tr data-id="{{ $buyRequest->id }}" data-ttn="{{ $ttnObject->id }}">
+<tr data-id="{{ $buyRequest->id }}" data-packet="{{ $buyPacket->id }}">
     <td>{{ $buyRequest->id }}</td>
     <td>{{ $buyRequest->user->fullName() }}</td>
     <td>

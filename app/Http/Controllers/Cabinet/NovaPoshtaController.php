@@ -7,6 +7,7 @@ use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Mail\RequestChangeStatusShipped;
 use App\Models\BuybackBonus;
+use App\Models\BuybackPacket;
 use App\Models\BuybackRequest;
 use App\Models\Network;
 use App\Models\NovaPoshta;
@@ -56,24 +57,7 @@ class NovaPoshtaController extends Controller
 //        $np = new NovaPoshtaApi(\Auth::user()->nova_poshta_key);
 //        $result = $np->documentsTracking($ttnObject->ttn);
 
-        $query = BuybackRequest::select('buyback_requests.*')->with('status');
-        $query->join('users', 'users.id', '=', 'buyback_requests.user_id')
-            ->leftJoin('shops', 'users.shop_id', '=', 'shops.id')
-            ->leftJoin('networks', 'users.network_id', '=', 'networks.id')
-            ->leftJoin('nova_poshta_requests', 'nova_poshta_requests.request_id', '=', 'buyback_requests.id')
-            ->where('nova_poshta_requests.np_id', '=', null);
-
-        if (\Auth::user()->isNetwork()) {
-            $query->where('networks.id', \Auth::user()->network_id);
-        }
-
-        if (\Auth::user()->isShop()) {
-            $query->where('shops.id', \Auth::user()->shop_id);
-        }
-
-        $buyRequests = $query->where('buyback_requests.is_deleted', false)->orderBy('id', 'DESC')->get();
-
-        return view('cabinet.nova_poshta.ttn', compact('ttnObject', 'buyRequests'));
+        return view('cabinet.nova_poshta.ttn', compact('ttnObject'));
     }
 
     public function addToTtn(Request $request)
@@ -100,6 +84,7 @@ class NovaPoshtaController extends Controller
     {
         $cities = $typeOfPayers = $paymentForms = $cargoTypes = [];
         $senderContact =  $recipientContact = [];
+        $packets = BuybackPacket::all();
 
         if (\Auth::user()->nova_poshta_key) {
 //        $vika = '364362610047bf3f07e7d65b0a4e9844';
@@ -129,7 +114,7 @@ class NovaPoshtaController extends Controller
         }
 
         return view('cabinet.nova_poshta.add_ttn',
-            compact('cities', 'typeOfPayers', 'paymentForms', 'cargoTypes', 'senderContact', 'recipientContact'));
+            compact('cities', 'typeOfPayers', 'paymentForms', 'cargoTypes', 'senderContact', 'recipientContact', 'packets'));
     }
 
     public function deleteTtn(Request $request, $ttn)
@@ -212,6 +197,7 @@ class NovaPoshtaController extends Controller
         if ($result['success']) {
             $ttn = new NovaPoshta();
             $ttn->user_id = \Auth::id();
+            $ttn->packet_id = $request->get('packet_id');
             $ttn->sender = $senderContact['data'][0]['Description'];
             $ttn->sender_phone = $senderContact['data'][0]['Phones'];
             $ttn->recipient = "{$request->get('LastName')} {$request->get('FirstName')} {$request->get('MiddleName')}";
@@ -227,5 +213,20 @@ class NovaPoshtaController extends Controller
 
             return $ttn;
         }
+    }
+
+    public function packetDescription(Request $request)
+    {
+//        $packet = BuybackPacket::find($request->get('id'));
+//        if ($packet && $packet->requests->count()) {
+//            $description = 'Устройства: ';
+//            foreach ($packet->requests as $bRequest) {
+//                $description .= sprintf('%s %s %s, ', $bRequest->model->technic->name, $bRequest->model->brand->name, $bRequest->model->name);
+//            }
+//
+//            return $description;
+//        }
+
+        return null;
     }
 }

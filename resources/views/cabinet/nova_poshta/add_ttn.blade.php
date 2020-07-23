@@ -30,6 +30,16 @@
                         @csrf
                         <fieldset class="form-fieldset">
 
+                            <div class="form-group">
+                                <label for="packet_id">Пакет<span class="text-danger">*</span></label>
+                                <select class="custom-select" id="packet_id" name="packet_id" required>
+                                    <option value=""></option>
+                                    @foreach($packets as $packet)
+                                        <option value="{{ $packet->id }}">{{ $packet->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div class="divider-text mb-4">Посылка</div>
 
                             <div class="form-row">
@@ -335,6 +345,23 @@
                             }
                             _form.find('select#SenderAddress').html(shop);
                         }
+                    }
+                });
+            });
+
+
+            $('#packet_id').on('change', function (e) {
+                let id = $(this).find(':selected').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('cabinet.nova_poshta.packet_description') }}',
+                    data: {id: id},
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        $('#Description').text(response);
                     }
                 });
             });

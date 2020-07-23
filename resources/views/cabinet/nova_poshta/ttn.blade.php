@@ -72,8 +72,10 @@
                                     <td>
                                         <ul id="list_device">
                                             <li class="d-none"></li>
-                                            @foreach($ttnObject->requests as $buyRequest)
-                                                @include('cabinet.nova_poshta.blocks.ttn_request_inline')
+                                            @foreach($ttnObject->packet->requests as $buyRequest)
+                                                <li data-id="{{ $buyRequest->id }}">
+                                                    {{ $buyRequest->model->technic->name }} / {{ $buyRequest->model->brand->name }} / {{ $buyRequest->model->name }} / {{ $buyRequest->cost }} грн
+                                                </li>
                                             @endforeach
                                         </ul>
                                     </td>
@@ -81,32 +83,6 @@
                                 <tr>
                                     <td colspan="2" class="text-right"><a href="{{ route('cabinet.nova_poshta.delete_ttn', ['ttn' => $ttnObject->ttn]) }}" class="btn btn-danger btn-xxs">Удалить экспресс-накладную</a></td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="table-responsive">
-                        <div class="text-center">
-                            <h4>Список заявок на выкуп</h4>
-                        </div>
-                        <table class="table table-sm table-white table-hover table-bordered tableTtnRequest">
-                            <thead>
-                            <tr>
-                                <th scope="col" width="40px">ID</th>
-                                <th scope="col">Пользователь</th>
-                                <th scope="col">Устройство</th>
-                                <th scope="col">IMEI</th>
-                                <th scope="col">Номер сейф-пакета</th>
-                                <th scope="col">Стоимость (грн)</th>
-                                <th scope="col">Статус</th>
-                                <th scope="col">Дата</th>
-                                <th scope="col"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($buyRequests as $buyRequest)
-                                @include('cabinet.nova_poshta.blocks.ttn_request_row')
-                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -119,64 +95,3 @@
         </div>
     </div>
 @endsection
-
-
-@push('scripts')
-
-    <script>
-        $(function(){
-            'use strict'
-
-            $('.tableTtnRequest').on('click', '.addToTtn', function (e) {
-                e.preventDefault();
-
-                let _parent = $(this).parent().parent('tr'),
-                    ttn = _parent.data('ttn'),
-                    id = _parent.data('id');
-
-                $.ajax({
-                    url: "{{ route('cabinet.nova_poshta.add_to_ttn') }}",
-                    type: "POST",
-                    data: {action: 'addToTtn', ttn: ttn, id: id},
-                    cache: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-                        _parent.remove();
-                        $('#list_device li').last().after(response);
-                    }
-                });
-            });
-
-            $('#list_device').on('click', '.remove-from-ttn', function (e) {
-                let _parent = $(this).parent(),
-                    ttn = _parent.data('ttn'),
-                    id = _parent.data('id');
-
-                $.ajax({
-                    url: "{{ route('cabinet.nova_poshta.add_to_ttn') }}",
-                    type: "POST",
-                    data: {action: 'removeFromTtn', ttn: ttn, id: id},
-                    cache: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-
-                        let tbody = $('.tableTtnRequest').find('tbody'),
-                            tr = tbody.find('tr');
-
-                        if (tr.length) {
-                            tr.last().before(response);
-                        } else {
-                            tbody.html(response);
-                        }
-                        _parent.remove();
-                    }
-                });
-            });
-        });
-    </script>
-@endpush
-

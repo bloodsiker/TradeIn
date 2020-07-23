@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class NovaPoshta extends Model
+class BuybackPacket extends Model
 {
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function packet()
+    public function requests()
     {
-        return $this->hasOne(BuybackPacket::class, 'id', 'packet_id');
+        return $this->belongsToMany(BuybackRequest::class, 'buyback_packet_request', 'packet_id', 'request_id');
     }
 }

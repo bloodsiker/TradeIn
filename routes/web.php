@@ -79,9 +79,14 @@ Route::group(['middleware' => ['web']], function () {
         Route::post('/buyback-request/debt', 'Cabinet\BuybackRequestController@debt')->name('cabinet.buyback_request.debt')->middleware('admin');
         Route::post('/buyback-request/load-stock', 'Cabinet\BuybackRequestController@loadStock')->name('cabinet.buyback_request.load_stock');
         Route::get('/buyback-request/export', 'Cabinet\BuybackRequestController@export')->name('cabinet.buyback_request.export');
+        Route::get('/buyback-request/packets', 'Cabinet\BuybackRequestController@packets')->name('cabinet.buyback_request.packets');
+        Route::post('/buyback-request/packet/add', 'Cabinet\BuybackRequestController@addPacket')->name('cabinet.buyback_request.packet.add');
+        Route::post('/buyback-request/packet/add-to-packet', 'Cabinet\BuybackRequestController@addToPacket')->name('cabinet.buyback_request.packet.add_to_packet');
+        Route::get('/buyback-request/packet/{id}', 'Cabinet\BuybackRequestController@packet')->name('cabinet.buyback_request.packet');
         Route::get('/buyback-request/pdf/{id}', 'Cabinet\BuybackRequestController@pdf')->name('cabinet.buyback_request.pdf');
 
         Route::match(['post', 'get'], '/nova-poshta', 'Cabinet\NovaPoshtaController@list')->name('cabinet.nova_poshta.list');
+        Route::post('/nova-poshta/packet-description', 'Cabinet\NovaPoshtaController@packetDescription')->name('cabinet.nova_poshta.packet_description');
         Route::match(['post', 'get'], '/nova-poshta/add-ttn', 'Cabinet\NovaPoshtaController@addTtn')->name('cabinet.nova_poshta.add_ttn');
         Route::match(['post', 'get'], '/nova-poshta/add-to-ttn', 'Cabinet\NovaPoshtaController@addToTtn')->name('cabinet.nova_poshta.add_to_ttn');
         Route::match(['post', 'get'], '/nova-poshta/ttn/{ttn}', 'Cabinet\NovaPoshtaController@ttn')->name('cabinet.nova_poshta.ttn');

@@ -7,8 +7,10 @@ use App\Facades\UserLog;
 use App\Http\Controllers\Controller;
 use App\Mail\RequestChangeStatusShipped;
 use App\Models\BuybackBonus;
+use App\Models\BuybackPacket;
 use App\Models\BuybackRequest;
 use App\Models\Network;
+use App\Models\NovaPoshta;
 use App\Models\Role;
 use App\Models\Shop;
 use App\Models\Status;
@@ -105,6 +107,90 @@ class BuybackRequestController extends Controller
 
         return view('cabinet.buyback_request.list',
             compact('buyRequests', 'statuses', 'shops', 'networks', 'users', 'allowStatuses'));
+    }
+
+    public function packets(Request $request)
+    {
+        $query = BuybackPacket::select('buyback_packets.*');
+        $query->join('users', 'users.id', '=', 'buyback_packets.user_id')
+            ->leftJoin('shops', 'users.shop_id', '=', 'shops.id')
+            ->leftJoin('networks', 'users.network_id', '=', 'networks.id');
+
+        if (\Auth::user()->isNetwork()) {
+            $query->where('networks.id', \Auth::user()->network_id);
+        }
+
+        if (\Auth::user()->isShop()) {
+            $query->where('shops.id', \Auth::user()->shop_id);
+        }
+
+        $buyPackets = $query->orderBy('id', 'DESC')->get();
+
+        return view('cabinet.buyback_request.packets.list',
+            compact('buyPackets'));
+    }
+
+    public function packet(Request $request, $id)
+    {
+        $buyPacket = BuybackPacket::find($id);
+
+        $query = $this->buybackRequestRepository->baseQuery();
+
+        $this->buybackRequestRepository->filterStatus($query, Status::STATUS_NEW);
+
+        $query->leftJoin('buyback_packet_request', 'buyback_packet_request.request_id', '=', 'buyback_requests.id')
+            ->where('buyback_packet_request.packet_id', '=', null);
+
+        if (\Auth::user()->isNetwork()) {
+            $this->buybackRequestRepository->filterNetwork($query, \Auth::user()->network_id);
+        }
+
+        if (\Auth::user()->isShop()) {
+            $this->buybackRequestRepository->filterShop($query, \Auth::user()->shop_id);
+        }
+
+        $buyRequests = $query->where('buyback_requests.is_deleted', false)->orderBy('id', 'DESC')->get();
+
+        return view('cabinet.buyback_request.packets.packet',
+            compact('buyPacket', 'buyRequests'));
+    }
+
+    public function addPacket(Request $request)
+    {
+        if ($request->isMethod('post')) {
+
+            $butPacket= new BuybackPacket();
+            $butPacket->user_id = \Auth::id();
+            $butPacket->name = $request->get('name');
+
+            $butPacket->save();
+
+            UserLog::log("Создал новый пакет {$butPacket->name}");
+
+            return redirect()->route('cabinet.buyback_request.packets')->with('success', 'Пакет создан!');
+        }
+
+        return redirect()->route('cabinet.buyback_request.packets.list');
+    }
+
+    public function addToPacket(Request $request)
+    {
+        $buyPacket = BuybackPacket::find($request->get('packet'));
+
+        $buyRequest = BuybackRequest::find($request->get('id'));
+
+        if ($request->get('action') === 'addToPacket') {
+            $buyPacket->requests()->attach($buyRequest);
+            return view('cabinet.buyback_request.packets.packet_request_inline', compact('buyRequest', 'buyPacket'));
+
+        } elseif ($request->get('action') === 'removeFromTtn') {
+            $buyPacket->requests()->detach($buyRequest);
+            $buyRequest->load('user', 'model', 'status');
+
+            return view('cabinet.buyback_request.packets.packet_request_row', compact('buyRequest', 'buyPacket'));
+        }
+
+        return response(['status' => 1, 'type' => 'success', 'message' => "Добавленно к посылке!", 'data' => $data ?? null]);
     }
 
     public function add(Request $request)

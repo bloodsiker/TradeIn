@@ -16,6 +16,7 @@ class CreateNovaPoshtasTable extends Migration
         Schema::create('nova_poshtas', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('packet_id')->unsigned();
             $table->string('sender');
             $table->string('sender_phone')->nullable();
             $table->string('recipient');
@@ -27,16 +28,17 @@ class CreateNovaPoshtasTable extends Migration
             $table->date('date_delivery');
             $table->timestamps();
 
+            $table->foreign('packet_id')->references('id')->on('buyback_packets')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 
-        Schema::create('nova_poshta_requests', function (Blueprint $table) {
-            $table->bigInteger('np_id')->unsigned();
-            $table->bigInteger('request_id')->unsigned();
-
-            $table->foreign('np_id')->references('id')->on('nova_poshtas')->onDelete('cascade');
-            $table->foreign('request_id')->references('id')->on('buyback_requests')->onDelete('cascade');
-        });
+//        Schema::create('nova_poshta_requests', function (Blueprint $table) {
+//            $table->bigInteger('np_id')->unsigned();
+//            $table->bigInteger('request_id')->unsigned();
+//
+//            $table->foreign('np_id')->references('id')->on('nova_poshtas')->onDelete('cascade');
+//            $table->foreign('request_id')->references('id')->on('buyback_requests')->onDelete('cascade');
+//        });
 
         Schema::table('users', function (Blueprint $table) {
             $table->string('nova_poshta_key')->nullable();
@@ -50,7 +52,6 @@ class CreateNovaPoshtasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nova_poshta_requests');
         Schema::dropIfExists('nova_poshtas');
 
         Schema::table('users', function (Blueprint $table) {
