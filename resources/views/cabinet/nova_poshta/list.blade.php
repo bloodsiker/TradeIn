@@ -10,6 +10,10 @@
                     <h4 class="mg-b-0">Список экспресс-накладных</h4>
                 </div>
                 <div class="mg-t-20 mg-sm-t-0 justify-content-end">
+                    <a href="{{ route('cabinet.buyback_request.list') }}" class="btn btn-sm btn-dark">
+                        <i class="fa fa-undo"></i>
+                        Назад
+                    </a>
                     <a href="{{ route('cabinet.nova_poshta.add_ttn') }}" class="btn btn-sm btn-dark">Создать ТТН</a>
                 </div>
             </div>
@@ -50,7 +54,7 @@
                                     <td>{{ $ttn->user->fullName() }}</td>
                                     <td>{{ $ttn->ttn }}</td>
                                     <td>{{ $ttn->cost }}</td>
-                                    <td>{{ $ttn->requests->count() }}</td>
+                                    <td>{{ $ttn->packet->requests->count() }}</td>
                                     <td>{{ \Carbon\Carbon::parse($ttn->date_delivery)->format('d.m.Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($ttn->created_at)->format('d.m.Y H:i') }}</td>
                                     <td>

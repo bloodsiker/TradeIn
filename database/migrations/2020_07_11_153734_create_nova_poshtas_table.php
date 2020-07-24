@@ -32,17 +32,9 @@ class CreateNovaPoshtasTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 
-//        Schema::create('nova_poshta_requests', function (Blueprint $table) {
-//            $table->bigInteger('np_id')->unsigned();
-//            $table->bigInteger('request_id')->unsigned();
-//
-//            $table->foreign('np_id')->references('id')->on('nova_poshtas')->onDelete('cascade');
-//            $table->foreign('request_id')->references('id')->on('buyback_requests')->onDelete('cascade');
+//        Schema::table('users', function (Blueprint $table) {
+//            $table->string('nova_poshta_key')->nullable();
 //        });
-
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('nova_poshta_key')->nullable();
-        });
     }
 
     /**

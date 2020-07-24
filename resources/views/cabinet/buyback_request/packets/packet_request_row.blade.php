@@ -15,9 +15,11 @@
     <td class="td-cost">{{ $buyRequest->cost }}</td>
     <td class="td-status">{{ $buyRequest->status->name }}</td>
     <td><small>{{ \Carbon\Carbon::parse($buyRequest->created_at)->format('d.m.Y H:i') }}</small></td>
-    <td>
-        <a href="#" class="btn btn-xxs btn-dark btn-icon addToTtn">
-            <i class="fas fa-plus"></i>
-        </a>
-    </td>
+    @if(!$buyPacket->ttn)
+        <td>
+            <a href="#" class="btn btn-xxs btn-dark btn-icon addToTtn">
+                <i class="fas fa-plus"></i>
+            </a>
+        </td>
+    @endif
 </tr>

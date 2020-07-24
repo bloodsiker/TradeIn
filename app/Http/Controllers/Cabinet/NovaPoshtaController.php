@@ -32,7 +32,7 @@ class NovaPoshtaController extends Controller
 {
     public function list(Request $request)
     {
-        $query = NovaPoshta::select('nova_poshtas.*')
+        $query = NovaPoshta::select('nova_poshtas.*')->with('user', 'packet')
             ->join('users', 'users.id', '=', 'nova_poshtas.user_id')
             ->leftJoin('shops', 'users.shop_id', '=', 'shops.id')
             ->leftJoin('networks', 'users.network_id', '=', 'networks.id');
@@ -208,6 +208,15 @@ class NovaPoshtaController extends Controller
             $ttn->cost = $result['data'][0]['CostOnSite'];
             $ttn->date_delivery = Carbon::parse($result['data'][0]['EstimatedDeliveryDate'])->format('Y-m-d');
             $ttn->save();
+
+            $packet = BuybackPacket::find($request->get('packet_id'));
+            if ($packet && $packet->requests->count()) {
+                foreach ($packet->requests as $pRequest) {
+                    $pRequest->status_id = Status::STATUS_SENT;
+                    $pRequest->save();
+                }
+            }
+
 
             UserLog::log("Создал экспресс-накладную  ТТН {$ttn->ttn}");
 

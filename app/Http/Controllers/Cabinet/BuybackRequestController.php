@@ -132,10 +132,9 @@ class BuybackRequestController extends Controller
 
     public function packet(Request $request, $id)
     {
-        $buyPacket = BuybackPacket::find($id);
+        $buyPacket = BuybackPacket::with('ttn')->find($id);
 
         $query = $this->buybackRequestRepository->baseQuery();
-
         $this->buybackRequestRepository->filterStatus($query, Status::STATUS_NEW);
 
         $query->leftJoin('buyback_packet_request', 'buyback_packet_request.request_id', '=', 'buyback_requests.id')

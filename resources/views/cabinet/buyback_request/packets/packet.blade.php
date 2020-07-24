@@ -57,7 +57,9 @@
                             <th scope="col">Стоимость (грн)</th>
                             <th scope="col">Статус</th>
                             <th scope="col">Дата</th>
-                            <th scope="col"></th>
+                            @if(!$buyPacket->ttn)
+                                <th scope="col"></th>
+                            @endif
                         </tr>
                         </thead>
                         <tbody>

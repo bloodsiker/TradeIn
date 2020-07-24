@@ -70,10 +70,10 @@
                                 <tr>
                                     <td>Содержимое посылки</td>
                                     <td>
-                                        <ul id="list_device">
-                                            <li class="d-none"></li>
+                                        <span><b>Пакет:</b> {{ $ttnObject->packet->name }}</span>
+                                        <ul>
                                             @foreach($ttnObject->packet->requests as $buyRequest)
-                                                <li data-id="{{ $buyRequest->id }}">
+                                                <li>
                                                     {{ $buyRequest->model->technic->name }} / {{ $buyRequest->model->brand->name }} / {{ $buyRequest->model->name }} / {{ $buyRequest->cost }} грн
                                                 </li>
                                             @endforeach
