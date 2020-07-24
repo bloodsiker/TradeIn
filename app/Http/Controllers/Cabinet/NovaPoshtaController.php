@@ -84,7 +84,9 @@ class NovaPoshtaController extends Controller
     {
         $cities = $typeOfPayers = $paymentForms = $cargoTypes = [];
         $senderContact =  $recipientContact = [];
-        $packets = BuybackPacket::all();
+        $packets = BuybackPacket::select('buyback_packets.*')
+            ->leftJoin('nova_poshtas', 'nova_poshtas.packet_id', '=', 'buyback_packets.id')
+            ->where('nova_poshtas.id', '=', null)->get();
 
         if (\Auth::user()->nova_poshta_key) {
 //        $vika = '364362610047bf3f07e7d65b0a4e9844';
