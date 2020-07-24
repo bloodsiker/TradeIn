@@ -193,7 +193,7 @@
 @push('modals')
 
     <div class="modal fade" id="edit-data" tabindex="-1" role="dialog" aria-labelledby="titleModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content tx-14">
                 <form action="{{ route('cabinet.buyback_request.edit') }}" id="formEdit" method="POST" data-parsley-validate novalidate>
                     <div class="modal-header">
@@ -203,40 +203,72 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-6 col-xl-6">
+                                <input type="hidden" name="id" value="">
+                                <div class="form-group">
+                                    <label for="name">Имя продавца</label>
+                                    <input type="text" class="form-control" name="name" id="name" placeholder="Имя продавца" autocomplete="off" readonly>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="phone">Телефон</label>
+                                        <input type="text" class="form-control" name="phone" id="phone" placeholder="Телефон" autocomplete="off" readonly>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="email">E-mail</label>
+                                        <input type="text" class="form-control" name="email" id="email" placeholder="E-mail" autocomplete="off" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="imei">IMEI-номер</label>
+                                        <input type="text" class="form-control" name="imei" id="imei" placeholder="IMEI-номер" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="packet">Номер сейф-пакета</label>
+                                        <input type="text" class="form-control" name="packet" id="packet" placeholder="Номер сейф-пакета" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="status">Статус</label>
+                                    <select class="custom-select" id="status" name="status_id">
+                                        @foreach($statuses as $status)
+                                            <option value="{{ $status->id }}" @if(!in_array($status->id, $allowStatuses)) disabled @endif>{{ $status->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-xl-6">
+                                <div class="form-group">
+                                    <label for="fio">ФИО клиента</label>
+                                    <input type="text" class="form-control" name="fio" id="fio" placeholder="Имя продавца" autocomplete="off">
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Адрес клиента</label>
+                                    <input type="text" class="form-control" name="address" id="address" placeholder="Телефон" autocomplete="off">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="type_document">Тип документа</label>
+                                    <input type="text" class="form-control" name="type_document" id="type_document" placeholder="E-mail" autocomplete="off" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="serial_number">Серия номер документа</label>
+                                    <input type="text" class="form-control" name="serial_number" id="serial_number" placeholder="IMEI-номер" autocomplete="off">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="issued_by">Кем и когда выдан</label>
+                                    <input type="text" class="form-control" name="issued_by" id="issued_by" placeholder="Номер сейф-пакета" autocomplete="off">
+                                </div>
+
+                            </div>
+                        </div>
                         @csrf
-                        <input type="hidden" name="id" value="">
-                        <div class="form-group">
-                            <label for="name">Имя продавца</label>
-                            <input type="text" class="form-control" name="name" id="name" placeholder="Имя продавца" autocomplete="off" readonly>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="phone">Телефон</label>
-                                <input type="text" class="form-control" name="phone" id="phone" placeholder="Телефон" autocomplete="off" readonly>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="email">E-mail</label>
-                                <input type="text" class="form-control" name="email" id="email" placeholder="E-mail" autocomplete="off" readonly>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="imei">IMEI-номер</label>
-                                <input type="text" class="form-control" name="imei" id="imei" placeholder="IMEI-номер" autocomplete="off">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="packet">Номер сейф-пакета</label>
-                                <input type="text" class="form-control" name="packet" id="packet" placeholder="Номер сейф-пакета" autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="status">Статус</label>
-                            <select class="custom-select" id="status" name="status_id">
-                                @foreach($statuses as $status)
-                                    <option value="{{ $status->id }}" @if(!in_array($status->id, $allowStatuses)) disabled @endif>{{ $status->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary tx-13" data-dismiss="modal">Закрыть</button>
@@ -348,6 +380,7 @@
                 });
             @endif
 
+            // Open modal edit request
             $('.editModal').click(function (e) {
                 e.preventDefault();
 
@@ -374,6 +407,12 @@
                             modalNetwork.find('input[name=packet]').val(response.data.packet);
                             modalNetwork.find('select option').attr('selected', false);
                             modalNetwork.find('select option[value='+response.data.status_id+']').attr('selected', 'selected');
+
+                            modalNetwork.find('input[name=fio]').val(response.data.act_form.fio);
+                            modalNetwork.find('input[name=address]').val(response.data.act_form.address);
+                            modalNetwork.find('input[name=type_document]').val(response.data.act_form.type_document);
+                            modalNetwork.find('input[name=serial_number]').val(response.data.act_form.serial_number);
+                            modalNetwork.find('input[name=issued_by]').val(response.data.act_form.issued_by);
                         } else {
                             $.notify('Error get network object', 'error');
                         }

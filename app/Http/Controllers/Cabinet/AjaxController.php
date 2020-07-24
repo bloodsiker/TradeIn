@@ -46,7 +46,7 @@ class AjaxController extends Controller
                 return response(['status' => 1, 'data' => $data]);
 
             case 'get_buyback_request':
-                $data = BuybackRequest::with('user')->with('status')->with('model')->get()->find($request->get('id'));
+                $data = BuybackRequest::with('user')->with('actForm')->with('status')->with('model')->get()->find($request->get('id'));
 
                 return response(['status' => 1, 'data' => $data]);
             default:

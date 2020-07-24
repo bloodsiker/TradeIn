@@ -112,6 +112,13 @@ class BuybackRequestRepository implements BuybackRequestRepositoryInterface
 
         $buyRequest->save();
 
+        $act = $buyRequest->actForm;
+        $act->fio = $request->get('fio');
+        $act->address = $request->get('address');
+        $act->serial_number = $request->get('serial_number');
+        $act->issued_by = $request->get('issued_by');
+        $act->save();
+
         return $buyRequest;
     }
 }
