@@ -42,10 +42,52 @@
                     </table>
                 </div>
 
-                <div class="table-responsive">
-                    <div class="text-center">
-                        <h4>Список заявок на выкуп</h4>
+                <div class="text-center">
+                    <h4>Список заявок на выкуп</h4>
+                </div>
+
+                <div class="row" id="filters">
+                    <div class="col-lg-12 col-xl-12">
+                        <form action="{{ route('cabinet.buyback_request.packet', ['id' => $buyPacket->id]) }}" method="GET" novalidate>
+                            <div class="form-row">
+
+                                <div class="form-group col-md-3">
+                                    <select class="custom-select network-filter" name="network_id">
+                                        <option value=""></option>
+                                        @foreach($networks as $network)
+                                            <option value="{{ $network->id }}" @if(request('network_id') == $network->id) selected @endif>{{ $network->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <select class="custom-select shop-filter" name="shop_id">
+                                        <option value=""></option>
+                                        @foreach($shops as $shop)
+                                            <option value="{{ $shop->id }}" @if(request('shop_id') == $shop->id) selected @endif>{{ $shop->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <input type="text" class="form-control filter_date" name="date_from" value="{{ request('date_from') ?: null }}" placeholder="Дата с" autocomplete="off">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <input type="text" class="form-control filter_date" name="date_to" value="{{ request('date_to') ?: null }}" placeholder="Дата по" autocomplete="off">
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <div class="btn-group" role="group">
+                                        <button type="submit" class="btn btn-dark">Применить</button>
+                                        <a href="{{ route('cabinet.buyback_request.packet', ['id' => $buyPacket->id])  }}" class="btn btn-danger">Сбросить</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
+                </div>
+
+                <div class="table-responsive">
                     <table class="table table-sm table-white table-hover table-bordered tableTtnRequest">
                         <thead>
                         <tr>
@@ -80,6 +122,27 @@
     <script>
         $(function(){
             'use strict'
+
+            $('.filter_date').datepicker({
+                todayHighlight: true,
+                orientation: "bottom left",
+                language: "{{app()->getLocale()}}",
+                isRTL: false,
+                autoClose: true,
+                format: "dd.mm.yyyy",
+            });
+
+            $('.network-filter').select2({
+                placeholder: 'Торговая сеть',
+                searchInputPlaceholder: 'Поиск торговой сети',
+                allowClear: true,
+            });
+
+            $('.shop-filter').select2({
+                placeholder: 'Магазин',
+                searchInputPlaceholder: 'Поиск магазина',
+                allowClear: true,
+            });
 
             $('.tableTtnRequest').on('click', '.addToTtn', function (e) {
                 e.preventDefault();

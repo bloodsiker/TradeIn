@@ -134,24 +134,37 @@ class BuybackRequestController extends Controller
     {
         $buyPacket = BuybackPacket::with('ttn')->find($id);
 
+        $networks = Network::all();
+        $shops = Shop::all();
+
         $query = $this->buybackRequestRepository->baseQuery();
         $this->buybackRequestRepository->filterStatus($query, Status::STATUS_NEW);
 
         $query->leftJoin('buyback_packet_request', 'buyback_packet_request.request_id', '=', 'buyback_requests.id')
             ->where('buyback_packet_request.packet_id', '=', null);
 
-        if (\Auth::user()->isNetwork()) {
-            $this->buybackRequestRepository->filterNetwork($query, \Auth::user()->network_id);
+        if ($request->get('network_id')) {
+            $this->buybackRequestRepository->filterNetwork($query, $request->get('network_id'));
         }
 
-        if (\Auth::user()->isShop()) {
-            $this->buybackRequestRepository->filterShop($query, \Auth::user()->shop_id);
+        if ($request->get('shop_id')) {
+            $this->buybackRequestRepository->filterShop($query, $request->get('shop_id'));
+        }
+
+        if ($request->get('date_from') && $request->get('date_to')) {
+            $from = Carbon::parse($request->get('date_from'))->format('Y-m-d').' 00:00';
+            $to = Carbon::parse($request->get('date_to'))->format('Y-m-d').' 23:59';
+            $this->buybackRequestRepository->filterByDate($query, $from, $to);
+        } elseif ($request->get('date_from') && empty($request->get('date_to'))) {
+            $from = Carbon::parse($request->get('date_from'))->format('Y-m-d').' 00:00';
+            $to = Carbon::now()->format('Y-m-d').' 23:59';
+            $this->buybackRequestRepository->filterByDate($query, $from, $to);
         }
 
         $buyRequests = $query->where('buyback_requests.is_deleted', false)->orderBy('id', 'DESC')->get();
 
         return view('cabinet.buyback_request.packets.packet',
-            compact('buyPacket', 'buyRequests'));
+            compact('buyPacket', 'buyRequests', 'networks', 'shops'));
     }
 
     public function addPacket(Request $request)
