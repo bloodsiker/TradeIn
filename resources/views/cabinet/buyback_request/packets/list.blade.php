@@ -55,7 +55,7 @@
                                     <td>{{ $buyPacket->requests->count() }}</td>
                                     <td><small>{{ $buyPacket->created_at->format('d.m.Y H:i') }}</small></td>
                                     <td>
-                                        <a href="{{ route('cabinet.buyback_request.packet', ['id' => $buyPacket->id]) }}" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                        <a href="{{ route('cabinet.buyback_request.packet', ['id' => $buyPacket->id]) }}" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                             <i class="far fa-edit"></i>
                                         </a>
                                     </td>
