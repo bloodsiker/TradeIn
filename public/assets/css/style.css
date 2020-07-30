@@ -4,7 +4,7 @@ body {background-color: #f5f6fa;font-size: 0.80rem;!important;}
 .sub-content {padding: 8px;}
 .btn-group {width: 100%}
 .link-color-gray{color: #0f1649}
-.btn-xxs {padding-top: 2px; padding-bottom: 2px; padding-left: 6px; padding-right: 6px; font-size: 12px;}
+.btn-xxs {padding-top: 2px; padding-bottom: 2px; padding-left: 6px; padding-right: 6px; font-size: 12px; margin: 2px;}
 .vertical-border-list {border: 1px solid #1b2e4b;border-radius: 3px;padding: 3px!important;}
 .nav-classic .vertical-border-list + .vertical-border-list {margin-top: 4px;}
 .vertical-border-list.active { background: #49597b!important; color: #fff!important;}

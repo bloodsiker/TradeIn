@@ -72,7 +72,7 @@ class BuybackRequestController extends Controller
         if (\Auth::user()->isShop()) {
             $allowStatuses = [Status::STATUS_NEW, Status::STATUS_SENT];
             $users = User::where('shop_id', \Auth::user()->shop_id)->get();
-            $this->buybackRequestRepository->byUser($query, \Auth::user()->shop_id);
+            $this->buybackRequestRepository->filterShop($query, \Auth::user()->shop_id);
         }
 
         if (!\Auth::user()->isShop()) {
