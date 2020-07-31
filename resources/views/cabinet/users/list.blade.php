@@ -88,7 +88,7 @@
                             <th scope="col">Роль</th>
                             <th scope="col">Статус</th>
                             @if(Auth::user()->isAdmin())
-                                <th scope="col" width="80px"></th>
+                                <th scope="col" width="90px"></th>
                             @endif
                         </tr>
                         </thead>

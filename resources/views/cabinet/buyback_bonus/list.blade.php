@@ -35,7 +35,7 @@
                             <th scope="col">Стоимость от</th>
                             <th scope="col">Стоимость до</th>
                             <th scope="col">Бонус (грн)</th>
-                            <th scope="col" width="80px"></th>
+                            <th scope="col" width="90px"></th>
                         </tr>
                         </thead>
                         <tbody>

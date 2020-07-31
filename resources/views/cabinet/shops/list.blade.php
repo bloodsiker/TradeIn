@@ -62,7 +62,7 @@
                             <th scope="col">Торговая сеть</th>
                             <th scope="col">Город</th>
                             <th scope="col">Адрес</th>
-                            <th scope="col" width="110px"></th>
+                            <th scope="col" width="125px"></th>
                         </tr>
                         </thead>
                         <tbody>

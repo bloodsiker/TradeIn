@@ -33,7 +33,7 @@
                         <tr>
                             <th scope="col" width="40px">ID</th>
                             <th scope="col">Название</th>
-                            <th scope="col" width="80px"></th>
+                            <th scope="col" width="90px"></th>
                         </tr>
                         </thead>
                         <tbody>

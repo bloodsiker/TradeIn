@@ -94,7 +94,7 @@
                                 <th scope="col">Цена 3</th>
                                 <th scope="col">Цена 4</th>
                                 <th scope="col">Цена 5</th>
-                                <th scope="col" width="80px"></th>
+                                <th scope="col" width="90px"></th>
                             </tr>
                             </thead>
                             <tbody>
