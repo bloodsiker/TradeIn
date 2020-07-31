@@ -61,10 +61,10 @@
                                     </td>
                                     @if(Auth::user()->isAdmin())
                                         <td>
-                                            <a href="#" data-toggle="tooltip" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
+                                            <a href="#" title="Редактировать" class="btn btn-xxs btn-success btn-icon editModal">
                                                 <i class="far fa-edit"></i>
                                             </a>
-                                            <a href="#" data-toggle="tooltip" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
+                                            <a href="#" title="Удалить" class="btn btnDelete btn-xxs btn-danger btn-icon">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         </td>
